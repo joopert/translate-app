@@ -1,0 +1,37 @@
+{
+  "items": [
+    {
+      "attached_custom_fields": [],
+      "benefits": [],
+      "created_at": "2025-03-10T14:48:20.732647Z",
+      "description": "testing",
+      "id": "d70cc302-cdb4-4633-abb2-248e20cd0584",
+      "is_archived": false,
+      "is_recurring": false,
+      "medias": [],
+      "metadata": {},
+      "modified_at": "2025-03-10T14:48:21.230509Z",
+      "name": "ads-free",
+      "organization_id": "6af29c96-d022-4a67-9e00-89b99e251319",
+      "prices": [
+        {
+          "amount_type": null,
+          "created_at": "2025-03-10T14:48:21.234766Z",
+          "id": "19a97fa3-1d29-4471-9bee-450f8a1c74a2",
+          "is_archived": false,
+          "modified_at": null,
+          "price_amount": 1000,
+          "price_currency": "usd",
+          "product_id": "d70cc302-cdb4-4633-abb2-248e20cd0584",
+          "recurring_interval": null,
+          "type": "one_time"
+        }
+      ],
+      "recurring_interval": null
+    }
+  ],
+  "pagination": {
+    "max_page": 1,
+    "total_count": 1
+  }
+}

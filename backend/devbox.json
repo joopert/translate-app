@@ -1,0 +1,16 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.14.0/.schema/devbox.schema.json",
+  "packages": [
+    "python@3.13",
+    "uv@latest",
+    "pre-commit@latest"
+  ],
+  "shell": {
+    "scripts": {
+      "setup": [
+        "uv sync --all-extras --all-groups",
+        "pre-commit install"
+      ]
+    }
+  }
+}

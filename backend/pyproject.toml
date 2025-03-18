@@ -1,0 +1,66 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Blueprint for backend"
+readme = "docs/README.md"
+authors = [{ name = "joopert" }]
+
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi[standard]>=0.115.11",
+    "fastapi-pagination>=0.12.34",
+    "loguru>=0.7.3",
+    "pydantic>=2.10.6",
+    "pydantic-settings>=2.8.1",
+    "secure>=1.0.1",
+    "boto3>=1.37.1",
+    "asyncer>=0.0.8",
+    "whenever>=0.7.2",
+]
+
+[project.optional-dependencies]
+auth-cognito = [
+    "aioboto3>=14.1.0",
+    "pycognito>=2024.5.1",
+]
+payments-polar = [
+    "polar-sdk>=0.16.6",
+]
+payments-paddle = [
+    "paddle-python-sdk>=1.6.0",
+]
+db-mongodb = [
+    "beanie>=1.29.0",
+]
+db-mongodb-aws = [
+    "beanie[aws]>=1.29.0",
+]
+
+[dependency-groups]
+auth-cognito = [
+    "types-aioboto3>=14.1.0",
+]
+dev = [
+    "boto3-stubs[full]>=1.37.13",
+    "mypy>=1.15.0",
+    "ruff>=0.9.10",
+]
+
+[tool.ruff]
+line-length = 120
+lint.select = [
+    "E",  # pycodestyle
+    "F",  # Pyflakes
+    "UP",  # pyupgrade
+    "B",  # flake8-bugbear
+    "SIM",  # flake8-simplify
+    "I",  # isort
+]
+lint.ignore = [
+    "B008",  # do not perform function calls in argument defaults
+]
+
+[tool.mypy]
+plugins = [
+  "pydantic.mypy"
+]

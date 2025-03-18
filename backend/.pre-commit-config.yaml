@@ -1,0 +1,60 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-yaml
+      - id: pretty-format-json
+        args:
+          - --autofix
+        exclude: ^.vscode/|^cdktf/  # is invalid json, but expected
+      - id: check-json
+        exclude: ^.vscode/  # is invalid json, but expected
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: detect-aws-credentials
+        args:
+          - --allow-missing-credentials
+      - id: detect-private-key
+      - id: check-added-large-files
+      - id: check-merge-conflict
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.11.0
+    hooks:
+    - id: ruff
+      args: [ --fix ]
+    - id: ruff-format
+  # - repo: https://github.com/igorshubovych/markdownlint-cli
+  #   rev: v0.39.0
+  #   hooks:
+  #     - id: markdownlint
+  - repo: https://github.com/PyCQA/bandit
+    rev: '1.8.3'
+    hooks:
+    - id: bandit
+      args: ["-c", "pyproject.toml"]
+      additional_dependencies: ["bandit[toml]"]
+  -   repo: https://github.com/pre-commit/mirrors-mypy
+      rev: 'v1.15.0'
+      hooks:
+      -   id: mypy
+          additional_dependencies:
+            - "pydantic"
+            - "types-requests"
+            - "types-python-slugify"
+  # - repo: local
+  #   hooks:
+  #     - id: verify-configs
+  #       name: Verify Configs
+  #       entry: python3 scripts/verify_configs.py
+  #       language: system
+  #       types: [python]
+  #       pass_filenames: false
+  # - repo: local
+  #   hooks:
+  #     - id: output-ts-schemas
+  #       name: output ts-schemas
+  #       entry: python3 scripts/output_ts_schemas.py
+  #       language: python
+  #       types: [python]
+  #       additional_dependencies: ["requests"]
+  #       pass_filenames: false
