@@ -61,7 +61,7 @@ class RefreshToken(BaseModel):
 
 
 class AccessToken(BaseModel):
-    expire_minutes: int = 3600
+    expire_seconds: int = 3600
 
 
 class Token(BaseModel):
