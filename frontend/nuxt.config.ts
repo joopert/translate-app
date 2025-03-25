@@ -14,9 +14,7 @@ export default defineNuxtConfig({
     }
   },
 
-  modules: [
-    '@vee-validate/nuxt',
-  ],
+  modules: ['@vee-validate/nuxt', "@nuxt/eslint"],
 
   veeValidate: {
     componentNames: {
