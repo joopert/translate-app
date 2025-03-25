@@ -6,9 +6,13 @@
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
+    "@hey-api/client-nuxt": "^0.3.0",
+    "@hey-api/openapi-ts": "^0.64.13",
     "@nuxt/eslint": "^1.2.0",
     "eslint": "^9.23.0",
-    "prettier": "^3.5.3"
+    "prettier": "^3.5.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
   },
   "name": "nuxt-app",
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
@@ -17,6 +21,7 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
+    "generate-backend-client": "ts-node scripts/generate-backend-client.ts",
     "postinstall": "nuxt prepare",
     "preview": "nuxt preview"
   },
