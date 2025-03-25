@@ -7,7 +7,8 @@
   ],
   "shell": {
     "init_hook": [
-      "yarn install"
+      "yarn install",
+      "pre-commit install"
     ]
   }
 }
