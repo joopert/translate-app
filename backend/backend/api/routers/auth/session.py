@@ -1,5 +1,7 @@
 import base64
+import traceback
 import uuid
+from typing import cast
 
 import boto3
 from asyncer import asyncify
@@ -84,20 +86,20 @@ async def signin(signin_data: SignIn) -> Response:
 
 
 @router.post("/refresh")
-async def refresh_token(request: Request) -> ResponseFormat:
+async def refresh_token(request: Request) -> Response:
     """Refresh access token using refresh token from cookie"""
-    try:
-        refresh_token = request.cookies.get("refresh_token")
-        if not refresh_token:
-            raise HTTPException(
-                status_code=401,
-                detail=Detail(
-                    loc=ErrorLocationField.GENERAL,
-                    code="NO_REFRESH_TOKEN",
-                    msg="No refresh token found",
-                ).model_dump(),
-            )
+    refresh_token = request.cookies.get("refresh_token")
+    if not refresh_token:
+        raise HTTPException(
+            status_code=401,
+            detail=Detail(
+                loc=ErrorLocationField.GENERAL,
+                code="NO_REFRESH_TOKEN",
+                msg="No refresh token found",
+            ).model_dump(),
+        )
 
+    try:
         cognito = Cognito(
             user_pool_id=settings.auth.cognito.user_pool_id,
             client_id=settings.auth.cognito.client_id,
@@ -105,55 +107,11 @@ async def refresh_token(request: Request) -> ResponseFormat:
         )
 
         cognito.renew_access_token()
-        current_user = await get_current_user(request=request, token=None)
-
-        response = Response()
-        response.set_cookie(
-            key="access_token",
-            value=cognito.access_token,  # type: ignore
-            domain=settings.auth.token.cookie.domain,
-            httponly=settings.auth.token.cookie.http_only,
-            max_age=settings.auth.token.access_token.expire_seconds,
-            secure=settings.auth.token.cookie.secure,
-            samesite=settings.auth.token.cookie.same_site,
-        )
-        response.set_cookie(
-            key="id_token",
-            value=cognito.id_token,  # type: ignore
-            max_age=settings.auth.token.access_token.expire_seconds,
-            domain=settings.auth.token.cookie.domain,
-            httponly=settings.auth.token.cookie.http_only,
-            secure=settings.auth.token.cookie.secure,
-            samesite=settings.auth.token.cookie.same_site,
-        )
-        response.set_cookie(
-            key="is_authenticated",
-            value="true",
-            domain=settings.auth.token.cookie.domain,
-            max_age=settings.auth.token.access_token.expire_seconds,
-            httponly=False,
-            secure=settings.auth.token.cookie.secure,
-            samesite=settings.auth.token.cookie.same_site,
-        )
-
-        response.set_cookie(
-            key="my_profile",
-            value=base64.b64encode(current_user.model_dump_json().encode()).decode(),
-            domain=settings.auth.token.cookie.domain,
-            max_age=settings.auth.token.access_token.expire_seconds,
-            httponly=False,
-            secure=settings.auth.token.cookie.secure,
-            samesite=settings.auth.token.cookie.same_site,
-        )
-
-        return ResponseFormat(
-            code="SUCCESS",
-            msg="Token refreshed successfully",
-        )
-
+        current_user = await get_current_user(request=request, token=cast(str, cognito.access_token))
     except Exception as e:
         unique_error_code = str(uuid.uuid4())
         logger.error(f"code: {unique_error_code}, message: {str(e)}")
+        logger.error(traceback.format_exc())
         raise HTTPException(
             status_code=401,
             detail=Detail(
@@ -162,6 +120,47 @@ async def refresh_token(request: Request) -> ResponseFormat:
                 msg=f"An error occurred while refreshing your token. Please reference this code: {unique_error_code}",
             ).model_dump(),
         ) from e
+
+    response = Response()
+    response.set_cookie(
+        key="access_token",
+        value=cognito.access_token,  # type: ignore
+        domain=settings.auth.token.cookie.domain,
+        httponly=settings.auth.token.cookie.http_only,
+        max_age=settings.auth.token.access_token.expire_seconds,
+        secure=settings.auth.token.cookie.secure,
+        samesite=settings.auth.token.cookie.same_site,
+    )
+    response.set_cookie(
+        key="id_token",
+        value=cognito.id_token,  # type: ignore
+        max_age=settings.auth.token.access_token.expire_seconds,
+        domain=settings.auth.token.cookie.domain,
+        httponly=settings.auth.token.cookie.http_only,
+        secure=settings.auth.token.cookie.secure,
+        samesite=settings.auth.token.cookie.same_site,
+    )
+    response.set_cookie(
+        key="is_authenticated",
+        value="true",
+        domain=settings.auth.token.cookie.domain,
+        max_age=settings.auth.token.access_token.expire_seconds,
+        httponly=False,
+        secure=settings.auth.token.cookie.secure,
+        samesite=settings.auth.token.cookie.same_site,
+    )
+
+    response.set_cookie(
+        key="my_profile",
+        value=base64.b64encode(current_user.model_dump_json().encode()).decode(),
+        domain=settings.auth.token.cookie.domain,
+        max_age=settings.auth.token.access_token.expire_seconds,
+        httponly=False,
+        secure=settings.auth.token.cookie.secure,
+        samesite=settings.auth.token.cookie.same_site,
+    )
+
+    return response
 
 
 @router.post("/logout/session")

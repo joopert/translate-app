@@ -21,14 +21,16 @@ cognito_client = boto3.client("cognito-idp", region_name=settings.auth.cognito.r
 
 async def get_current_user(
     request: Request,
-    token: HTTPBearer | None = Depends(HTTPBearer(auto_error=False)),
+    token: HTTPBearer | str | None = Depends(HTTPBearer(auto_error=False)),
 ) -> CurrentUser:
-    access_token = cast(
-        str | None,
-        token.credentials if token else request.cookies.get("access_token"),  # type: ignore[attr-defined]
-    )
+    if isinstance(token, str):
+        access_token = token
+    else:
+        access_token = cast(
+            str | None,
+            token.credentials if token else request.cookies.get("access_token"),  # type: ignore[attr-defined]
+        )
 
-    id_token: str | None = request.cookies.get("id_token")
     if not access_token:
         raise HTTPException(
             status_code=401,
@@ -39,6 +41,7 @@ async def get_current_user(
             ).model_dump(),
         )
 
+    id_token: str | None = request.cookies.get("id_token")
     try:
         cognito = Cognito(
             user_pool_id=settings.auth.cognito.user_pool_id,
