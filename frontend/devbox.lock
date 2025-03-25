@@ -69,6 +69,70 @@
         }
       }
     },
+    "pre-commit@latest": {
+      "last_modified": "2025-03-19T06:05:51Z",
+      "resolved": "github:NixOS/nixpkgs/44e422ba8ed1bdec9620b0733601669972f91170#pre-commit",
+      "source": "devbox-search",
+      "version": "4.0.1",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/zdylw97pgqkwin28i7hf1qriym6fkbjq-pre-commit-4.0.1",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/kd552yxp9vl688yqkk0y1w8qmlg7417h-pre-commit-4.0.1-dist"
+            }
+          ],
+          "store_path": "/nix/store/zdylw97pgqkwin28i7hf1qriym6fkbjq-pre-commit-4.0.1"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/czkda43s9pi419ywm8mwyicfz0hixc0r-pre-commit-4.0.1",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/1nc11pw86savx37n9067k591pr2bsmjj-pre-commit-4.0.1-dist"
+            }
+          ],
+          "store_path": "/nix/store/czkda43s9pi419ywm8mwyicfz0hixc0r-pre-commit-4.0.1"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/nqbxjpv6aigfxry690spcfl61nrcnir2-pre-commit-4.0.1",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/4gm9h9v22d96pghbidfnl4gjqf8ls3ir-pre-commit-4.0.1-dist"
+            }
+          ],
+          "store_path": "/nix/store/nqbxjpv6aigfxry690spcfl61nrcnir2-pre-commit-4.0.1"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/gpdrakayg9zgmyqqxzfj8b9ndxyxb6ka-pre-commit-4.0.1",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/5by2443vzdhfpyxhhmasmw91iqvrkp3l-pre-commit-4.0.1-dist"
+            }
+          ],
+          "store_path": "/nix/store/gpdrakayg9zgmyqqxzfj8b9ndxyxb6ka-pre-commit-4.0.1"
+        }
+      }
+    },
     "yarn@latest": {
       "last_modified": "2025-03-11T17:52:14Z",
       "resolved": "github:NixOS/nixpkgs/0d534853a55b5d02a4ababa1d71921ce8f0aee4c#yarn",
