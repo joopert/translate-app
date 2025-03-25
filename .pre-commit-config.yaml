@@ -4,9 +4,9 @@ repos:
     hooks:
       - id: check-yaml
       - id: pretty-format-json
-        exclude: ^.vscode/  # is invalid json, but expected
+        exclude: ^.vscode/|frontend/tsconfig.json  # is invalid json, but expected
       - id: check-json
-        exclude: ^.vscode/  # is invalid json, but expected
+        exclude: ^.vscode/|frontend/tsconfig.json  # is invalid json, but expected
       - id: end-of-file-fixer
       - id: trailing-whitespace
       - id: detect-aws-credentials
@@ -25,7 +25,7 @@ repos:
     rev: '1.7.8'
     hooks:
     - id: bandit
-      args: ["-c", "pyproject.toml"]
+      args: ["-c", "backend/pyproject.toml"]
       additional_dependencies: ["bandit[toml]"]
   -   repo: https://github.com/pre-commit/mirrors-mypy
       rev: 'v1.10.0'
