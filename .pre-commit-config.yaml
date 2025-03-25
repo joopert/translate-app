@@ -47,3 +47,9 @@ repos:
       hooks:
       -   id: prettier
           files: "frontend/"
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.6.9
+    hooks:
+      - id: uv-lock
+        files: "backend/"
+        args: ["--directory", "backend"]
