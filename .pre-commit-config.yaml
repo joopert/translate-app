@@ -25,12 +25,13 @@ repos:
     rev: '1.7.8'
     hooks:
     - id: bandit
-      args: ["-c", "backend/pyproject.toml"]
+      args: ["-c", "./backend/pyproject.toml"]
       additional_dependencies: ["bandit[toml]"]
   -   repo: https://github.com/pre-commit/mirrors-mypy
       rev: 'v1.10.0'
       hooks:
       -   id: mypy
+          files: "backend/"
           additional_dependencies:
             - "pydantic"
             - "types-requests"

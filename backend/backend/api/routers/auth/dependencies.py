@@ -23,6 +23,7 @@ async def get_current_user(
     request: Request,
     token: HTTPBearer | str | None = Depends(HTTPBearer(auto_error=False)),
 ) -> CurrentUser:
+    access_token: str | None = None
     if isinstance(token, str):
         access_token = token
     else:
