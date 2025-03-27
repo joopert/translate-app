@@ -4,38 +4,30 @@
  */
 import { sendRedirect, H3Event } from 'h3';
 import type { FetchContext } from 'ofetch';
-import {
-  navigateTo,
-  useRequestEvent,
-  useRequestHeaders,
-  useRuntimeConfig,
-  useRoute,
-} from '#imports';
+import { useRequestEvent, useRequestHeaders, useRuntimeConfig } from '#imports';
 import type { RuntimeConfig } from '@nuxt/schema';
-
+//docs: when a page loads, and we get a 401, we need to refresh. But the server does not have access to a token at all, so we get 401 on SSR.
+// on subsequent requests, we get a 401, and we need to refresh. But the server has access to a token, so SSR works.
 const credential = 'include' as const;
 
-export const useCookiesAuth = (fromPath: string | undefined = undefined) => {
+export const useCookiesAuth = () => {
   const event = useRequestEvent();
-  const header = useRequestHeaders();
+  const header = useRequestHeaders(['cookie']);
   const config = useRuntimeConfig();
-  const fromPathValue = fromPath || useRoute().path;
-  const refreshTokenOnResponseErrorHandler = getRefreshTokenOnResponseErrorHandler(
-    event,
-    config,
-    fromPathValue,
-  );
+  const refreshTokenOnResponseErrorHandler = getRefreshTokenOnResponseErrorHandler(event, config);
+
   return {
     retryStatusCodes: [401],
     retry: 1,
     baseURL: config.public.cookiesAuth.apiBaseUrl,
     credentials: credential,
+    headers: import.meta.server ? { cookie: header.cookie || '' } : undefined,
     onResponseError: async (context: FetchContext) => {
       if (context.response?.status === 401) {
         await $fetch(config.public.cookiesAuth.refreshTokenUrl, {
           method: 'POST',
           baseURL: config.public.cookiesAuth.apiBaseUrl,
-          headers: import.meta.server ? { cookie: header.cookie } : undefined,
+          headers: import.meta.server ? { cookie: header.cookie || '' } : undefined,
           credentials: credential,
           onResponseError: refreshTokenOnResponseErrorHandler,
         });
@@ -44,25 +36,22 @@ export const useCookiesAuth = (fromPath: string | undefined = undefined) => {
   };
 };
 
-function getRefreshTokenOnResponseErrorHandler(
-  event: H3Event | undefined,
-  config: RuntimeConfig,
-  fromPath: string,
-) {
+function getRefreshTokenOnResponseErrorHandler(event: H3Event | undefined, config: RuntimeConfig) {
   if (config.public.cookiesAuth.redirectOnRefreshTokenExpiration) {
     const handler = async (refreshContext: FetchContext) => {
       if (refreshContext.response?.status === 401) {
-        if (isExternalApi(config)) {
-          await navigateTo(config.public.cookiesAuth.redirectTo);
-        } else {
-          if (refreshContext.response?.status === 401) {
-            if (import.meta.server) {
-              if (fromPath !== config.public.cookiesAuth.redirectTo && event) {
-                return await sendRedirect(event, config.public.cookiesAuth.redirectTo);
-              }
-            } else if (import.meta.client) {
-              await navigateTo(config.public.cookiesAuth.redirectTo);
+        if (import.meta.client) {
+          window.location.href = config.public.cookiesAuth.redirectTo;
+          return;
+        }
+
+        if (import.meta.server && event) {
+          try {
+            if (!event.node.res.headersSent && !event.node.res.writableEnded) {
+              return await sendRedirect(event, config.public.cookiesAuth.redirectTo);
             }
+          } catch (error) {
+            console.error('Failed to redirect:', error);
           }
         }
       }
@@ -71,8 +60,4 @@ function getRefreshTokenOnResponseErrorHandler(
   } else {
     return undefined;
   }
-}
-
-function isExternalApi(config: RuntimeConfig) {
-  return config.public.cookiesAuth.apiBaseUrl.startsWith('http');
 }
