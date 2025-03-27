@@ -1,0 +1,6 @@
+{
+    "recommendations": [
+      "esbenp.prettier-vscode",          // Prettier formatter
+      "charliermarsh.ruff",              // ruff python formatter
+    ]
+  }
