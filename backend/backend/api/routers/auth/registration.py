@@ -15,13 +15,20 @@ router = APIRouter()
 cognito_client = boto3.client("cognito-idp", region_name=settings.auth.cognito.region)
 
 
-@router.post("/sign-up")
+@router.post(
+    "/sign-up", operation_id="auth_post_sign_up", summary="Register a new user", description="Register a new user"
+)
 async def signup(user: UserRegister) -> ResponseFormat:
     create_user(user.email, user.password.get_secret_value())
     return ResponseFormat(code="SIGN_UP_SUCCESS", msg="User registered successfully")
 
 
-@router.post("/confirm-sign-up")
+@router.post(
+    "/confirm-sign-up",
+    operation_id="auth_post_confirm_sign_up",
+    summary="Confirm user registration",
+    description="Confirm user registration",
+)
 async def confirm_sign_up(confirm_data: ConfirmSignUp) -> ResponseFormat:
     cognito_confirm_signup(confirm_data.email, confirm_data.confirmation_code)
     await handle_user_registration(confirm_data.email)

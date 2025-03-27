@@ -19,7 +19,12 @@ from .models import (
 router = APIRouter()
 
 
-@router.post("/forgot-password")
+@router.post(
+    "/forgot-password",
+    operation_id="auth_post_forgot_password",
+    summary="Forgot password",
+    description="Forgot password",
+)
 async def forgot_passwords(forgot_data: ForgotPassword) -> ResponseFormat:
     try:
         cognito_forgot_password(forgot_data.email)
@@ -32,7 +37,12 @@ async def forgot_passwords(forgot_data: ForgotPassword) -> ResponseFormat:
     )
 
 
-@router.post("/confirm-forgot-password")
+@router.post(
+    "/confirm-forgot-password",
+    operation_id="auth_post_confirm_forgot_password",
+    summary="Confirm forgot password",
+    description="Confirm forgot password",
+)
 async def confirm_forgot_password(
     confirm_data: ConfirmForgotPassword,
 ) -> ResponseFormat:
@@ -49,7 +59,12 @@ async def confirm_forgot_password(
     )
 
 
-@router.post("/change-password")
+@router.post(
+    "/change-password",
+    operation_id="auth_post_change_password",
+    summary="Change password",
+    description="Change password",
+)
 async def change_password(
     change_data: ChangePassword, current_user: CurrentUser = Depends(get_current_user)
 ) -> ResponseFormat:
@@ -68,7 +83,12 @@ async def change_password(
     )
 
 
-@router.post("/set-initial-password")
+@router.post(
+    "/set-initial-password",
+    operation_id="auth_post_set_initial_password",
+    summary="Set initial password",
+    description="Set initial password",
+)
 async def set_initial_password(username: str, old_password: str, new_password: str):
     try:
         cognito_set_initial_password(username, old_password, new_password)

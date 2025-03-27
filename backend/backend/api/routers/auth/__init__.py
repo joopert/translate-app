@@ -14,6 +14,6 @@ router.include_router(password.router)
 router.include_router(session.router)
 
 
-@router.get("/protected")
+@router.get("/protected", operation_id="auth_get_protected", summary="Protected route", description="Protected route")
 async def protected_route(current_user: CurrentUser = Depends(get_current_user)):
     return {"message": "This is a protected route", "user": current_user}

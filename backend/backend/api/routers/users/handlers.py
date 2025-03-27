@@ -8,7 +8,12 @@ from backend.services.users.models import User
 router = APIRouter()
 
 
-@router.get("/me", response_model=User)
+@router.get(
+    "/current_user",
+    operation_id="users_get_current_user",
+    summary="Get current user profile",
+    description="Get the current user's profile from the database.",
+)
 async def get_current_user_profile(current_user: CurrentUser = Depends(get_current_user)) -> User:
     """
     Get the current user's profile from the database.

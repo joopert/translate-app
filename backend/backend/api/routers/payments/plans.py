@@ -10,7 +10,12 @@ if TYPE_CHECKING:
 router = APIRouter()
 
 
-@router.get("/plans")
+@router.get(
+    "/plans",
+    operation_id="payments_get_plans",
+    summary="Get available subscription plans",
+    description="Get available subscription plans",
+)
 async def get_plans(manager: "PlansManager" = Depends(get_plans_manager)) -> Plans:
     """
     Get available subscription plans from Polar
@@ -18,7 +23,12 @@ async def get_plans(manager: "PlansManager" = Depends(get_plans_manager)) -> Pla
     return manager.plans
 
 
-@router.get("/plans/refresh")
+@router.get(
+    "/plans/refresh",
+    operation_id="payments_get_plans_refresh",
+    summary="Refresh available subscription plans",
+    description="Refresh available subscription plans",
+)
 async def refresh_plans(
     force: bool = False,
     manager: "PlansManager" = Depends(get_plans_manager),
@@ -27,7 +37,12 @@ async def refresh_plans(
     return manager.plans
 
 
-@router.get("/plans/{plan_id}", response_model=Plan)
+@router.get(
+    "/plans/{plan_id}",
+    operation_id="payments_get_plan",
+    summary="Get details for a specific plan",
+    description="Get details for a specific plan",
+)
 async def get_plan(plan_id: str, manager: "PlansManager" = Depends(get_plans_manager)) -> Plan:
     """
     Get details for a specific plan

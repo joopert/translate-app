@@ -22,7 +22,12 @@ router = APIRouter()
 cognito_client = boto3.client("cognito-idp", region_name=settings.auth.cognito.region)
 
 
-@router.get("/me", summary="Get current user information")
+@router.get(
+    "/me",
+    operation_id="auth_get_me",
+    summary="Get current user information",
+    description="Get the current authenticated user's information",
+)
 async def get_current_user_info(
     current_user: CurrentUser = Depends(get_current_user),
 ) -> CurrentUser | Detail:
@@ -34,6 +39,7 @@ async def get_current_user_info(
 
 @router.post(
     "/sign-in",
+    operation_id="auth_post_sign_in",
     summary="Authenticate user using JSON",
     description="Authenticate using username and password in JSON body to get access token",
 )
@@ -85,7 +91,12 @@ async def signin(signin_data: SignIn) -> Response:
     return response
 
 
-@router.post("/refresh")
+@router.post(
+    "/refresh",
+    operation_id="auth_post_refresh",
+    summary="Refresh access token using refresh token from cookie",
+    description="Refresh access token using refresh token from cookie",
+)
 async def refresh_token(request: Request) -> Response:
     """Refresh access token using refresh token from cookie"""
     refresh_token = request.cookies.get("refresh_token")
@@ -163,9 +174,14 @@ async def refresh_token(request: Request) -> Response:
     return response
 
 
-@router.post("/logout/session")
+@router.post(
+    "/logout/session",
+    operation_id="auth_post_logout_session",
+    summary="Logout from current device",
+    description="Revoke refresh token for current device and clear cookies",
+)
 async def logout_device(request: Request):
-    """Revoke refresh token for current device and clear cookies"""
+    """Revoke refresh token for current device and clear cookies."""
     refresh_token = request.cookies.get("refresh_token")
     if not refresh_token:
         raise HTTPException(
@@ -204,7 +220,12 @@ async def logout_device(request: Request):
     return response
 
 
-@router.post("/logout/all-devices")
+@router.post(
+    "/logout/all-devices",
+    operation_id="auth_post_logout_all_devices",
+    summary="Logout from all devices",
+    description="Revoke refresh token for all devices and clear cookies",
+)
 async def logout_all_devices(current_user: CurrentUser = Depends(get_current_user)):
     """User-initiated global sign out from all devices"""
     try:
