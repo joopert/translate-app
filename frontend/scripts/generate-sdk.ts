@@ -14,6 +14,6 @@ createClient({
   ],
   watch: {
     enabled: true,
-    interval: 10000,
+    interval: 30000,
   },
 });
