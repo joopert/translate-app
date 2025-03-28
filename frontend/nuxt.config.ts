@@ -4,25 +4,25 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   runtimeConfig: {
     public: {
-      baseURL: "http://localhost:8001/api/v1", //TODO: get this from .env or so
-      cookiesAuth: { // TODO: this should be moved to a seperate config, not in public.
-        apiBaseUrl: "http://localhost:8001/api/v1",
-        refreshTokenUrl: "/auth/refresh",
+      baseURL: 'http://localhost:8001/api/v1', //TODO: get this from .env or so
+      cookiesAuth: {
+        // TODO: this should be moved to a seperate config, not in public.
+        apiBaseUrl: 'http://localhost:8001/api/v1',
+        refreshTokenUrl: '/auth/refresh',
         redirectOnRefreshTokenExpiration: true,
-        redirectTo: "/sign-in"
-      }
-    }
-  },
-
-  modules: ['@vee-validate/nuxt', "@nuxt/eslint"],
-
-  veeValidate: {
-    componentNames: {
-      Form: "VeeForm",
-      Field: "VeeField",
-      ErrorMessage: "VeeErrorMessage",
-      FieldArray: "VeeFieldArray",
+        redirectTo: '/sign-in',
+      },
     },
   },
 
-})
+  modules: ['@vee-validate/nuxt', '@nuxt/eslint'],
+
+  veeValidate: {
+    componentNames: {
+      Form: 'VeeForm',
+      Field: 'VeeField',
+      ErrorMessage: 'VeeErrorMessage',
+      FieldArray: 'VeeFieldArray',
+    },
+  },
+});
