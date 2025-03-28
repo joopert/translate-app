@@ -17,6 +17,21 @@
         ],
         "jinja": true,
         "envFile": "${workspaceFolder}/backend/.env"
+      },
+      {
+        "name": "SDK Generator",
+        "type": "node",
+        "request": "launch",
+        "runtimeExecutable": "devbox",
+        "runtimeArgs": [
+          "run",
+          "--",
+          "bash",
+          "-c",
+          "cd ${workspaceFolder}/frontend && yarn tsx scripts/generate-sdk.ts"
+        ],
+        "cwd": "${workspaceFolder}/frontend",
+        "console": "integratedTerminal"
       }
-    ]
+    ],
   }

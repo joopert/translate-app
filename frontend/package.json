@@ -3,7 +3,8 @@
     "@vee-validate/nuxt": "^4.15.0",
     "nuxt": "^3.16.0",
     "vue": "^3.5.13",
-    "vue-router": "^4.5.0"
+    "vue-router": "^4.5.0",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@hey-api/client-nuxt": "^0.3.0",
@@ -21,7 +22,7 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "generate-backend-client": "tsx scripts/generate-backend-client.ts",
+    "generate-sdk": "tsx scripts/generate-sdk.ts",
     "postinstall": "nuxt prepare",
     "preview": "nuxt preview"
   },
