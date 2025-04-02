@@ -26,7 +26,7 @@ def confirm_sign_up(email: str, confirmation_code: str) -> None:
         )
     except cognito_client.exceptions.CodeMismatchException as e:
         raise AuthException(
-            code="CONFIRM_SIGN_UP_ERROR_INVALID_VERIFICATION_CODE",
+            error_code="CONFIRM_SIGN_UP_ERROR_INVALID_VERIFICATION_CODE",
             message="Invalid verification code",
             category=ErrorCategory.VALIDATION,
             field="confirmation_code",
@@ -34,7 +34,7 @@ def confirm_sign_up(email: str, confirmation_code: str) -> None:
 
     except cognito_client.exceptions.ExpiredCodeException as e:
         raise AuthException(
-            code="CONFIRM_SIGN_UP_ERROR_VERIFICATION_CODE_EXPIRED",
+            error_code="CONFIRM_SIGN_UP_ERROR_VERIFICATION_CODE_EXPIRED",
             message="Verification code has expired.",
             category=ErrorCategory.VALIDATION,
             field="confirmation_code",
@@ -42,9 +42,9 @@ def confirm_sign_up(email: str, confirmation_code: str) -> None:
 
     except cognito_client.exceptions.LimitExceededException as e:
         raise AuthException(
-            code="CONFIRM_SIGN_UP_ERROR_VERIFICATION_CODE_LIMIT_EXCEEDED",
+            error_code="CONFIRM_SIGN_UP_ERROR_VERIFICATION_CODE_LIMIT_EXCEEDED",
             message="Verification code limit exceeded. Please try again later.",
-            category=ErrorCategory.VALIDATION,
+            category=ErrorCategory.RATE_LIMIT,
             field="confirmation_code",
         ) from e
 
@@ -53,7 +53,7 @@ def confirm_sign_up(email: str, confirmation_code: str) -> None:
         logger.error(f"code: {unique_error_code}, message: {str(e)}")
 
         raise AuthException(
-            code="INTERNAL_SERVER_ERROR",
+            error_code="INTERNAL_SERVER_ERROR",
             message=INTERNAL_SERVER_ERROR_TEXT.format(unique_error_code=unique_error_code),
             category=ErrorCategory.SERVER_ERROR,
             field=ErrorLocationField.GENERAL,

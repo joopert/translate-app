@@ -25,7 +25,7 @@ def authenticate(username: str, password: str) -> Tokens:
         cognito.authenticate(password=password)  # type: ignore
     except cognito_client.exceptions.NotAuthorizedException as e:
         raise AuthException(
-            code="INVALID_CREDENTIALS",
+            error_code="INVALID_CREDENTIALS",
             message="Invalid credentials",
             category=ErrorCategory.AUTHENTICATION,
             field=ErrorLocationField.GENERAL,
@@ -34,7 +34,7 @@ def authenticate(username: str, password: str) -> Tokens:
         unique_error_code = str(uuid.uuid4())
         logger.error(f"code: {unique_error_code}, message: {str(e)}")
         raise AuthException(
-            code="INTERNAL_SERVER_ERROR",
+            error_code="INTERNAL_SERVER_ERROR",
             message=INTERNAL_SERVER_ERROR_TEXT.format(unique_error_code=unique_error_code),
             category=ErrorCategory.SERVER_ERROR,
             field=ErrorLocationField.GENERAL,

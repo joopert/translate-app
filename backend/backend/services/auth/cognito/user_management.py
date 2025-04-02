@@ -76,21 +76,21 @@ def create_user(email: str, password: str) -> None:
 
     except cognito_client.exceptions.UsernameExistsException as e:
         raise AuthException(
-            code="SIGN_UP_ERROR_USERNAME_EXISTS",
+            error_code="SIGN_UP_ERROR_USERNAME_EXISTS",
             message="An account with the provided credentials already exists. Please try a different username.",
-            category=ErrorCategory.VALIDATION,
+            category=ErrorCategory.CONFLICT,
             field="email",
         ) from e
     except cognito_client.exceptions.InvalidPasswordException as e:
         raise AuthException(
-            code="SIGN_UP_ERROR_INVALID_PASSWORD",
+            error_code="SIGN_UP_ERROR_INVALID_PASSWORD",
             message=str(e),
             category=ErrorCategory.VALIDATION,
             field="password",
         ) from e
     except cognito_client.exceptions.InvalidParameterException as e:
         raise AuthException(
-            code="SIGN_UP_ERROR_INVALID_PARAMETER",
+            error_code="SIGN_UP_ERROR_INVALID_PARAMETER",
             message=str(e),
             category=ErrorCategory.VALIDATION,
             field="password",
@@ -101,7 +101,7 @@ def create_user(email: str, password: str) -> None:
         logger.error(f"code: {unique_error_code}, message: {str(e)}")
 
         raise AuthException(
-            code="INTERNAL_SERVER_ERROR",
+            error_code="INTERNAL_SERVER_ERROR",
             message=INTERNAL_SERVER_ERROR_TEXT.format(unique_error_code=unique_error_code),
             category=ErrorCategory.SERVER_ERROR,
             field=ErrorLocationField.GENERAL,
@@ -134,7 +134,7 @@ def admin_create_user(email: str) -> CognitoUser:
             temporary_password=user.password.get_secret_value(),
         )
     except cognito_client.exceptions.InvalidPasswordException:
-        pass
+        pass  # TODO: need to fix this ... as this is internal error.
 
     cognito_user = cast(CognitoUser, get_cognito_user(email))
 

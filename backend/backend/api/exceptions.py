@@ -1,10 +1,10 @@
 from typing import Any
 
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 from pydantic import BaseModel, field_validator
 
-from backend.common.exceptions import ErrorLocation, ErrorLocationField
-from backend.services.auth.exceptions import AuthException, ErrorCategory
+from backend.common.exceptions import ErrorCategory, ErrorLocation, ErrorLocationField
+from backend.services.auth.exceptions import BackendException
 
 
 class Detail(BaseModel):
@@ -19,20 +19,20 @@ class Detail(BaseModel):
         return v
 
 
-def map_auth_exception_to_http(exception: AuthException) -> HTTPException:
+def map_auth_exception_to_http(exception: BackendException) -> HTTPException:
     status_mapping = {
-        ErrorCategory.VALIDATION: 400,
-        ErrorCategory.AUTHENTICATION: 401,
-        ErrorCategory.AUTHORIZATION: 403,
-        ErrorCategory.NOT_FOUND: 404,
-        ErrorCategory.CONFLICT: 409,
-        ErrorCategory.RATE_LIMIT: 429,
-        ErrorCategory.SERVER_ERROR: 500,
+        ErrorCategory.VALIDATION: status.HTTP_400_BAD_REQUEST,
+        ErrorCategory.AUTHENTICATION: status.HTTP_401_UNAUTHORIZED,
+        ErrorCategory.AUTHORIZATION: status.HTTP_403_FORBIDDEN,
+        ErrorCategory.NOT_FOUND: status.HTTP_404_NOT_FOUND,
+        ErrorCategory.CONFLICT: status.HTTP_409_CONFLICT,
+        ErrorCategory.RATE_LIMIT: status.HTTP_429_TOO_MANY_REQUESTS,
+        ErrorCategory.SERVER_ERROR: status.HTTP_500_INTERNAL_SERVER_ERROR,
     }
 
     detail = Detail(
         loc=[exception.location, exception.field],
-        code=exception.code,
+        code=exception.error_code,
         msg=exception.message,
     )
 

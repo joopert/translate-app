@@ -2,18 +2,19 @@ from collections.abc import Awaitable, Callable
 from contextlib import asynccontextmanager
 
 import secure
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import JSONResponse
 from fastapi_pagination import add_pagination
 
-from backend.api.exceptions import Detail
+from backend.api.exceptions import Detail, map_auth_exception_to_http
 from backend.api.routers.auth import router as auth_router
 from backend.api.routers.payments import router as payments_router
 from backend.core.db import init_db
 from backend.core.settings import settings
+from backend.services.auth.exceptions import BackendException
 
 secure_headers = secure.Secure.from_preset(
     preset=secure.Preset.BASIC
@@ -62,3 +63,8 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         # TODO: check if we can do it without model_dump
         details.append(detail.model_dump())  # type: ignore
     return JSONResponse(status_code=422, content=details)
+
+
+@app.exception_handler(BackendException)
+async def backend_exception_handler(request: Request, exc: BackendException) -> HTTPException:
+    raise map_auth_exception_to_http(exc)

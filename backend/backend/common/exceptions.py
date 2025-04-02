@@ -14,10 +14,10 @@ class ErrorLocationField(str, Enum):
 
 
 class ErrorCategory(str, Enum):
-    VALIDATION = "validation"  # 400
-    AUTHENTICATION = "authentication"  # 401
-    AUTHORIZATION = "authorization"  # 403
-    NOT_FOUND = "not_found"  # 404
-    CONFLICT = "conflict"  # 409
-    RATE_LIMIT = "rate_limit"  # 429
-    SERVER_ERROR = "server_error"  # 500
+    VALIDATION = "validation"
+    AUTHENTICATION = "authentication"
+    AUTHORIZATION = "authorization"
+    NOT_FOUND = "not_found"
+    CONFLICT = "conflict"
+    RATE_LIMIT = "rate_limit"
+    SERVER_ERROR = "server_error"
