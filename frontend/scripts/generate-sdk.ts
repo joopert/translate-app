@@ -5,6 +5,7 @@ createClient({
   output: { format: 'prettier', path: 'api-client' }, //TODO: would like camelcase/pascalcase. But need to figure out how to accept on fastapi side.
   plugins: [
     '@hey-api/client-nuxt',
+    'zod',
     {
       name: '@hey-api/sdk',
       methodNameBuilder(operation) {
