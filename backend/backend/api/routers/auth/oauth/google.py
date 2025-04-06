@@ -1,7 +1,8 @@
+import json
 import secrets
 from urllib.parse import urlencode
 
-from fastapi import APIRouter, Response
+from fastapi import APIRouter, Query, Response
 
 from backend.api.routers.auth.models import OAuthUrl
 from backend.core.settings import settings
@@ -9,10 +10,21 @@ from backend.core.settings import settings
 router = APIRouter()
 
 
-@router.get("/sign-in/google")
-async def google_signin(response: Response) -> OAuthUrl:
+@router.get(
+    "/sign-in/google", operation_id="auth_get_sign_in_google", summary="Google sign-in", description="Google sign-in"
+)
+async def google_signin(
+    response: Response,
+    redirect: str | None = Query(None, description="URL to redirect to after successful authentication"),
+) -> OAuthUrl:
     """Redirect users to Cognito's Google sign-in page"""
-    state = secrets.token_urlsafe(32)
+    state_token = secrets.token_urlsafe(32)
+
+    state_data = {"token": state_token}
+    if redirect:
+        state_data["redirect"] = redirect
+
+    state = json.dumps(state_data)
     params = {
         "client_id": settings.auth.cognito.client_id,
         "response_type": "code",
@@ -27,7 +39,7 @@ async def google_signin(response: Response) -> OAuthUrl:
 
     response.set_cookie(
         key="oauth_state",
-        value=state,
+        value=state_token,
         max_age=300,
         domain=settings.auth.token.cookie.domain,
         httponly=settings.auth.token.cookie.http_only,

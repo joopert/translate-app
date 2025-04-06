@@ -1,4 +1,7 @@
 import base64
+import json
+import traceback
+import uuid
 
 import requests
 from fastapi import APIRouter, HTTPException, Request
@@ -8,16 +11,32 @@ from fastapi.security import HTTPBearer
 from backend.api.exceptions import Detail, ErrorLocationField
 from backend.api.routers.auth.dependencies import get_current_user
 from backend.core.settings import settings
+from backend.utils.constants import INTERNAL_SERVER_ERROR_TEXT
+from backend.utils.log import logger
 
 router = APIRouter()
 
 
-@router.get("/callback")
+@router.get(
+    "/callback",
+    operation_id="auth_callback_auth_callback_get",
+    summary="Auth Callback",
+    description="Handle the OAuth callback from Cognito",
+)
 async def auth_callback(request: Request, code: str, state: str) -> RedirectResponse:
     """Handle the OAuth callback from Cognito"""
-    stored_state = request.cookies.get("oauth_state")
-    if not stored_state or stored_state != state:
-        raise HTTPException(status_code=400, detail="Invalid state parameter")
+    stored_state_token = request.cookies.get("oauth_state")
+    redirect_path = None
+
+    try:
+        state_data = json.loads(state)
+        state_token = state_data.get("token")
+        redirect_path = state_data.get("redirect")
+
+        if not stored_state_token or not state_token or stored_state_token != state_token:
+            raise HTTPException(status_code=400, detail="Invalid state parameter")
+    except json.JSONDecodeError as e:
+        raise HTTPException(status_code=400, detail="Invalid state format") from e
 
     try:
         token_response = requests.post(
@@ -43,8 +62,12 @@ async def auth_callback(request: Request, code: str, state: str) -> RedirectResp
             )
 
         tokens = token_response.json()
+        if redirect_path and isinstance(redirect_path, str) and redirect_path.startswith("/"):
+            callback_url = f"{settings.auth.cognito.frontend_url}/auth/callback?redirect={redirect_path}"
+        else:
+            callback_url = f"{settings.auth.cognito.frontend_url}/auth/callback"
 
-        response = RedirectResponse(url=f"{settings.auth.cognito.frontend_url}/auth/callback")
+        response = RedirectResponse(url=callback_url)
         response.delete_cookie("oauth_state")
         response.set_cookie(
             key="access_token",
@@ -106,7 +129,10 @@ async def auth_callback(request: Request, code: str, state: str) -> RedirectResp
         )
 
         return response
-
     except Exception as e:
-        print(f"Error in callback: {str(e)}")
-        return RedirectResponse(url=f"{settings.auth.cognito.frontend_url}/auth/error?error={str(e)}")
+        unique_error_code = str(uuid.uuid4())
+        logger.error(f"code: {unique_error_code}, message: {str(e)}")
+        traceback.print_exc()
+        return RedirectResponse(
+            url=f"{settings.auth.cognito.frontend_url}/auth/callback?error=internal_server_error&error_description={INTERNAL_SERVER_ERROR_TEXT.format(unique_error_code=unique_error_code)}"
+        )
