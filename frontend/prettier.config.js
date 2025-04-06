@@ -8,7 +8,7 @@ const config = {
   printWidth: 100,
   bracketSpacing: true,
   arrowParens: 'avoid',
-  vueIndentScriptAndStyle: true,
+  vueIndentScriptAndStyle: false,
   semi: true,
 };
 
