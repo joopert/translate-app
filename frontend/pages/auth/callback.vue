@@ -1,11 +1,10 @@
 <template></template>
 
 <script setup lang="ts">
-import { useRouter, useRoute } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { useRedirectMessage } from '~/composables/useRedirectMessage';
 import { onMounted } from 'vue';
 
-const router = useRouter();
 const route = useRoute();
 const { createRedirectUrl } = useRedirectMessage();
 
@@ -15,7 +14,7 @@ onMounted(() => {
   const errorDescription = route.query.error_description as string;
 
   if (error) {
-    router.push(
+    navigateTo(
       createRedirectUrl(
         '/auth/sign-in',
         'danger',
@@ -27,9 +26,9 @@ onMounted(() => {
   }
 
   if (redirect) {
-    router.push(redirect);
+    navigateTo(redirect);
   } else {
-    router.push('/');
+    navigateTo('/');
   }
 });
 </script>
