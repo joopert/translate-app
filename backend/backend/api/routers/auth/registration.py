@@ -4,7 +4,7 @@ from fastapi import APIRouter
 from backend.api.routers.auth.models import (
     ConfirmSignUp,
     ResponseFormat,
-    UserRegister,
+    SignUp,
 )
 from backend.core.settings import settings
 from backend.services.auth.cognito.user_management import create_user
@@ -18,7 +18,7 @@ cognito_client = boto3.client("cognito-idp", region_name=settings.auth.cognito.r
 @router.post(
     "/sign-up", operation_id="auth_post_sign_up", summary="Register a new user", description="Register a new user"
 )
-async def signup(user: UserRegister) -> ResponseFormat:
+async def signup(user: SignUp) -> ResponseFormat:
     create_user(user.email, user.password.get_secret_value())
     return ResponseFormat(code="SIGN_UP_SUCCESS", msg="User registered successfully")
 

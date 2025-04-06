@@ -7,8 +7,9 @@ import type {
   Client,
 } from '@hey-api/client-nuxt';
 import type {
-  GoogleSigninAuthSignInGoogleGetData,
-  GoogleSigninAuthSignInGoogleGetResponse,
+  AuthGetSignInGoogleData,
+  AuthGetSignInGoogleResponse,
+  AuthGetSignInGoogleError,
   AuthCallbackAuthCallbackGetData,
   AuthCallbackAuthCallbackGetError,
   AuthPostSignUpData,
@@ -69,25 +70,19 @@ export type Options<
 };
 
 /**
- * Google Signin
- * Redirect users to Cognito's Google sign-in page
+ * Google sign-in
+ * Google sign-in
  */
-export const googleSigninAuthSignInGoogleGet = <
+export const authGetSignInGoogle = <
   TComposable extends Composable,
-  DefaultT extends
-    GoogleSigninAuthSignInGoogleGetResponse = GoogleSigninAuthSignInGoogleGetResponse,
+  DefaultT extends AuthGetSignInGoogleResponse = AuthGetSignInGoogleResponse,
 >(
-  options: Options<
-    TComposable,
-    GoogleSigninAuthSignInGoogleGetData,
-    GoogleSigninAuthSignInGoogleGetResponse,
-    DefaultT
-  >,
+  options: Options<TComposable, AuthGetSignInGoogleData, AuthGetSignInGoogleResponse, DefaultT>,
 ) => {
   return (options.client ?? _heyApiClient).get<
     TComposable,
-    GoogleSigninAuthSignInGoogleGetResponse | DefaultT,
-    unknown,
+    AuthGetSignInGoogleResponse | DefaultT,
+    AuthGetSignInGoogleError,
     DefaultT
   >({
     url: '/auth/sign-in/google',

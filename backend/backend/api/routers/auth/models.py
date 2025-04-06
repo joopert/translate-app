@@ -7,7 +7,7 @@ from backend.services.auth.cognito.models import CognitoUser
 T = TypeVar("T", bound=BaseModel)
 
 
-class UserRegister(BaseModel):
+class SignUp(BaseModel):
     email: str
     password: SecretStr
 

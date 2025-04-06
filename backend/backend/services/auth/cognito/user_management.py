@@ -8,7 +8,7 @@ from pydantic import SecretStr
 from backend.api.exceptions import ErrorLocationField
 from backend.api.routers.auth.models import (
     CognitoUser,
-    UserRegister,
+    SignUp,
 )
 from backend.core.settings import settings
 from backend.services.auth.cognito import Cognito
@@ -116,7 +116,7 @@ def admin_create_user(email: str) -> CognitoUser:
     Returns:
         bool: True if the user is successfully created.
     """
-    user = UserRegister(
+    user = SignUp(
         email=email,
         password=SecretStr(generate_password()),
     )

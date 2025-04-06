@@ -77,7 +77,7 @@ export type SignIn = {
   password: string;
 };
 
-export type UserRegister = {
+export type SignUp = {
   email: string;
   password: string;
 };
@@ -88,22 +88,36 @@ export type ValidationError = {
   type: string;
 };
 
-export type GoogleSigninAuthSignInGoogleGetData = {
+export type AuthGetSignInGoogleData = {
   body?: never;
   path?: never;
-  query?: never;
+  query?: {
+    /**
+     * URL to redirect to after successful authentication
+     */
+    redirect?: string | null;
+  };
   url: '/auth/sign-in/google';
 };
 
-export type GoogleSigninAuthSignInGoogleGetResponses = {
+export type AuthGetSignInGoogleErrors = {
+  /**
+   * Validation Error
+   */
+  422: HttpValidationError;
+};
+
+export type AuthGetSignInGoogleError = AuthGetSignInGoogleErrors[keyof AuthGetSignInGoogleErrors];
+
+export type AuthGetSignInGoogleResponses = {
   /**
    * Successful Response
    */
   200: OAuthUrl;
 };
 
-export type GoogleSigninAuthSignInGoogleGetResponse =
-  GoogleSigninAuthSignInGoogleGetResponses[keyof GoogleSigninAuthSignInGoogleGetResponses];
+export type AuthGetSignInGoogleResponse =
+  AuthGetSignInGoogleResponses[keyof AuthGetSignInGoogleResponses];
 
 export type AuthCallbackAuthCallbackGetData = {
   body?: never;
@@ -133,7 +147,7 @@ export type AuthCallbackAuthCallbackGetResponses = {
 };
 
 export type AuthPostSignUpData = {
-  body: UserRegister;
+  body: SignUp;
   path?: never;
   query?: never;
   url: '/auth/sign-up';

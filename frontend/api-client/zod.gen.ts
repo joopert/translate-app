@@ -81,9 +81,9 @@ export const zSignIn = z.object({
   password: z.string(),
 });
 
-export const zUserRegister = z.object({
-  email: z.string().min(10),
-  password: z.string().min(8),
+export const zSignUp = z.object({
+  email: z.string(),
+  password: z.string(),
 });
 
 export const zValidationError = z.object({
@@ -92,7 +92,7 @@ export const zValidationError = z.object({
   type: z.string(),
 });
 
-export const zGoogleSigninAuthSignInGoogleGetResponse = zOAuthUrl;
+export const zAuthGetSignInGoogleResponse = zOAuthUrl;
 
 export const zAuthPostSignUpResponse = zResponseFormat;
 
