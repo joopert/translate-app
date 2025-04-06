@@ -1,16 +1,19 @@
 {
-    "python.defaultInterpreterPath": "${workspaceFolder}/backend/.venv/bin/python",
-    "python.autoComplete.extraPaths": ["${workspaceFolder}/backend"],
-    "[python]": {
-        "editor.defaultFormatter": "charliermarsh.ruff"
-    },
-    "[typescript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-      },
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-        "source.fixAll.ruff": "always"
-    },
-    "windsurfPyright.analysis.typeCheckingMode": "strict",
-    "files.insertFinalNewline": true
+  "python.defaultInterpreterPath": "${workspaceFolder}/backend/.venv/bin/python",
+  "python.autoComplete.extraPaths": ["${workspaceFolder}/backend"],
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[vue]": {
+    "editor.defaultFormatter": "Vue.volar"
+  },
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.ruff": "always"
+  },
+  "windsurfPyright.analysis.typeCheckingMode": "strict",
+  "files.insertFinalNewline": true
 }
