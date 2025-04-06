@@ -17,6 +17,10 @@ interface FormErrorHandler {
   alertMessage: Ref<AlertMessage | null>;
   // Clear any displayed error message
   clearError: () => void;
+  // Loading state management
+  loading: Ref<boolean>;
+  startLoading: () => void;
+  stopLoading: () => void;
 }
 
 /**
@@ -28,6 +32,7 @@ export function useFormErrorHandler(options: {
 }): FormErrorHandler {
   const { form } = options;
   const alertMessage = ref<AlertMessage | null>(null);
+  const loading = ref<boolean>(false);
 
   /**
    * Helper to create an alert message
@@ -232,10 +237,27 @@ export function useFormErrorHandler(options: {
     createAlert('danger', 'UNKNOWN_ERROR', 'An unexpected error occurred');
   };
 
+  /**
+   * Start loading state
+   */
+  const startLoading = () => {
+    loading.value = true;
+  };
+
+  /**
+   * Stop loading state
+   */
+  const stopLoading = () => {
+    loading.value = false;
+  };
+
   return {
     handleResponseError,
     handleError,
     alertMessage,
     clearError,
+    loading,
+    startLoading,
+    stopLoading,
   };
 }
