@@ -2,11 +2,10 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
-import { useRedirectMessage } from '~/composables/useRedirectMessage';
 import { onMounted } from 'vue';
 
 const route = useRoute();
-const { createRedirectUrl } = useRedirectMessage();
+const { createRedirectMessage } = useRedirectMessage();
 
 onMounted(() => {
   const redirect = route.query.redirect as string;
@@ -14,14 +13,16 @@ onMounted(() => {
   const errorDescription = route.query.error_description as string;
 
   if (error) {
-    navigateTo(
-      createRedirectUrl(
-        '/auth/sign-in',
-        'danger',
-        errorDescription || 'Authentication failed. Please try again.',
-        'AUTHENTICATION_FAILED',
-      ),
-    );
+    navigateTo({
+      path: '/auth/sign-in',
+      query: {
+        ...createRedirectMessage({
+          type: 'danger',
+          message: errorDescription || 'Please try again.',
+          category: 'Authentication failed',
+        }),
+      },
+    });
     return;
   }
 

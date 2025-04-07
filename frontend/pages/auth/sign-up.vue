@@ -218,9 +218,8 @@ import { useForm } from 'vee-validate';
 import { zSignUp } from '~/api-client/zod.gen';
 import { authPostSignUp, authGetSignInGoogle } from '~/api-client/sdk.gen';
 import { useFormErrorHandler } from '~/composables/useFormErrorHandler';
-import { useRedirectMessage } from '~/composables/useRedirectMessage';
 
-const { createRedirectUrl } = useRedirectMessage();
+const { createRedirectMessage } = useRedirectMessage();
 
 const termsAccepted = ref(false);
 const form = useForm({
@@ -247,14 +246,17 @@ const onSubmit = handleSubmit(async values => {
     });
 
     if (result) {
-      await navigateTo(
-        createRedirectUrl(
-          '/auth/sign-in',
-          'success',
-          'Your account was created successfully. Please check your email for verification instructions.',
-          'ACCOUNT_CREATED',
-        ),
-      );
+      await navigateTo({
+        path: '/auth/sign-in',
+        query: {
+          ...createRedirectMessage({
+            type: 'success',
+            message:
+              'Your account was created successfully. Please check your email for verification instructions.',
+            category: 'Account created',
+          }),
+        },
+      });
     }
   } catch (error) {
     console.error('Unhandled signup error:', error);

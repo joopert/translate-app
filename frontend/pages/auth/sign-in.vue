@@ -194,7 +194,6 @@ import { useForm } from 'vee-validate';
 import { zSignUp } from '~/api-client/zod.gen';
 import { authPostSignIn, authGetSignInGoogle } from '~/api-client/sdk.gen';
 import { useFormErrorHandler } from '~/composables/useFormErrorHandler';
-import { useRedirectMessage } from '~/composables/useRedirectMessage';
 
 const route = useRoute();
 const redirectPath = ref((route.query.redirect as string) || '/');

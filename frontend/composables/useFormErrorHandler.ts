@@ -74,7 +74,7 @@ export function useFormErrorHandler(options: {
 
         // Check if it's a general error (not tied to a specific field)
         if (
-          detail.loc === 'general' ||
+          detail.loc[1] === 'general' ||
           (typeof detail.loc === 'string' && zErrorLocationField.safeParse(detail.loc).success)
         ) {
           // General error, just show the alert
@@ -100,8 +100,6 @@ export function useFormErrorHandler(options: {
               });
             }
 
-            // Still show an alert for accessibility reasons
-            createAlert('danger', detail.code, detail.msg);
             return error;
           }
         }
@@ -144,8 +142,6 @@ export function useFormErrorHandler(options: {
               });
             }
 
-            // Still show an alert for accessibility reasons
-            createAlert('danger', detail.code, detail.msg);
             return error;
           }
         }

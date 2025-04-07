@@ -7,6 +7,12 @@ interface AlertMessage {
   message: string;
 }
 
+interface RedirectAlertMessage {
+  redirect_type: 'success' | 'info' | 'warning' | 'danger';
+  redirect_category: string | undefined;
+  redirect_message: string;
+}
+
 /**
  * Composable to handle redirect messages in URL parameters
  * Works with the existing UiAlert component
@@ -45,25 +51,21 @@ export function useRedirectMessage() {
   /**
    * Create a router location object with redirect message parameters
    *
-   * @param path - The target path to navigate to (e.g., '/auth/sign-in')
-   * @param type - The type of alert to show: 'success', 'info', 'warning', or 'danger'
-   * @param message - The message text to display in the alert
-   * @param category - The category identifier for the alert (e.g., 'ACCOUNT_CREATED')
-   * @returns A router location object with query parameters for the alert
+   * @param redirect_message - The message text to display in the alert
+   * @param redirect_type - The type of alert to show: 'success', 'info', 'warning', or 'danger'
+   * @param redirect_category - The category identifier for the alert (e.g., 'ACCOUNT_CREATED')
+   * @returns A object with query parameters for the alert
    */
-  function createRedirectUrl(path: string, type: string, message: string, category: string) {
+  function createRedirectMessage(message: AlertMessage): RedirectAlertMessage {
     return {
-      path,
-      query: {
-        redirect_type: type,
-        redirect_message: message,
-        redirect_category: category,
-      },
+      redirect_type: message.type,
+      redirect_message: message.message,
+      redirect_category: message.category,
     };
   }
 
   return {
     getRedirectMessage,
-    createRedirectUrl,
+    createRedirectMessage,
   };
 }
