@@ -66,7 +66,20 @@ def confirm_forgot_password(email: str, confirmation_code: str, new_password: st
             category=ErrorCategory.VALIDATION,
             field="confirmation_code",
         ) from e
-
+    except cognito_client.exceptions.InvalidPasswordException as e:
+        raise AuthException(
+            error_code="CHANGE_PASSWORD_ERROR_INVALID_PASSWORD",
+            message=str(e),
+            category=ErrorCategory.VALIDATION,
+            field="new_password",
+        ) from e
+    except cognito_client.exceptions.LimitExceededException as e:
+        raise AuthException(
+            error_code="FORGOT_PASSWORD_ERROR_LIMIT_EXCEEDED",
+            message="Please try again later. Too many requests have been sent.",
+            category=ErrorCategory.RATE_LIMIT,
+            field=ErrorLocationField.GENERAL,
+        ) from e
     except Exception as e:
         unique_error_code = str(uuid.uuid4())
         logger.error(f"code: {unique_error_code}, message: {str(e)}")
