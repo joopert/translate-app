@@ -37,6 +37,8 @@ import type {
   AuthPostLogoutSessionData,
   AuthPostLogoutAllDevicesData,
   AuthGetProtectedData,
+  HealthGetHealthData,
+  HealthGetHealthResponse,
   PolarWebhookPaymentsWebhookPostData,
   PolarWebhookPaymentsWebhookPostResponse,
   PaymentsGetPlansData,
@@ -387,6 +389,27 @@ export const authGetProtected = <TComposable extends Composable, DefaultT = unde
       },
     ],
     url: '/auth/protected',
+    ...options,
+  });
+};
+
+/**
+ * Health check
+ * Health check
+ */
+export const healthGetHealth = <
+  TComposable extends Composable,
+  DefaultT extends HealthGetHealthResponse = HealthGetHealthResponse,
+>(
+  options: Options<TComposable, HealthGetHealthData, HealthGetHealthResponse, DefaultT>,
+) => {
+  return (options.client ?? _heyApiClient).get<
+    TComposable,
+    HealthGetHealthResponse | DefaultT,
+    unknown,
+    DefaultT
+  >({
+    url: '/health/',
     ...options,
   });
 };

@@ -47,6 +47,14 @@ export type HttpValidationError = {
   detail?: Array<ValidationError>;
 };
 
+export type Health = {
+  status?: 'OK' | 'ERROR';
+  /**
+   * UTC timestamp in ISO 8601 format
+   */
+  timestamp: string;
+};
+
 export type OAuthUrl = {
   url: string;
 };
@@ -401,6 +409,22 @@ export type AuthGetProtectedResponses = {
    */
   200: unknown;
 };
+
+export type HealthGetHealthData = {
+  body?: never;
+  path?: never;
+  query?: never;
+  url: '/health/';
+};
+
+export type HealthGetHealthResponses = {
+  /**
+   * Successful Response
+   */
+  200: Health;
+};
+
+export type HealthGetHealthResponse = HealthGetHealthResponses[keyof HealthGetHealthResponses];
 
 export type PolarWebhookPaymentsWebhookPostData = {
   body?: never;

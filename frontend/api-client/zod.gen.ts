@@ -57,6 +57,11 @@ export const zHttpValidationError = z.object({
     .optional(),
 });
 
+export const zHealth = z.object({
+  status: z.enum(['OK', 'ERROR']).optional(),
+  timestamp: z.string(),
+});
+
 export const zOAuthUrl = z.object({
   url: z.string(),
 });
@@ -105,6 +110,8 @@ export const zAuthPostConfirmForgotPasswordResponse = zResponseFormat;
 export const zAuthPostChangePasswordResponse = zResponseFormat;
 
 export const zAuthGetMeResponse = z.union([zCurrentUser, zDetail]);
+
+export const zHealthGetHealthResponse = zHealth;
 
 export const zPolarWebhookPaymentsWebhookPostResponse = z.object({});
 

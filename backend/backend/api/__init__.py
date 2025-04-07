@@ -11,6 +11,7 @@ from fastapi_pagination import add_pagination
 
 from backend.api.exceptions import Detail, map_auth_exception_to_http
 from backend.api.routers.auth import router as auth_router
+from backend.api.routers.health import router as health_router
 from backend.api.routers.payments import router as payments_router
 from backend.core.db import init_db
 from backend.core.settings import settings
@@ -46,6 +47,7 @@ app.add_middleware(
     allow_headers=settings.cors_allow_headers,
 )
 app.include_router(auth_router)
+app.include_router(health_router)
 app.include_router(payments_router)
 add_pagination(app)
 
