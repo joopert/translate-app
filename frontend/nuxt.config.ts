@@ -17,7 +17,13 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ['@vee-validate/nuxt', '@nuxt/eslint', '@nuxtjs/color-mode'],
+  modules: [
+    '@vee-validate/nuxt',
+    '@nuxt/eslint',
+    '@nuxtjs/color-mode',
+    'nuxt-purgecss', // improves performance by removing unused CSS
+    'nuxt-vitalizer', // improves performance for Lighthouse
+  ],
 
   veeValidate: {
     componentNames: {
@@ -46,5 +52,12 @@ export default defineNuxtConfig({
 
   colorMode: {
     classSuffix: '',
+  },
+
+  nitro: {
+    compressPublicAssets: {
+      brotli: true,
+      gzip: true,
+    },
   },
 });
