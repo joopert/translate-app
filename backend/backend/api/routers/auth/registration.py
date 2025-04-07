@@ -3,12 +3,14 @@ from fastapi import APIRouter
 
 from backend.api.routers.auth.models import (
     ConfirmSignUp,
+    ResendConfirmationCode,
     ResponseFormat,
     SignUp,
 )
 from backend.core.settings import settings
 from backend.services.auth.cognito.user_management import create_user
 from backend.services.auth.cognito.verification import confirm_sign_up as cognito_confirm_signup
+from backend.services.auth.cognito.verification import resend_confirmation_code as cognito_resend_confirmation_code
 from backend.services.users.user_management import handle_user_registration
 
 router = APIRouter()
@@ -36,6 +38,21 @@ async def confirm_sign_up(confirm_data: ConfirmSignUp) -> ResponseFormat:
     return ResponseFormat(
         code="CONFIRM_SIGN_UP_SUCCESS",
         msg="Sign up confirmed successfully",
+    )
+
+
+@router.post(
+    "/resend-confirmation-code",
+    operation_id="auth_post_resend_confirmation_code",
+    summary="Resend confirmation code",
+    description="Resend confirmation code",
+)
+async def resend_confirmation_code(resend_data: ResendConfirmationCode) -> ResponseFormat:
+    cognito_resend_confirmation_code(resend_data.email)
+
+    return ResponseFormat(
+        code="RESEND_CONFIRMATION_CODE_SUCCESS",
+        msg="Confirmation code resent successfully",
     )
 
 

@@ -128,7 +128,8 @@ async def refresh_token(request: Request) -> Response:
             detail=Detail(
                 loc=ErrorLocationField.GENERAL,
                 code="REFRESH_TOKEN_ERROR",
-                msg=f"An error occurred while refreshing your token. Please reference this code: {unique_error_code}",
+                msg="An error occurred while refreshing your token. "
+                "Please contact support and reference this code: {unique_error_code}",
             ).model_dump(),
         ) from e
 

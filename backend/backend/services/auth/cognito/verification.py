@@ -48,7 +48,7 @@ def confirm_sign_up(email: str, confirmation_code: str) -> None:
             field="confirmation_code",
         ) from e
 
-    except Exception as e:
+    except (Exception, cognito_client.exceptions.NotAuthorizedException) as e:
         unique_error_code = str(uuid.uuid4())
         logger.error(f"code: {unique_error_code}, message: {str(e)}")
 
@@ -61,3 +61,26 @@ def confirm_sign_up(email: str, confirmation_code: str) -> None:
 
     # TODO: Call handle_user_registration, but we get into async/sync issues.
     # A solution would be to use event bus, so it is called another way.
+
+
+def resend_confirmation_code(email: str) -> None:
+    try:
+        cognito = Cognito(
+            user_pool_id=settings.auth.cognito.user_pool_id,
+            client_id=settings.auth.cognito.client_id,
+            user_pool_region=settings.auth.cognito.region,
+            username=email,
+        )
+        cognito.resend_confirmation_code(  # type: ignore
+            username=email,
+        )
+    except Exception as e:
+        unique_error_code = str(uuid.uuid4())
+        logger.error(f"code: {unique_error_code}, message: {str(e)}")
+
+        raise AuthException(
+            error_code="INTERNAL_SERVER_ERROR",
+            message=INTERNAL_SERVER_ERROR_TEXT.format(unique_error_code=unique_error_code),
+            category=ErrorCategory.SERVER_ERROR,
+            field=ErrorLocationField.GENERAL,
+        ) from e

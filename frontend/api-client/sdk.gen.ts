@@ -18,6 +18,9 @@ import type {
   AuthPostConfirmSignUpData,
   AuthPostConfirmSignUpResponse,
   AuthPostConfirmSignUpError,
+  AuthPostResendConfirmationCodeData,
+  AuthPostResendConfirmationCodeResponse,
+  AuthPostResendConfirmationCodeError,
   AuthPostForgotPasswordData,
   AuthPostForgotPasswordResponse,
   AuthPostForgotPasswordError,
@@ -152,6 +155,36 @@ export const authPostConfirmSignUp = <
     DefaultT
   >({
     url: '/auth/confirm-sign-up',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options?.headers,
+    },
+  });
+};
+
+/**
+ * Resend confirmation code
+ * Resend confirmation code
+ */
+export const authPostResendConfirmationCode = <
+  TComposable extends Composable,
+  DefaultT extends AuthPostResendConfirmationCodeResponse = AuthPostResendConfirmationCodeResponse,
+>(
+  options: Options<
+    TComposable,
+    AuthPostResendConfirmationCodeData,
+    AuthPostResendConfirmationCodeResponse,
+    DefaultT
+  >,
+) => {
+  return (options.client ?? _heyApiClient).post<
+    TComposable,
+    AuthPostResendConfirmationCodeResponse | DefaultT,
+    AuthPostResendConfirmationCodeError,
+    DefaultT
+  >({
+    url: '/auth/resend-confirmation-code',
     ...options,
     headers: {
       'Content-Type': 'application/json',

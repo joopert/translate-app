@@ -75,6 +75,10 @@ export type Plans = {
   items: Array<Plan>;
 };
 
+export type ResendConfirmationCode = {
+  email: string;
+};
+
 export type ResponseFormat = {
   code: string;
   msg: string;
@@ -205,6 +209,33 @@ export type AuthPostConfirmSignUpResponses = {
 
 export type AuthPostConfirmSignUpResponse =
   AuthPostConfirmSignUpResponses[keyof AuthPostConfirmSignUpResponses];
+
+export type AuthPostResendConfirmationCodeData = {
+  body: ResendConfirmationCode;
+  path?: never;
+  query?: never;
+  url: '/auth/resend-confirmation-code';
+};
+
+export type AuthPostResendConfirmationCodeErrors = {
+  /**
+   * Validation Error
+   */
+  422: HttpValidationError;
+};
+
+export type AuthPostResendConfirmationCodeError =
+  AuthPostResendConfirmationCodeErrors[keyof AuthPostResendConfirmationCodeErrors];
+
+export type AuthPostResendConfirmationCodeResponses = {
+  /**
+   * Successful Response
+   */
+  200: ResponseFormat;
+};
+
+export type AuthPostResendConfirmationCodeResponse =
+  AuthPostResendConfirmationCodeResponses[keyof AuthPostResendConfirmationCodeResponses];
 
 export type AuthPostForgotPasswordData = {
   body: ForgotPassword;

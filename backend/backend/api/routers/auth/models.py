@@ -26,6 +26,10 @@ class ForgotPassword(BaseModel):
     email: str
 
 
+class ResendConfirmationCode(BaseModel):
+    email: str
+
+
 class ConfirmForgotPassword(BaseModel):
     email: str
     confirmation_code: str

@@ -76,6 +76,10 @@ export const zPlans = z.object({
   items: z.array(zPlan),
 });
 
+export const zResendConfirmationCode = z.object({
+  email: z.string(),
+});
+
 export const zResponseFormat = z.object({
   code: z.string(),
   msg: z.string(),
@@ -102,6 +106,8 @@ export const zAuthGetSignInGoogleResponse = zOAuthUrl;
 export const zAuthPostSignUpResponse = zResponseFormat;
 
 export const zAuthPostConfirmSignUpResponse = zResponseFormat;
+
+export const zAuthPostResendConfirmationCodeResponse = zResponseFormat;
 
 export const zAuthPostForgotPasswordResponse = zResponseFormat;
 

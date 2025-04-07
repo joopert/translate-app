@@ -12,6 +12,7 @@ from pydantic import SecretStr
 from backend.api.exceptions import Detail, ErrorLocationField
 from backend.core.settings import settings
 from backend.services.auth.cognito import Cognito
+from backend.utils.constants import INTERNAL_SERVER_ERROR_TEXT
 from backend.utils.log import logger
 
 from .models import CurrentUser
@@ -122,6 +123,6 @@ async def get_current_user(
             detail=Detail(
                 loc=ErrorLocationField.GENERAL,
                 code="INTERNAL_SERVER_ERROR",
-                msg=f"An unexpected error occurred. Please reference this code: {unique_error_code}.",
+                msg=INTERNAL_SERVER_ERROR_TEXT.format(unique_error_code=unique_error_code),
             ).model_dump(),
         ) from e
