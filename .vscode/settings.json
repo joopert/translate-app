@@ -15,5 +15,8 @@
     "source.fixAll.ruff": "always"
   },
   "windsurfPyright.analysis.typeCheckingMode": "strict",
-  "files.insertFinalNewline": true
+  "files.insertFinalNewline": true,
+  "files.associations": {
+    "*.css": "tailwindcss"
+  }
 }

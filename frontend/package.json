@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@nuxtjs/color-mode": "^3.5.2",
     "@tailwindcss/vite": "^4.1.2",
     "@vee-validate/nuxt": "^4.15.0",
     "@vee-validate/zod": "^4.15.0",
@@ -14,8 +15,11 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@egoist/tailwindcss-icons": "^1.9.0",
     "@hey-api/client-nuxt": "^0.3.0",
     "@hey-api/openapi-ts": "^0.64.13",
+    "@iconify-json/flowbite": "^1.2.5",
+    "@iconify-json/mdi": "^1.2.3",
     "@nuxt/eslint": "^1.2.0",
     "@types/node": "^22.14.0",
     "eslint": "^9.23.0",

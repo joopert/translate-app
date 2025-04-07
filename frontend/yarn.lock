@@ -18,6 +18,11 @@
     package-manager-detector "^0.2.8"
     tinyexec "^0.3.2"
 
+"@antfu/utils@^8.1.0":
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/@antfu/utils/-/utils-8.1.1.tgz#95b1947d292a9a2efffba2081796dcaa05ecedfb"
+  integrity sha512-Mex9nXf9vR6AhcXmMrlz/HVgYYZpVGJ6YlPgwl7UnaFpnshXs6EK/oa5Gpf3CzENMjkvEx2tQtntGnb7UtSTOQ==
+
 "@apidevtools/json-schema-ref-parser@^11.7.0":
   version "11.9.3"
   resolved "https://registry.npmjs.org/@apidevtools/json-schema-ref-parser/-/json-schema-ref-parser-11.9.3.tgz"
@@ -266,6 +271,13 @@
   integrity sha512-+tv3z+SPp+gqTIcImN9o0hqE9xyfQjI1XD9pL6NuKjua9B1y7mNYv0S9cP+QEbA4ppVgGZEmKOvHX5G5Ei1CVA==
   dependencies:
     mime "^3.0.0"
+
+"@egoist/tailwindcss-icons@^1.9.0":
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/@egoist/tailwindcss-icons/-/tailwindcss-icons-1.9.0.tgz#ca5af5717673fc185cd94f639d4ccbd2c211bd70"
+  integrity sha512-xWA9cUy6hzlK7Y6TaoRIcwmilSXiTJ8rbXcEdf9uht7yzDgw/yIgF4rThIQMrpD2Y2v4od51+r2y6Z7GStanDQ==
+  dependencies:
+    "@iconify/utils" "^2.2.1"
 
 "@emnapi/core@^1.4.0":
   version "1.4.0"
@@ -566,6 +578,39 @@
   version "0.4.2"
   resolved "https://registry.npmjs.org/@humanwhocodes/retry/-/retry-0.4.2.tgz"
   integrity sha512-xeO57FpIu4p1Ri3Jq/EXq4ClRm86dVF2z/+kvFnyqVYRavTZmaFaUBbWCOuuTh0o/g7DSsk6kc2vrS4Vl5oPOQ==
+
+"@iconify-json/flowbite@^1.2.5":
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/@iconify-json/flowbite/-/flowbite-1.2.5.tgz#c006aac3269f006bae66ead8ddc4ac06ff9806eb"
+  integrity sha512-HPaKCC4U5F3OrzDGkC6vTNv5DO9HG4rTYl2D1B4x6vetoNNhuHdh1mM3hDnpCPhNIUlbe2sBSMJxBtewP+YjVA==
+  dependencies:
+    "@iconify/types" "*"
+
+"@iconify-json/mdi@^1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@iconify-json/mdi/-/mdi-1.2.3.tgz#5e4ee9d8c8aaad04381c8cc6c6edbe3327f031b5"
+  integrity sha512-O3cLwbDOK7NNDf2ihaQOH5F9JglnulNDFV7WprU2dSoZu3h3cWH//h74uQAB87brHmvFVxIOkuBX2sZSzYhScg==
+  dependencies:
+    "@iconify/types" "*"
+
+"@iconify/types@*", "@iconify/types@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@iconify/types/-/types-2.0.0.tgz#ab0e9ea681d6c8a1214f30cd741fe3a20cc57f57"
+  integrity sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==
+
+"@iconify/utils@^2.2.1":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@iconify/utils/-/utils-2.3.0.tgz#1bbbf8c477ebe9a7cacaea78b1b7e8937f9cbfba"
+  integrity sha512-GmQ78prtwYW6EtzXRU1rY+KwOKfz32PD7iJh6Iyqw68GiKuoZ2A6pRtzWONz5VQJbp50mEjXh/7NkumtrAgRKA==
+  dependencies:
+    "@antfu/install-pkg" "^1.0.0"
+    "@antfu/utils" "^8.1.0"
+    "@iconify/types" "^2.0.0"
+    debug "^4.4.0"
+    globals "^15.14.0"
+    kolorist "^1.8.0"
+    local-pkg "^1.0.0"
+    mlly "^1.7.4"
 
 "@ioredis/commands@^1.1.1":
   version "1.2.0"
@@ -966,6 +1011,16 @@
     vite-node "^3.0.9"
     vite-plugin-checker "^0.9.1"
     vue-bundle-renderer "^2.1.1"
+
+"@nuxtjs/color-mode@^3.5.2":
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/@nuxtjs/color-mode/-/color-mode-3.5.2.tgz#4f2cbdd44009068b746e3bb0964b761b90969b73"
+  integrity sha512-cC6RfgZh3guHBMLLjrBB2Uti5eUoGM9KyauOaYS9ETmxNWBMTvpgjvSiSJp1OFljIXPIqVTJ3xtJpSNZiO3ZaA==
+  dependencies:
+    "@nuxt/kit" "^3.13.2"
+    pathe "^1.1.2"
+    pkg-types "^1.2.1"
+    semver "^7.6.3"
 
 "@oxc-parser/binding-darwin-arm64@0.56.5":
   version "0.56.5"
@@ -3492,9 +3547,9 @@ globals@^14.0.0:
   resolved "https://registry.npmjs.org/globals/-/globals-14.0.0.tgz"
   integrity sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ==
 
-globals@^15.15.0:
+globals@^15.14.0, globals@^15.15.0:
   version "15.15.0"
-  resolved "https://registry.npmjs.org/globals/-/globals-15.15.0.tgz"
+  resolved "https://registry.yarnpkg.com/globals/-/globals-15.15.0.tgz#7c4761299d41c32b075715a4ce1ede7897ff72a8"
   integrity sha512-7ACyT3wmyp3I61S4fG682L0VA2RGD9otkqGJIwNUMF1SWUombIIk+af1unuDYgMm082aHYwD+mzJvv9Iu8dsgg==
 
 globals@^16.0.0:
@@ -3956,6 +4011,11 @@ knitwork@^1.0.0, knitwork@^1.2.0:
   version "1.2.0"
   resolved "https://registry.npmjs.org/knitwork/-/knitwork-1.2.0.tgz"
   integrity sha512-xYSH7AvuQ6nXkq42x0v5S8/Iry+cfulBz/DJQzhIyESdLD7425jXsPy4vn5cCXU+HhRN2kVw51Vd1K6/By4BQg==
+
+kolorist@^1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/kolorist/-/kolorist-1.8.0.tgz#edddbbbc7894bc13302cdf740af6374d4a04743c"
+  integrity sha512-Y+60/zizpJ3HRH8DCss+q95yr6145JXZo46OTpFvDZWLfRCE4qChOyk1b26nMaNpfHHgxagk9dXT5OP0Tfe+dQ==
 
 launch-editor@^2.10.0:
   version "2.10.0"

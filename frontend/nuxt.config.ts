@@ -17,7 +17,7 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ['@vee-validate/nuxt', '@nuxt/eslint'],
+  modules: ['@vee-validate/nuxt', '@nuxt/eslint', '@nuxtjs/color-mode'],
 
   veeValidate: {
     componentNames: {
@@ -34,7 +34,7 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'], // needed for flowbite
 
   typescript: {
-    typeCheck: process.env.NODE_ENV === 'production',
+    typeCheck: process.env.NODE_ENV === 'production', // this will take care that during prod build typescript will be checked
     strict: true,
     tsConfig: {
       compilerOptions: {
@@ -42,5 +42,9 @@ export default defineNuxtConfig({
         noUnusedParameters: true,
       },
     },
+  },
+
+  colorMode: {
+    classSuffix: '',
   },
 });
