@@ -15,9 +15,12 @@
         </p>
         <p class="mb-4 text-lg font-light text-gray-500 dark:text-gray-400">
           We are already working to solve the problem.
+          <span v-if="!isHealthy" class="block mt-2 text-sm">
+            Next retry in {{ countdown }} seconds (Attempt {{ currentAttempt }}).
+          </span>
         </p>
         <button
-          @click="retryConnection"
+          @click="manualRetry"
           type="button"
           class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
@@ -51,26 +54,103 @@ const route = useRoute();
 const redirectPath = ref((route.query.redirect as string) || '/');
 
 const messages = ref<string[]>([]);
+const currentMessage = ref('');
 
-onMounted(async () => {
-  const response = await fetch('/data/500-messages.json');
-  const data = await response.json();
-  messages.value = data.messages;
+const autoRetryTimeout = ref<number | null>(null);
+const countdownInterval = ref<number | null>(null);
+const countdown = ref(0);
+const currentAttempt = ref(0);
+
+const initialDelaySeconds = 5;
+const maxDelaySeconds = 60;
+let currentDelaySeconds = initialDelaySeconds;
+
+const stopCountdown = () => {
+  if (countdownInterval.value) {
+    window.clearInterval(countdownInterval.value);
+    countdownInterval.value = null;
+  }
+  countdown.value = 0;
+};
+
+const startCountdown = (seconds: number) => {
+  stopCountdown();
+  countdown.value = seconds;
+  countdownInterval.value = window.setInterval(() => {
+    countdown.value -= 1;
+    if (countdown.value <= 0) {
+      stopCountdown();
+    }
+  }, 1000);
+};
+
+const stopAutoRetry = () => {
+  if (autoRetryTimeout.value) {
+    window.clearTimeout(autoRetryTimeout.value);
+    autoRetryTimeout.value = null;
+  }
+  stopCountdown();
+};
+
+const scheduleNextRetry = (delaySeconds: number) => {
+  stopAutoRetry();
+  currentAttempt.value += 1;
+  startCountdown(delaySeconds);
+
+  autoRetryTimeout.value = window.setTimeout(async () => {
+    await performRetry();
+  }, delaySeconds * 1000);
+};
+
+const performRetry = async () => {
+  await checkHealth();
+
+  if (isHealthy.value) {
+    stopAutoRetry();
+    navigateTo(redirectPath.value);
+  } else {
+    currentDelaySeconds = Math.min(currentDelaySeconds * 2, maxDelaySeconds);
+    scheduleNextRetry(currentDelaySeconds);
+  }
+};
+
+const startAutoRetry = () => {
+  stopAutoRetry();
+  currentAttempt.value = 0;
+  currentDelaySeconds = initialDelaySeconds;
   currentMessage.value = getRandomMessage();
-});
+  scheduleNextRetry(currentDelaySeconds);
+};
+
+const manualRetry = async () => {
+  stopAutoRetry();
+  currentAttempt.value = 0;
+  currentDelaySeconds = initialDelaySeconds;
+  currentMessage.value = getRandomMessage();
+  await performRetry();
+};
 
 const getRandomMessage = () => {
-  if (!messages.value.length) return 'Loading...';
+  if (!messages.value || messages.value.length === 0)
+    return 'We seem to be experiencing technical difficulties. Please wait.';
   return messages.value[Math.floor(Math.random() * messages.value.length)];
 };
 
-const currentMessage = ref(getRandomMessage());
-
-const retryConnection = async () => {
-  currentMessage.value = getRandomMessage();
-  await checkHealth();
-  if (isHealthy.value) {
-    navigateTo(redirectPath.value);
+onMounted(async () => {
+  try {
+    const response = await fetch('/data/500-messages.json');
+    if (!response.ok) throw new Error('Failed to fetch messages');
+    const data = await response.json();
+    messages.value = data.messages;
+  } catch (error) {
+    console.error('Error loading 500 messages:', error);
+    messages.value = ['An unexpected error occurred. We are trying to reconnect.'];
   }
-};
+  startAutoRetry();
+});
+
+onUnmounted(() => {
+  console.log('500 page unmounted. Clearing timers.');
+  stopAutoRetry();
+});
 </script>
