@@ -194,10 +194,8 @@ import { useForm } from 'vee-validate';
 import { zSignUp } from '~/api-client/zod.gen';
 import { authPostSignIn, authGetSignInGoogle } from '~/api-client/sdk.gen';
 import { useFormErrorHandler } from '~/composables/useFormErrorHandler';
-import { useRouter } from 'vue-router';
 import { useRedirectMessage } from '~/composables/useRedirectMessage';
 
-const router = useRouter();
 const route = useRoute();
 const redirectPath = ref((route.query.redirect as string) || '/');
 
@@ -221,9 +219,8 @@ const onSubmit = handleSubmit(async values => {
   clearError();
   startLoading();
 
-  let result;
   try {
-    result = await authPostSignIn({
+    await authPostSignIn({
       composable: '$fetch',
       body: {
         username: values.email,

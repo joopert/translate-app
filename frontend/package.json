@@ -17,10 +17,12 @@
     "@hey-api/client-nuxt": "^0.3.0",
     "@hey-api/openapi-ts": "^0.64.13",
     "@nuxt/eslint": "^1.2.0",
+    "@types/node": "^22.14.0",
     "eslint": "^9.23.0",
     "prettier": "^3.5.3",
     "tsx": "^4.19.3",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.3",
+    "vue-tsc": "^2.2.8"
   },
   "dependenciesComments": {
     "@vueuse/integrations": "needed for jwt-decode",

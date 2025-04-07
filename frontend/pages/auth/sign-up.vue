@@ -218,13 +218,11 @@ import { useForm } from 'vee-validate';
 import { zSignUp } from '~/api-client/zod.gen';
 import { authPostSignUp, authGetSignInGoogle } from '~/api-client/sdk.gen';
 import { useFormErrorHandler } from '~/composables/useFormErrorHandler';
-import { useRouter } from 'vue-router';
 import { useRedirectMessage } from '~/composables/useRedirectMessage';
 
 const { createRedirectUrl } = useRedirectMessage();
 
 const termsAccepted = ref(false);
-const router = useRouter();
 const form = useForm({
   validationSchema: toTypedSchema(zSignUp),
 });

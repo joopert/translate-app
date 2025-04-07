@@ -32,4 +32,15 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()], // needed for flowbite
   },
   css: ['~/assets/css/main.css'], // needed for flowbite
+
+  typescript: {
+    typeCheck: process.env.NODE_ENV === 'production',
+    strict: true,
+    tsConfig: {
+      compilerOptions: {
+        noUnusedLocals: true,
+        noUnusedParameters: true,
+      },
+    },
+  },
 });

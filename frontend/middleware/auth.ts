@@ -1,6 +1,6 @@
 import { useAuth } from '~/composables/auth/useAuth';
 
-export default defineNuxtRouteMiddleware((to, from) => {
+export default defineNuxtRouteMiddleware(to => {
   // Skip middleware for auth pages to prevent redirect loops
   if (to.path.startsWith('/auth/')) {
     return;
