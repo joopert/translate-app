@@ -140,6 +140,16 @@ export const useAuth = () => {
     return Array.isArray(cognitoGroups) ? cognitoGroups.includes(group) : false;
   };
 
+  /**
+   * Wait for any in-progress token refresh to complete
+   * @returns A promise that resolves when refresh is complete
+   */
+  const waitForRefresh = async (): Promise<void> => {
+    if (isRefreshing.value && currentRefreshPromise.value) {
+      await currentRefreshPromise.value;
+    }
+  };
+
   return {
     /** Current authentication state */
     isAuthenticated,
@@ -151,5 +161,7 @@ export const useAuth = () => {
     isRefreshing,
     /** Current refresh promise */
     currentRefreshPromise,
+    /** Wait for any in-progress refresh to complete */
+    waitForRefresh,
   };
 };

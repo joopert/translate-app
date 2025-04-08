@@ -9,7 +9,7 @@ export default defineNuxtRouteMiddleware(async to => {
     return;
   }
 
-  const { isAuthenticated, refreshToken, isRefreshing, currentRefreshPromise } = useAuth();
+  const { isAuthenticated, refreshToken, waitForRefresh } = useAuth();
 
   // Case 1: Already authenticated - continue to route
   if (isAuthenticated.value) {
@@ -17,20 +17,14 @@ export default defineNuxtRouteMiddleware(async to => {
   }
 
   // Case 2: Authentication in progress - wait for it to complete
-  if (isRefreshing.value && currentRefreshPromise.value) {
-    await currentRefreshPromise.value;
-    if (isAuthenticated.value) {
-      return; // Refresh succeeded, continue to route
-    }
-    return navigateTo({
-      path: '/auth/sign-in',
-      query: {
-        redirect: to.fullPath,
-      },
-    });
+  await waitForRefresh();
+
+  // After waiting for any in-progress refresh, check auth state again
+  if (isAuthenticated.value) {
+    return; // Refresh succeeded, continue to route
   }
 
-  // Case 3: Not authenticated or refresh failed - try refreshing
+  // Case 3: Not authenticated yet - try refreshing
   if (!isAuthenticated.value) {
     await refreshToken();
 
