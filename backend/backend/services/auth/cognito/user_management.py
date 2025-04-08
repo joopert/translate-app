@@ -1,7 +1,6 @@
 import uuid
 from typing import Any, cast
 
-import boto3
 from asyncer import asyncify
 from botocore.exceptions import ClientError
 from pycognito.exceptions import TokenVerificationException  # type: ignore[import]
@@ -20,8 +19,6 @@ from backend.services.auth.helpers import generate_password
 from backend.utils.constants import INTERNAL_SERVER_ERROR_TEXT
 from backend.utils.log import logger
 
-cognito_client = boto3.client("cognito-idp", region_name=settings.auth.cognito.region)
-
 
 def get_cognito_user(username: str) -> CognitoUser | None:
     cognito = Cognito(
@@ -32,7 +29,7 @@ def get_cognito_user(username: str) -> CognitoUser | None:
     )
     try:
         user_info: Any = cognito.admin_get_user()  # type: ignore[attr-defined]
-    except cognito_client.exceptions.UserNotFoundException:
+    except cognito.client.exceptions.UserNotFoundException:
         return None
 
     return CognitoUser(
@@ -60,14 +57,13 @@ def create_user(email: str, password: str) -> None:
     Returns:
         Dictionary with Cognito response
     """
+    cognito = Cognito(
+        user_pool_id=settings.auth.cognito.user_pool_id,
+        client_id=settings.auth.cognito.client_id,
+        user_pool_region=settings.auth.cognito.region,
+        username=email,
+    )
     try:
-        cognito = Cognito(
-            user_pool_id=settings.auth.cognito.user_pool_id,
-            client_id=settings.auth.cognito.client_id,
-            user_pool_region=settings.auth.cognito.region,
-            username=email,
-        )
-
         cognito.register(  # type: ignore
             username=email,
             password=password,
@@ -77,21 +73,21 @@ def create_user(email: str, password: str) -> None:
         # TODO: we could improve by directly getting the user, and returning that.
         return None
 
-    except cognito_client.exceptions.UsernameExistsException as e:
+    except cognito.client.exceptions.UsernameExistsException as e:
         raise AuthException(
             error_code="SIGN_UP_ERROR_USERNAME_EXISTS",
             message="An account with the provided credentials already exists. Please try a different username.",
             category=ErrorCategory.CONFLICT,
             field="email",
         ) from e
-    except cognito_client.exceptions.InvalidPasswordException as e:
+    except cognito.client.exceptions.InvalidPasswordException as e:
         raise AuthException(
             error_code="SIGN_UP_ERROR_INVALID_PASSWORD",
             message=str(e),
             category=ErrorCategory.VALIDATION,
             field="password",
         ) from e
-    except cognito_client.exceptions.InvalidParameterException as e:
+    except cognito.client.exceptions.InvalidParameterException as e:
         raise AuthException(
             error_code="SIGN_UP_ERROR_INVALID_PARAMETER",
             message=str(e),
@@ -123,20 +119,18 @@ def admin_create_user(email: str) -> CognitoUser:
         email=email,
         password=SecretStr(generate_password()),
     )
-
-    try:
-        cognito = Cognito(
-            user_pool_id=settings.auth.cognito.user_pool_id,
-            client_id=settings.auth.cognito.client_id,
-            user_pool_region=settings.auth.cognito.region,
-            username=user.email,
-        )
-
+    cognito = Cognito(
+        user_pool_id=settings.auth.cognito.user_pool_id,
+        client_id=settings.auth.cognito.client_id,
+        user_pool_region=settings.auth.cognito.region,
+        username=user.email,
+    )
+    try:  # noqa
         user = cognito.admin_create_user(  # type: ignore
             user.email,
             temporary_password=user.password.get_secret_value(),
         )
-    except cognito_client.exceptions.InvalidPasswordException:
+    except cognito.client.exceptions.InvalidPasswordException:
         pass  # TODO: need to fix this ... as this is internal error.
 
     cognito_user = cast(CognitoUser, get_cognito_user(email))
@@ -162,7 +156,7 @@ def admin_get_user(username: str) -> CognitoUser | None:
     try:
         logger.debug(f"Trying to get user with username {username}")
         user_info: Any = cognito.admin_get_user()  # type: ignore[attr-defined]
-    except cognito_client.exceptions.UserNotFoundException:  # type: ignore[attr-defined]
+    except cognito.client.exceptions.UserNotFoundException:  # type: ignore[attr-defined]
         return None
 
     return CognitoUser(
@@ -180,15 +174,15 @@ def admin_get_user(username: str) -> CognitoUser | None:
 
 
 def get_current_user(access_token: str, id_token: str | None = None) -> CurrentUser:
-    try:
-        cognito = Cognito(
-            user_pool_id=settings.auth.cognito.user_pool_id,
-            client_id=settings.auth.cognito.client_id,
-            user_pool_region=settings.auth.cognito.region,
-            access_token=access_token,
-            id_token=id_token,
-        )
+    cognito = Cognito(
+        user_pool_id=settings.auth.cognito.user_pool_id,
+        client_id=settings.auth.cognito.client_id,
+        user_pool_region=settings.auth.cognito.region,
+        access_token=access_token,
+        id_token=id_token,
+    )
 
+    try:
         access_token_content = cognito.verify_token(  # type: ignore
             access_token, "access_token", "access"
         )
@@ -240,7 +234,7 @@ def get_current_user(access_token: str, id_token: str | None = None) -> CurrentU
             field=ErrorLocationField.GENERAL,
         ) from e
 
-    except cognito_client.exceptions.NotAuthorizedException as e:
+    except cognito.client.exceptions.NotAuthorizedException as e:
         raise AuthException(
             error_code="INVALID_TOKEN",
             message="Invalid token",

@@ -1,7 +1,5 @@
 import uuid
 
-import boto3
-
 from backend.api.exceptions import ErrorLocationField
 from backend.core.settings import settings
 from backend.services.auth.cognito import Cognito
@@ -9,24 +7,22 @@ from backend.services.auth.exceptions import AuthException, ErrorCategory
 from backend.utils.constants import INTERNAL_SERVER_ERROR_TEXT
 from backend.utils.log import logger
 
-cognito_client = boto3.client("cognito-idp", region_name=settings.auth.cognito.region)
-
 
 def forgot_password(email: str) -> None:
+    cognito = Cognito(
+        user_pool_id=settings.auth.cognito.user_pool_id,
+        client_id=settings.auth.cognito.client_id,
+        username=email,
+    )
     try:
-        cognito = Cognito(
-            user_pool_id=settings.auth.cognito.user_pool_id,
-            client_id=settings.auth.cognito.client_id,
-            username=email,
-        )
         cognito.initiate_forgot_password()
 
-    except cognito_client.exceptions.UserNotFoundException as e:
+    except cognito.client.exceptions.UserNotFoundException as e:
         logger.debug(f"User not found: {str(e)}")
         pass
         # we do not raise, because we do not want to expose this from security perspective.
 
-    except cognito_client.exceptions.LimitExceededException as e:
+    except cognito.client.exceptions.LimitExceededException as e:
         raise AuthException(
             error_code="FORGOT_PASSWORD_ERROR_LIMIT_EXCEEDED",
             message="Limit exceeded. Try again later.",
@@ -45,20 +41,20 @@ def forgot_password(email: str) -> None:
 
 
 def confirm_forgot_password(email: str, confirmation_code: str, new_password: str) -> None:
+    cognito = Cognito(
+        user_pool_id=settings.auth.cognito.user_pool_id,
+        client_id=settings.auth.cognito.client_id,
+        username=email,
+    )
     try:
-        cognito = Cognito(
-            user_pool_id=settings.auth.cognito.user_pool_id,
-            client_id=settings.auth.cognito.client_id,
-            username=email,
-        )
         cognito.confirm_forgot_password(  # type: ignore
             confirmation_code,
             new_password,
         )
 
     except (
-        cognito_client.exceptions.CodeMismatchException,
-        cognito_client.exceptions.ExpiredCodeException,
+        cognito.client.exceptions.CodeMismatchException,
+        cognito.client.exceptions.ExpiredCodeException,
     ) as e:
         raise AuthException(
             error_code="CONFIRM_FORGOT_PASSWORD_ERROR_INVALID_CODE",
@@ -66,14 +62,14 @@ def confirm_forgot_password(email: str, confirmation_code: str, new_password: st
             category=ErrorCategory.VALIDATION,
             field="confirmation_code",
         ) from e
-    except cognito_client.exceptions.InvalidPasswordException as e:
+    except cognito.client.exceptions.InvalidPasswordException as e:
         raise AuthException(
             error_code="CHANGE_PASSWORD_ERROR_INVALID_PASSWORD",
             message=str(e),
             category=ErrorCategory.VALIDATION,
             field="new_password",
         ) from e
-    except cognito_client.exceptions.LimitExceededException as e:
+    except cognito.client.exceptions.LimitExceededException as e:
         raise AuthException(
             error_code="FORGOT_PASSWORD_ERROR_LIMIT_EXCEEDED",
             message="Please try again later. Too many requests have been sent.",
@@ -92,17 +88,18 @@ def confirm_forgot_password(email: str, confirmation_code: str, new_password: st
 
 
 def change_password(old_password: str, new_password: str, access_token: str) -> None:
+    cognito = Cognito(
+        user_pool_id=settings.auth.cognito.user_pool_id,
+        client_id=settings.auth.cognito.client_id,
+        access_token=access_token,
+    )
+
     try:
-        cognito = Cognito(
-            user_pool_id=settings.auth.cognito.user_pool_id,
-            client_id=settings.auth.cognito.client_id,
-            access_token=access_token,
-        )
         cognito.change_password(  # type: ignore
             old_password,
             new_password,
         )
-    except cognito_client.exceptions.NotAuthorizedException as e:
+    except cognito.client.exceptions.NotAuthorizedException as e:
         raise AuthException(
             error_code="CHANGE_PASSWORD_ERROR_UNAUTHORIZED",
             message="Unable to change password. Please ensure your old password is correct and you're properly signed in.",  # noqa: E501
@@ -110,7 +107,7 @@ def change_password(old_password: str, new_password: str, access_token: str) -> 
             field="old_password",
         ) from e
 
-    except cognito_client.exceptions.InvalidPasswordException as e:
+    except cognito.client.exceptions.InvalidPasswordException as e:
         raise AuthException(
             error_code="CHANGE_PASSWORD_ERROR_INVALID_PASSWORD",
             message=str(e),
@@ -129,12 +126,12 @@ def change_password(old_password: str, new_password: str, access_token: str) -> 
 
 
 def set_initial_password(username: str, old_password: str, new_password: str) -> None:
+    cognito = Cognito(
+        user_pool_id=settings.auth.cognito.user_pool_id,
+        client_id=settings.auth.cognito.client_id,
+        username=username,
+    )
     try:
-        cognito = Cognito(
-            user_pool_id=settings.auth.cognito.user_pool_id,
-            client_id=settings.auth.cognito.client_id,
-            username=username,
-        )
         cognito.new_password_challenge(  # type: ignore
             old_password,
             new_password,

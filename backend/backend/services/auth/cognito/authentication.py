@@ -1,8 +1,6 @@
 import traceback
 import uuid
 
-import boto3
-
 from backend.api.exceptions import ErrorLocationField
 from backend.core.settings import settings
 from backend.services.auth.cognito import Cognito
@@ -11,20 +9,17 @@ from backend.services.auth.models import Tokens
 from backend.utils.constants import INTERNAL_SERVER_ERROR_TEXT
 from backend.utils.log import logger
 
-cognito_client = boto3.client("cognito-idp", region_name=settings.auth.cognito.region)
-
 
 def authenticate(username: str, password: str) -> Tokens:
+    cognito = Cognito(
+        user_pool_id=settings.auth.cognito.user_pool_id,
+        client_id=settings.auth.cognito.client_id,
+        user_pool_region=settings.auth.cognito.region,
+        username=username,
+    )
     try:
-        cognito = Cognito(
-            user_pool_id=settings.auth.cognito.user_pool_id,
-            client_id=settings.auth.cognito.client_id,
-            user_pool_region=settings.auth.cognito.region,
-            username=username,
-        )
-
         cognito.authenticate(password=password)  # type: ignore
-    except cognito_client.exceptions.NotAuthorizedException as e:
+    except cognito.client.exceptions.NotAuthorizedException as e:
         raise AuthException(
             error_code="INVALID_CREDENTIALS",
             message="Invalid credentials",
