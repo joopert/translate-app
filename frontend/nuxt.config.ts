@@ -6,12 +6,18 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   runtimeConfig: {
     public: {
+      enableSidebar: false,
       baseURL: 'http://localhost:8001/api/v1', //TODO: get this from .env or so
       cookiesAuth: {
         // TODO: this should be moved to a seperate config, not in public.
         refreshTokenUrl: '/auth/refresh',
         redirectOnRefreshTokenExpiration: true,
         redirectTo: '/sign-in',
+      },
+      company: {
+        name: 'someName',
+        website: 'https://domain.com',
+        infoEmail: 'hello@domain.com',
       },
     },
   },
