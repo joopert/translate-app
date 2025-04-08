@@ -28,7 +28,7 @@ router = APIRouter()
 )
 async def get_current_user_info(
     current_user: CurrentUser = Depends(get_current_user),
-) -> CurrentUser | Detail:
+) -> CurrentUser:
     """
     Get the current authenticated user's information
     """
