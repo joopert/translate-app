@@ -47,47 +47,45 @@
 </template>
 
 <script setup lang="ts">
-  export interface IAlertProps {
-    type: 'info' | 'danger' | 'success' | 'warning' | 'dark';
-    category?: string;
-    message?: string;
-    icon?: string;
-    closable?: boolean;
-  }
+export interface IAlertProps {
+  type: 'info' | 'danger' | 'success' | 'warning' | 'dark';
+  category?: string;
+  message?: string;
+  icon?: string;
+  closable?: boolean;
+}
 
-  const props = withDefaults(defineProps<IAlertProps>(), {
-    type: 'info',
-    category: 'Info',
-    icon: 'i-mdi-information',
-    closable: true,
-  });
+const props = withDefaults(defineProps<IAlertProps>(), {
+  type: 'info',
+  category: 'Info',
+  icon: 'i-mdi-information',
+  closable: true,
+});
 
-  const emit = defineEmits<{ (e: 'close'): void }>();
+const emit = defineEmits<{ (e: 'close'): void }>();
 
-  const visible = ref(true);
+const visible = ref(true);
 
-  const typeClasses = {
-    info: 'text-blue-800 bg-blue-50 dark:text-blue-400 border-blue-300 dark:border-blue-800',
-    danger: 'text-red-800 bg-red-50 dark:text-red-400 border-red-300 dark:border-red-800',
-    success:
-      'text-green-800 bg-green-50 dark:text-green-400 border-green-300 dark:border-green-800',
-    warning:
-      'text-yellow-800 bg-yellow-50 dark:text-yellow-300 border-yellow-300 dark:border-yellow-800',
-    dark: 'text-gray-800 bg-gray-50 dark:text-gray-300 border-gray-300 dark:border-gray-800',
-  };
+const typeClasses = {
+  info: 'text-blue-800 bg-blue-50 dark:text-blue-400 border-blue-300 dark:border-blue-800',
+  danger: 'text-red-800 bg-red-50 dark:text-red-400 border-red-300 dark:border-red-800',
+  success: 'text-green-800 bg-green-50 dark:text-green-400 border-green-300 dark:border-green-800',
+  warning:
+    'text-yellow-800 bg-yellow-50 dark:text-yellow-300 border-yellow-300 dark:border-yellow-800',
+  dark: 'text-gray-800 bg-gray-50 dark:text-gray-300 border-gray-300 dark:border-gray-800',
+};
 
-  const closeButtonClasses = {
-    info: 'text-blue-500 dark:text-blue-400 bg-blue-50 hover:bg-blue-200 focus:ring-blue-400',
-    danger: 'text-red-500 dark:text-red-400 bg-red-50 hover:bg-red-200 focus:ring-red-400',
-    success:
-      'text-green-500 dark:text-green-400 bg-green-50 hover:bg-green-200 focus:ring-green-400',
-    warning:
-      'text-yellow-500 dark:text-yellow-300 bg-yellow-50 hover:bg-yellow-200 focus:ring-yellow-400',
-    dark: 'text-gray-500 dark:text-gray-300 bg-gray-50 hover:bg-gray-200 focus:ring-gray-400 dark:hover:text-white',
-  };
+const closeButtonClasses = {
+  info: 'text-blue-500 dark:text-blue-400 bg-blue-50 hover:bg-blue-200 focus:ring-blue-400',
+  danger: 'text-red-500 dark:text-red-400 bg-red-50 hover:bg-red-200 focus:ring-red-400',
+  success: 'text-green-500 dark:text-green-400 bg-green-50 hover:bg-green-200 focus:ring-green-400',
+  warning:
+    'text-yellow-500 dark:text-yellow-300 bg-yellow-50 hover:bg-yellow-200 focus:ring-yellow-400',
+  dark: 'text-gray-500 dark:text-gray-300 bg-gray-50 hover:bg-gray-200 focus:ring-gray-400 dark:hover:text-white',
+};
 
-  function onCloseClick() {
-    emit('close');
-    visible.value = false;
-  }
+function onCloseClick() {
+  emit('close');
+  visible.value = false;
+}
 </script>
