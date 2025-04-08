@@ -3,7 +3,6 @@ import traceback
 import uuid
 from typing import cast
 
-import boto3
 from asyncer import asyncify
 from botocore.exceptions import ClientError
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
@@ -19,7 +18,6 @@ from .dependencies import get_current_user
 from .models import CurrentUser, ResponseFormat, SignIn
 
 router = APIRouter()
-cognito_client = boto3.client("cognito-idp", region_name=settings.auth.cognito.region)
 
 
 @router.get(
@@ -195,9 +193,13 @@ async def logout_device(request: Request):
         )
 
     try:
-        cognito_client.revoke_token(  # type: ignore
-            Token=refresh_token, ClientId=settings.auth.cognito.client_id
+        cognito = Cognito(
+            user_pool_id=settings.auth.cognito.user_pool_id,
+            client_id=settings.auth.cognito.client_id,
+            refresh_token=refresh_token,
         )
+        cognito.client.revoke_token(Token=refresh_token, ClientId=settings.auth.cognito.client_id)  # type: ignore
+
     except ClientError as e:
         raise HTTPException(
             status_code=400,
