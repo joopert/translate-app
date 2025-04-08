@@ -1,8 +1,10 @@
 import { client } from '~/api-client/client.gen';
 
 export default defineNuxtPlugin(() => {
+  const runtimeConfig = useRuntimeConfig();
+
   client.setConfig({
-    baseURL: 'http://localhost:8001', //TODO: on prod this must be different
-    credentials: 'include', // TODO: on prod this should be 'same-origin'
+    baseURL: runtimeConfig.public.baseURL,
+    credentials: import.meta.dev ? 'include' : 'same-origin', // backend and frontend are on different ports on localhost. On prod it must be same-origin
   });
 });
