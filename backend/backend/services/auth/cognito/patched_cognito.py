@@ -1,9 +1,12 @@
 # type: ignore
 import base64
 
+import boto3
 import jwt
 from pycognito import Cognito as OriginalCognito
 from pycognito.exceptions import TokenVerificationException
+
+from backend.core.settings import settings
 
 
 def verify_token(self, token, id_name, token_use):
@@ -54,12 +57,58 @@ def verify_token(self, token, id_name, token_use):
     return verified
 
 
+# Singleton Cognito client
+_cognito_client = None
+
+
 class Cognito(OriginalCognito):
     """
     Custom implementation of Cognito with patched token verification.
     See https://github.com/joopert/flightdeals/issues/85.
 
     The compute_hash_digest expects bytes but gets a string.
+    Also uses a shared client instance for better performance.
     """
 
     verify_token = verify_token
+
+    def __init__(
+        self,
+        user_pool_id,
+        client_id,
+        user_pool_region=None,
+        username=None,
+        id_token=None,
+        refresh_token=None,
+        access_token=None,
+        client_secret=None,
+        **kwargs,
+    ):
+        # Call the parent constructor with minimal arguments
+        # and default values where needed
+        super().__init__(
+            user_pool_id=user_pool_id,
+            client_id=client_id,
+            user_pool_region=user_pool_region,
+            username=username,
+            id_token=id_token,
+            refresh_token=refresh_token,
+            access_token=access_token,
+            client_secret=client_secret,
+            **kwargs,
+        )
+
+        # Override the client with our singleton instance
+        self.client = self.get_cognito_client()
+
+    def get_cognito_client(self):
+        """
+        Returns a singleton Cognito client.
+        """
+        global _cognito_client
+
+        if _cognito_client is None:
+            session = boto3.Session(region_name=settings.auth.cognito.region)
+            _cognito_client = session.client("cognito-idp")
+
+        return _cognito_client
