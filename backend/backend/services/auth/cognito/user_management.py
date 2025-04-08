@@ -3,11 +3,13 @@ from typing import Any, cast
 
 import boto3
 from asyncer import asyncify
+from pycognito.exceptions import TokenVerificationException  # type: ignore[import]
 from pydantic import SecretStr
 
 from backend.api.exceptions import ErrorLocationField
 from backend.api.routers.auth.models import (
     CognitoUser,
+    CurrentUser,
     SignUp,
 )
 from backend.core.settings import settings
@@ -174,3 +176,84 @@ def admin_get_user(username: str) -> CognitoUser | None:
         phone_number=user_info._data.get("phone_number"),
         phone_number_is_verified=user_info.phone_number_verified,
     )
+
+
+def get_current_user(access_token: str, id_token: str | None = None) -> CurrentUser:
+    try:
+        cognito = Cognito(
+            user_pool_id=settings.auth.cognito.user_pool_id,
+            client_id=settings.auth.cognito.client_id,
+            user_pool_region=settings.auth.cognito.region,
+            access_token=access_token,
+            id_token=id_token,
+        )
+
+        access_token_content = cognito.verify_token(  # type: ignore
+            access_token, "access_token", "access"
+        )
+        if id_token:
+            id_token_content = cognito.verify_token(id_token, "id_token", "id")  # type: ignore
+            return CurrentUser(
+                id=access_token_content["sub"],
+                access_token=SecretStr(access_token),
+                username=id_token_content["cognito:username"],
+                email=id_token_content["email"],
+                email_is_verified=id_token_content["email_verified"],
+                groups=id_token_content.get("cognito:groups", []),
+                picture=id_token_content.get("picture"),
+                first_name=id_token_content.get("given_name"),
+                last_name=id_token_content.get("family_name"),
+                phone_number=id_token_content.get("phone_number"),
+                phone_number_is_verified=id_token_content.get("phone_number_verified"),
+            )
+
+        else:
+            user_info: Any = cognito.get_user()  # pyright: ignore[reportUnknownMemberType]
+            return CurrentUser(
+                id=access_token_content["sub"],
+                access_token=SecretStr(access_token),
+                username=user_info._metadata.get("username"),
+                email=user_info._data["email"],
+                email_is_verified=user_info.email_verified,
+                groups=user_info._data.get("cognito:groups", []),
+                picture=user_info._data.get("picture"),
+                first_name=user_info._data.get("given_name"),
+                last_name=user_info._data.get("family_name"),
+                phone_number=user_info._data.get("phone_number"),
+                phone_number_is_verified=user_info.phone_number_verified,
+            )
+
+    except TokenVerificationException as e:
+        if "Signature has expired" in str(e):
+            raise AuthException(
+                error_code="TOKEN_EXPIRED",
+                message="Token expired",
+                category=ErrorCategory.AUTHENTICATION,
+                field=ErrorLocationField.GENERAL,
+            ) from e
+
+        raise AuthException(
+            error_code="INVALID_TOKEN",
+            message="Invalid token",
+            category=ErrorCategory.AUTHENTICATION,
+            field=ErrorLocationField.GENERAL,
+        ) from e
+
+    except cognito_client.exceptions.NotAuthorizedException as e:
+        raise AuthException(
+            error_code="INVALID_TOKEN",
+            message="Invalid token",
+            category=ErrorCategory.AUTHENTICATION,
+            field=ErrorLocationField.GENERAL,
+        ) from e
+
+    except Exception as e:
+        unique_error_code = str(uuid.uuid4())
+        logger.error(f"code: {unique_error_code}, message: {str(e)}")
+
+        raise AuthException(
+            error_code="INTERNAL_SERVER_ERROR",
+            message=INTERNAL_SERVER_ERROR_TEXT.format(unique_error_code=unique_error_code),
+            category=ErrorCategory.SERVER_ERROR,
+            field=ErrorLocationField.GENERAL,
+        ) from e
