@@ -6,7 +6,6 @@ import uuid
 import requests
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import RedirectResponse
-from fastapi.security import HTTPBearer
 
 from backend.api.exceptions import Detail, ErrorLocationField
 from backend.api.routers.auth.dependencies import get_current_user
@@ -111,12 +110,9 @@ async def auth_callback(request: Request, code: str, state: str) -> RedirectResp
             samesite=settings.auth.token.cookie.same_site,
         )
 
-        # The token is not available in request.
-        # So we need to pass it as the token argument into get_current_user.
-        # Therefore we need to make the HTTPBearer ourselves
-        bearer_token = HTTPBearer()
-        bearer_token.credentials = tokens["access_token"]  # type: ignore
-        current_user = await get_current_user(request=request, token=bearer_token)
+        current_user = await get_current_user(
+            request=request, token=tokens["access_token"], id_token=tokens["id_token"]
+        )
 
         response.set_cookie(
             key="my_profile",
