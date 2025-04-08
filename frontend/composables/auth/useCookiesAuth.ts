@@ -19,14 +19,14 @@ export const useCookiesAuth = () => {
   return {
     retryStatusCodes: [401],
     retry: 1,
-    baseURL: config.public.cookiesAuth.apiBaseUrl,
+    baseURL: config.public.baseURL,
     credentials: credential,
     headers: import.meta.server ? { cookie: header.cookie || '' } : undefined,
     onResponseError: async (context: FetchContext) => {
       if (context.response?.status === 401) {
         await $fetch(config.public.cookiesAuth.refreshTokenUrl, {
           method: 'POST',
-          baseURL: config.public.cookiesAuth.apiBaseUrl,
+          baseURL: config.public.baseURL,
           headers: import.meta.server ? { cookie: header.cookie || '' } : undefined,
           credentials: credential,
           onResponseError: refreshTokenOnResponseErrorHandler,

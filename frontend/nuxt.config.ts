@@ -9,7 +9,6 @@ export default defineNuxtConfig({
       baseURL: 'http://localhost:8001/api/v1', //TODO: get this from .env or so
       cookiesAuth: {
         // TODO: this should be moved to a seperate config, not in public.
-        apiBaseUrl: 'http://localhost:8001/api/v1',
         refreshTokenUrl: '/auth/refresh',
         redirectOnRefreshTokenExpiration: true,
         redirectTo: '/sign-in',
