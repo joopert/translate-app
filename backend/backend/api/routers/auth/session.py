@@ -1,7 +1,6 @@
 import base64
 
 from asyncer import asyncify
-from botocore.exceptions import ClientError
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from fastapi.responses import JSONResponse
 
@@ -10,6 +9,7 @@ from backend.core.settings import settings
 from backend.services.auth.cognito import Cognito
 from backend.services.auth.cognito.authentication import authenticate
 from backend.services.auth.cognito.authentication import refresh_token as cognito_refresh_token
+from backend.services.auth.cognito.user_management import cognito_logout
 
 from .dependencies import get_current_user
 from .models import CurrentUser, ResponseFormat, SignIn
@@ -163,23 +163,7 @@ async def logout_device(request: Request):
             ),
         )
 
-    try:
-        cognito = Cognito(
-            user_pool_id=settings.auth.cognito.user_pool_id,
-            client_id=settings.auth.cognito.client_id,
-            refresh_token=refresh_token,
-        )
-        cognito.client.revoke_token(Token=refresh_token, ClientId=settings.auth.cognito.client_id)  # type: ignore
-
-    except ClientError as e:
-        raise HTTPException(
-            status_code=400,
-            detail=Detail(
-                loc=ErrorLocationField.GENERAL,
-                code="LOGOUT_ERROR_REVOKE_TOKEN",
-                msg=f"Failed to logout from device: {str(e)}",
-            ),
-        ) from e
+    await asyncify(cognito_logout)(refresh_token)
 
     response = JSONResponse(
         content=ResponseFormat(

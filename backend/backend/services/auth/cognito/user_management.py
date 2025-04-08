@@ -3,6 +3,7 @@ from typing import Any, cast
 
 import boto3
 from asyncer import asyncify
+from botocore.exceptions import ClientError
 from pycognito.exceptions import TokenVerificationException  # type: ignore[import]
 from pydantic import SecretStr
 
@@ -256,4 +257,22 @@ def get_current_user(access_token: str, id_token: str | None = None) -> CurrentU
             message=INTERNAL_SERVER_ERROR_TEXT.format(unique_error_code=unique_error_code),
             category=ErrorCategory.SERVER_ERROR,
             field=ErrorLocationField.GENERAL,
+        ) from e
+
+
+def cognito_logout(refresh_token: str) -> None:
+    try:
+        cognito = Cognito(
+            user_pool_id=settings.auth.cognito.user_pool_id,
+            client_id=settings.auth.cognito.client_id,
+            refresh_token=refresh_token,
+        )
+        cognito.client.revoke_token(Token=refresh_token, ClientId=settings.auth.cognito.client_id)  # type: ignore
+
+    except ClientError as e:
+        raise AuthException(
+            category=ErrorCategory.AUTHENTICATION,
+            field=ErrorLocationField.GENERAL,
+            error_code="LOGOUT_ERROR_REVOKE_TOKEN",
+            message=f"Failed to logout from device: {str(e)}",
         ) from e
