@@ -1,7 +1,4 @@
 import base64
-import traceback
-import uuid
-from typing import cast
 
 from asyncer import asyncify
 from botocore.exceptions import ClientError
@@ -12,7 +9,7 @@ from backend.api.exceptions import Detail, ErrorLocationField
 from backend.core.settings import settings
 from backend.services.auth.cognito import Cognito
 from backend.services.auth.cognito.authentication import authenticate
-from backend.utils.log import logger
+from backend.services.auth.cognito.authentication import refresh_token as cognito_refresh_token
 
 from .dependencies import get_current_user
 from .models import CurrentUser, ResponseFormat, SignIn
@@ -98,48 +95,17 @@ async def signin(signin_data: SignIn) -> Response:
 async def refresh_token(request: Request) -> Response:
     """Refresh access token using refresh token from cookie"""
     refresh_token = request.cookies.get("refresh_token")
-    if not refresh_token:
-        raise HTTPException(
-            status_code=401,
-            detail=Detail(
-                loc=ErrorLocationField.GENERAL,
-                code="NO_REFRESH_TOKEN",
-                msg="No refresh token found",
-            ).model_dump(),
-        )
+    tokens = await asyncify(cognito_refresh_token)(refresh_token)
 
-    try:
-        cognito = Cognito(
-            user_pool_id=settings.auth.cognito.user_pool_id,
-            client_id=settings.auth.cognito.client_id,
-            refresh_token=refresh_token,
-        )
-
-        cognito.renew_access_token()
-
-        current_user = await get_current_user(
-            request=request,
-            token=cast(str, cognito.access_token),
-            id_token=cast(str, cognito.id_token),
-        )
-    except Exception as e:
-        unique_error_code = str(uuid.uuid4())
-        logger.error(f"code: {unique_error_code}, message: {str(e)}")
-        logger.error(traceback.format_exc())
-        raise HTTPException(
-            status_code=401,
-            detail=Detail(
-                loc=ErrorLocationField.GENERAL,
-                code="REFRESH_TOKEN_ERROR",
-                msg="An error occurred while refreshing your token. "
-                "Please contact support and reference this code: {unique_error_code}",
-            ).model_dump(),
-        ) from e
-
+    current_user = await get_current_user(
+        request=request,
+        token=tokens.access_token.get_secret_value(),
+        id_token=tokens.id_token.get_secret_value(),
+    )
     response = Response()
     response.set_cookie(
         key="access_token",
-        value=cognito.access_token,  # type: ignore
+        value=tokens.access_token.get_secret_value(),
         domain=settings.auth.token.cookie.domain,
         httponly=settings.auth.token.cookie.http_only,
         max_age=settings.auth.token.access_token.expire_seconds,
@@ -148,7 +114,7 @@ async def refresh_token(request: Request) -> Response:
     )
     response.set_cookie(
         key="id_token",
-        value=cognito.id_token,  # type: ignore
+        value=tokens.id_token.get_secret_value(),
         max_age=settings.auth.token.access_token.expire_seconds,
         domain=settings.auth.token.cookie.domain,
         httponly=settings.auth.token.cookie.http_only,

@@ -1,3 +1,4 @@
+import traceback
 import uuid
 
 import boto3
@@ -33,6 +34,44 @@ def authenticate(username: str, password: str) -> Tokens:
     except Exception as e:
         unique_error_code = str(uuid.uuid4())
         logger.error(f"code: {unique_error_code}, message: {str(e)}")
+        raise AuthException(
+            error_code="INTERNAL_SERVER_ERROR",
+            message=INTERNAL_SERVER_ERROR_TEXT.format(unique_error_code=unique_error_code),
+            category=ErrorCategory.SERVER_ERROR,
+            field=ErrorLocationField.GENERAL,
+        ) from e
+
+    tokens = Tokens(
+        access_token=cognito.access_token,  # type: ignore
+        refresh_token=cognito.refresh_token,  # type: ignore
+        id_token=cognito.id_token,  # type: ignore
+    )
+    return tokens
+
+
+def refresh_token(refresh_token: str | None) -> Tokens:
+    if not refresh_token:
+        raise AuthException(
+            error_code="NO_REFRESH_TOKEN",
+            message="No refresh token provided",
+            category=ErrorCategory.AUTHENTICATION,
+            field=ErrorLocationField.GENERAL,
+        )
+
+    try:
+        cognito = Cognito(
+            user_pool_id=settings.auth.cognito.user_pool_id,
+            client_id=settings.auth.cognito.client_id,
+            refresh_token=refresh_token,
+        )
+
+        cognito.renew_access_token()
+
+    except Exception as e:
+        unique_error_code = str(uuid.uuid4())
+        logger.error(f"code: {unique_error_code}, message: {str(e)}")
+        logger.error(traceback.format_exc())
+
         raise AuthException(
             error_code="INTERNAL_SERVER_ERROR",
             message=INTERNAL_SERVER_ERROR_TEXT.format(unique_error_code=unique_error_code),
