@@ -51,7 +51,7 @@
             </svg>
             <span class="sr-only">Toggle sidebar</span>
           </button>
-          <a href="/" class="flex mr-4">
+          <NuxtLink to="/" class="flex mr-4">
             <img
               src="https://flowbite.s3.amazonaws.com/logo.svg"
               class="mr-3 h-8"
@@ -60,7 +60,7 @@
             <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">{{
               $config.public.company.name
             }}</span>
-          </a>
+          </NuxtLink>
           <form action="#" method="GET" class="hidden lg:block lg:pl-2">
             <label for="topbar-search" class="sr-only">Search</label>
             <div class="relative mt-1 lg:w-96">
