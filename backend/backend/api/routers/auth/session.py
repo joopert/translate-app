@@ -116,7 +116,12 @@ async def refresh_token(request: Request) -> Response:
         )
 
         cognito.renew_access_token()
-        current_user = await get_current_user(request=request, token=cast(str, cognito.access_token))
+
+        current_user = await get_current_user(
+            request=request,
+            token=cast(str, cognito.access_token),
+            id_token=cast(str, cognito.id_token),
+        )
     except Exception as e:
         unique_error_code = str(uuid.uuid4())
         logger.error(f"code: {unique_error_code}, message: {str(e)}")

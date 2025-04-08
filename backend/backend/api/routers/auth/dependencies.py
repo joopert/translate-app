@@ -23,6 +23,7 @@ cognito_client = boto3.client("cognito-idp", region_name=settings.auth.cognito.r
 async def get_current_user(
     request: Request,
     token: HTTPBearer | str | None = Depends(HTTPBearer(auto_error=False)),
+    id_token: str | None = None,
 ) -> CurrentUser:
     access_token: str | None = None
     if isinstance(token, str):
@@ -43,7 +44,8 @@ async def get_current_user(
             ).model_dump(),
         )
 
-    id_token: str | None = request.cookies.get("id_token")
+    if id_token is None:
+        id_token = request.cookies.get("id_token")
     try:
         cognito = Cognito(
             user_pool_id=settings.auth.cognito.user_pool_id,
