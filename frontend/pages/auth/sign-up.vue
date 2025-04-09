@@ -249,6 +249,7 @@ const onSubmit = handleSubmit(async values => {
       await navigateTo({
         path: '/auth/confirm-sign-up',
         query: {
+          email: values.email,
           ...createRedirectMessage({
             type: 'success',
             message:
