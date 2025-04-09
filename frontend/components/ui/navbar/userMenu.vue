@@ -134,6 +134,7 @@
     <ul class="py-1 text-gray-500 dark:text-gray-400" aria-labelledby="dropdown">
       <li>
         <a
+          @click="handleLogoutSession"
           href="#"
           class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
           >Sign out</a
@@ -143,10 +144,19 @@
   </div>
 </template>
 <script setup lang="ts">
+import { authPostLogoutSession } from '~/api-client/sdk.gen';
+
 const { optimisticAuthState } = useAuth();
 onMounted(() => {
   useFlowbite(flowbite => {
     flowbite.initDropdowns();
   });
 });
+
+const handleLogoutSession = async () => {
+  await authPostLogoutSession({
+    composable: '$fetch',
+  });
+  optimisticAuthState.value = false;
+};
 </script>
