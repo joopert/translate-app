@@ -18,6 +18,10 @@ export const useAuth = () => {
   const isAuthenticated = ref(!!authCookie.value);
   const isRefreshing = useState('auth-is-refreshing', () => false);
 
+  // Optimistic authentication state - remains true during refresh attempts
+  // Use this for UI elements where you don't want flashing during refresh
+  const optimisticAuthState = ref(!!authCookie.value);
+
   // Security and throttling settings
   const refreshAttempts = useState('auth-refresh-attempts', () => 0);
   const lastRefreshTime = useState('auth-last-refresh-time', () => 0);
@@ -55,6 +59,10 @@ export const useAuth = () => {
    * @returns {Promise<boolean>} True if refresh was successful
    */
   const refreshToken = async (): Promise<boolean> => {
+    // When starting a refresh, set optimisticAuthenticated to true
+    // This prevents the UI from flashing during refresh attempts
+    optimisticAuthState.value = true;
+
     // Check for throttling/cooldown
     const now = Date.now();
     if (now - lastRefreshTime.value < REFRESH_COOLDOWN) {
@@ -74,6 +82,7 @@ export const useAuth = () => {
     // Check max attempts
     if (refreshAttempts.value >= MAX_REFRESH_ATTEMPTS) {
       refreshAttempts.value = 0;
+      optimisticAuthState.value = false; // Clear optimistic flag after max attempts
       return false;
     }
 
@@ -93,12 +102,16 @@ export const useAuth = () => {
         // Update authentication state on success
         isAuthenticated.value = true;
         authCookie.value = true;
+        optimisticAuthState.value = true;
         refreshAttempts.value = 0;
         return true;
       } catch (error) {
-        // Handle failure
+        // Handle failure - only clear optimistic flag on final attempt failure
         isAuthenticated.value = false;
         authCookie.value = false;
+        if (refreshAttempts.value >= MAX_REFRESH_ATTEMPTS) {
+          optimisticAuthState.value = false;
+        }
         return false;
       }
     })();
@@ -122,9 +135,23 @@ export const useAuth = () => {
       // Update the authenticated state
       isAuthenticated.value = !!newValue;
 
-      // Try to refresh if auth was lost and on client side
-      if (oldValue && !newValue && import.meta.client && !isRefreshing.value) {
+      // Only set optimisticAuthenticated to false when we're sure refresh won't help
+      // This prevents UI flashing during refresh attempts
+      if (newValue) {
+        // If we have a valid auth cookie, both states are true
+        optimisticAuthState.value = true;
+      } else if (oldValue && !newValue && import.meta.client && !isRefreshing.value) {
+        // Try to refresh if auth was lost and on client side
         await refreshToken();
+
+        // After refresh attempt, update optimistic state based on actual state
+        // Only set to false if the refresh attempt has completed and failed
+        if (!isAuthenticated.value && !isRefreshing.value) {
+          optimisticAuthState.value = false;
+        }
+      } else if (!isRefreshing.value) {
+        // If not refreshing and no auth cookie, definitely not authenticated
+        optimisticAuthState.value = false;
       }
     },
     { immediate: true },
@@ -151,8 +178,10 @@ export const useAuth = () => {
   };
 
   return {
-    /** Current authentication state */
+    /** The real-time, strictly accurate authentication state */
     isAuthenticated,
+    /** Optimistic authentication state - UI-friendly state that stays true during refresh attempts */
+    optimisticAuthState,
     /** Check if user has specific group */
     hasGroup,
     /** Manually trigger a token refresh */

@@ -1,6 +1,6 @@
 <template>
   <button
-    v-if="!isAuthenticated"
+    v-if="!optimisticAuthState"
     type="button"
     class="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus:ring-4 focus:ring-gray-300 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-600 flex items-center justify-center"
   >
@@ -143,7 +143,7 @@
   </div>
 </template>
 <script setup lang="ts">
-const { isAuthenticated } = useAuth();
+const { optimisticAuthState } = useAuth();
 onMounted(() => {
   useFlowbite(flowbite => {
     flowbite.initDropdowns();
