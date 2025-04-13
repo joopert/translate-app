@@ -9,6 +9,11 @@ on:
   # on demand
   workflow_dispatch:
 
+# Add permissions to create pull requests
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   auto-update:
     runs-on: ubuntu-latest
