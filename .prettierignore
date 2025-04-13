@@ -1,1 +1,2 @@
-*.json  # we have a pre-commit that fixes all .json
+# we have a pre-commit that fixes all .json
+**/*.json

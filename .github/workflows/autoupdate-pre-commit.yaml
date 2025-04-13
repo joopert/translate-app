@@ -9,6 +9,11 @@ on:
   # on demand
   workflow_dispatch:
 
+# Add permissions to create pull requests
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   auto-update:
     runs-on: ubuntu-latest
@@ -25,17 +30,20 @@ jobs:
       - name: Run install
         uses: borales/actions-yarn@v4
         with:
-          cmd: install
+          cmd: install --production=false
+          dir: frontend
 
       - name: Build Nuxt application
-        run: npx nuxi build
+        run: |
+          cd frontend
+          npx nuxi build
 
       - uses: browniebroke/pre-commit-autoupdate-action@v1.0.0
 
       - uses: peter-evans/create-pull-request@v7.0.8
         if: always()
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PRECOMMIT_PR_TOKEN }}
           branch: update/pre-commit-hooks
           title: Update pre-commit hooks
           commit-message: "chore: update pre-commit hooks"
