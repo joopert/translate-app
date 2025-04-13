@@ -17,6 +17,19 @@ jobs:
 
       - uses: actions/setup-python@v5
 
+      - name: Set Node.js 22.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22.x
+
+      - name: Run install
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: install
+
+      - name: Build Nuxt application
+        run: npx nuxi build
+
       - uses: browniebroke/pre-commit-autoupdate-action@v1.0.0
 
       - uses: peter-evans/create-pull-request@v7.0.8
