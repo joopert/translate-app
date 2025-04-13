@@ -26,9 +26,12 @@ jobs:
         uses: borales/actions-yarn@v4
         with:
           cmd: install --production=false
+          dir: frontend
 
       - name: Build Nuxt application
-        run: npx nuxi build
+        run: |
+          cd frontend
+          npx nuxi build
 
       - uses: browniebroke/pre-commit-autoupdate-action@v1.0.0
 
