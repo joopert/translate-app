@@ -53,13 +53,13 @@ def refresh_token(refresh_token: str | None) -> Tokens:
             field=ErrorLocationField.GENERAL,
         )
 
-    try:
-        cognito = Cognito(
-            user_pool_id=settings.auth.cognito.user_pool_id,
-            client_id=settings.auth.cognito.client_id,
-            refresh_token=refresh_token,
-        )
+    cognito = Cognito(
+        user_pool_id=settings.auth.cognito.user_pool_id,
+        client_id=settings.auth.cognito.client_id,
+        refresh_token=refresh_token,
+    )
 
+    try:
         cognito.renew_access_token()
 
     except Exception as e:

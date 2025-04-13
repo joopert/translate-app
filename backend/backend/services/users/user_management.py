@@ -28,20 +28,34 @@ async def get_user_by_email(email: str) -> User | None:
     return await User.find_by_email(email)
 
 
-async def create_user(email: str) -> User:
+async def create_user(email: str, auth_user_id: str | None = None) -> User:
     """
     Create a new user in the database.
 
     Args:
         email: User's email address
+        auth_user_id: Optional auth user ID. If not provided, will be retrieved from Cognito.
 
     Returns:
         Newly created user
     """
-    logger.debug(f"Trying to create user with email {email}")
+    logger.debug(f"Creating user with email {email}")
 
-    cognito_user = cast("CognitoUser", admin_get_user(email))
-    db_user = User(email=email, auth_user_id=cognito_user.id)
+    if auth_user_id is None:
+        logger.debug("No auth_user_id provided, looking up in Cognito")
+        try:
+            cognito_user = cast("CognitoUser", admin_get_user(email))
+            if not cognito_user or not cognito_user.id:
+                raise ValueError(f"Cognito user exists but has no ID for email: {email}")
+            auth_user_id = cognito_user.id
+        except Exception as e:
+            logger.error(f"Failed to retrieve auth_user_id for email {email}: {str(e)}")
+            raise ValueError(f"Cannot create user: Unable to obtain auth_user_id for {email}") from e
+
+    if not auth_user_id:
+        raise ValueError(f"Cannot create user: auth_user_id is required for email {email}")
+
+    db_user = User(email=email, auth_user_id=auth_user_id)
     await db_user.save()
     logger.info(f"Created user with email {email}")
     return db_user
@@ -89,20 +103,27 @@ async def create_user(email: str) -> User:
 
 
 #         # Add more field-specific validations as needed
-async def handle_user_registration(email: str, plan_name: str | None = None) -> None:
+async def handle_user_registration(email: str, plan_name: str | None = None, auth_user_id: str | None = None) -> None:
     """
     Handle user registration after creating a new user auth user.
     It will do the following steps:
     - create a database user
     - Create a subscription
+
+    Args:
+        email: User's email address
+        plan_name: Optional plan name to use (defaults to settings)
+        auth_user_id: Optional auth user ID for OAuth users (if provided, skips Cognito lookup)
     """
     if plan_name is None and settings.payments.default_plan_name is None:
         raise ValueError("No plan name provided and no default plan name set in settings")
     plan_name = cast(str, plan_name or settings.payments.default_plan_name)
 
     logger.info(f"Handling user registration for user with email {email} for plan {plan_name}")
-    await create_user(email)
+
+    await create_user(email, auth_user_id=auth_user_id)
     logger.debug(f"Created user with email {email}")
+
     await create_subscription(email, plan_name)
     logger.debug(f"Created subscription for user with email {email}")
 

@@ -4,12 +4,14 @@ import traceback
 import uuid
 
 import requests
+from asyncer import asyncify
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import RedirectResponse
 
 from backend.api.exceptions import Detail, ErrorLocationField
-from backend.api.routers.auth.dependencies import get_current_user
 from backend.core.settings import settings
+from backend.services.auth.cognito.user_management import get_current_user
+from backend.services.users.user_management import get_user_by_email, handle_user_registration
 from backend.utils.constants import INTERNAL_SERVER_ERROR_TEXT
 from backend.utils.log import logger
 
@@ -110,9 +112,15 @@ async def auth_callback(request: Request, code: str, state: str) -> RedirectResp
             samesite=settings.auth.token.cookie.same_site,
         )
 
-        current_user = await get_current_user(
-            request=request, token=tokens["access_token"], id_token=tokens["id_token"]
+        current_user = await asyncify(get_current_user)(
+            access_token=tokens["access_token"], id_token=tokens["id_token"]
         )
+
+        user_email = current_user.email
+        existing_user = await get_user_by_email(user_email)
+        if existing_user is None:
+            logger.info(f"New Google OAuth user detected: {user_email}. Creating user record.")
+            await handle_user_registration(user_email, auth_user_id=current_user.id)
 
         response.set_cookie(
             key="my_profile",
