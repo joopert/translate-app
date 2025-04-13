@@ -18,6 +18,7 @@ export default defineNuxtConfig({
         name: 'someName',
         website: 'https://domain.com',
         infoEmail: 'hello@domain.com',
+        officialName: 'someName',
       },
     },
   },
