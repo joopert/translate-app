@@ -4,9 +4,9 @@ repos:
     hooks:
       - id: check-yaml
       - id: pretty-format-json
-        exclude: ^.vscode/|frontend/tsconfig.json|package.json  # is invalid json, but expected. Except for package.json, not sure what is wrong.
+        exclude: ^.vscode/|frontend/tsconfig.json|package.json|infra/tsconfig.json # is invalid json, but expected. Except for package.json, not sure what is wrong.
       - id: check-json
-        exclude: ^.vscode/|frontend/tsconfig.json  # is invalid json, but expected
+        exclude: ^.vscode/|frontend/tsconfig.json|infra/tsconfig.json # is invalid json, but expected
       - id: end-of-file-fixer
       - id: trailing-whitespace
       - id: detect-aws-credentials
@@ -18,35 +18,35 @@ repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.11.5
     hooks:
-    - id: ruff
-      args: [ --fix ]
-    - id: ruff-format
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
   - repo: https://github.com/PyCQA/bandit
-    rev: '1.8.3'
+    rev: "1.8.3"
     hooks:
-    - id: bandit
-      args: ["-c", "./backend/pyproject.toml"]
-      additional_dependencies: ["bandit[toml]"]
-  -   repo: https://github.com/pre-commit/mirrors-mypy
-      rev: 'v1.15.0'
-      hooks:
-      -   id: mypy
-          files: "backend/"
-          additional_dependencies:
-            - "pydantic"
-            - "types-requests"
-            - "types-python-slugify"
+      - id: bandit
+        args: ["-c", "./backend/pyproject.toml"]
+        additional_dependencies: ["bandit[toml]"]
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: "v1.15.0"
+    hooks:
+      - id: mypy
+        files: "backend/"
+        additional_dependencies:
+          - "pydantic"
+          - "types-requests"
+          - "types-python-slugify"
   - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: 'v9.24.0'
+    rev: "v9.24.0"
     hooks:
-    -   id: eslint
+      - id: eslint
         files: "frontend/"
         entry: "eslint --config ./frontend/eslint.config.mjs"
-  -   repo: https://github.com/JoC0de/pre-commit-prettier
-      rev: 'v3.5.3'
-      hooks:
-      -   id: prettier
-          files: "frontend/"
+  - repo: https://github.com/JoC0de/pre-commit-prettier
+    rev: "v3.5.3"
+    hooks:
+      - id: prettier
+        files: "frontend/"
   - repo: https://github.com/astral-sh/uv-pre-commit
     rev: 0.6.14
     hooks:
