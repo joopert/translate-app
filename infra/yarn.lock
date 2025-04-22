@@ -570,6 +570,11 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
+"@trautonen/cdk-dns-validated-certificate@0.1.12":
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/@trautonen/cdk-dns-validated-certificate/-/cdk-dns-validated-certificate-0.1.12.tgz#30c59c5e7b040ca2b0e01dc9a68d2796e53da6f4"
+  integrity sha512-WLsG1CzsSAiD+VCDwYyvNgrIR9VooN4FYCbtvyCvVB1ZMsk8KPPMn1PZ7nQaIbFFBjeKdwZ4R4QJvo9ipXNUjg==
+
 "@tsconfig/node10@^1.0.7":
   version "1.0.11"
   resolved "https://registry.yarnpkg.com/@tsconfig/node10/-/node10-1.0.11.tgz#6ee46400685f130e278128c7b38b7e031ff5b2f2"
@@ -927,6 +932,11 @@ case@1.6.3:
   version "1.6.3"
   resolved "https://registry.yarnpkg.com/case/-/case-1.6.3.tgz#0a4386e3e9825351ca2e6216c60467ff5f1ea1c9"
   integrity sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ==
+
+cdk-cross-account-route53@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/cdk-cross-account-route53/-/cdk-cross-account-route53-1.0.1.tgz#baa5068bc7bd27019b047da1b6334a1fc2805a5a"
+  integrity sha512-SvLW4tyMfRM+9vM2MLTlwpvDQDH0UAL+TU1ByV8/oJZ3L+XB5uTqYz0U7518WX+fsubPtP+CMc9Ylen1OdUamg==
 
 cdk-fck-nat@1.5.17:
   version "1.5.17"

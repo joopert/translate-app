@@ -20,7 +20,9 @@
     "typescript": "~5.8.3"
   },
   "dependencies": {
+    "@trautonen/cdk-dns-validated-certificate": "0.1.12",
     "aws-cdk-lib": "2.190.0",
+    "cdk-cross-account-route53": "^1.0.1",
     "cdk-fck-nat": "1.5.17",
     "constructs": "^10.0.0"
   }
