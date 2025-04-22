@@ -65,29 +65,3 @@ When using AWS CDK to set up ECS services with Cloud Map for service discovery, 
   These integrations are not managed by CDK. Any manual changes made in the AWS Console will not be tracked by your infrastructure-as-code and may prevent a clean destroy operation.
 - **Destroy Caveat:**
   If you manually add integrations in the console, a subsequent `cdk destroy` may fail to fully clean up resources. You may need to manually remove integrations before destroying the stack.
-
-## Creating a New Permission Set for a Domain in AWS
-
-Follow these steps to create and assign a new AdministratorAccess permission set for a new domain using the AWS Management Console:
-
-1. Access the AWS Management Console
-   Log in to the AWS Management Console using your management account.
-2. Create a Permission Set
-   Navigate to IAM Identity Center.
-   In the sidebar, select Permission sets.
-   Click Create permission set.
-   Choose Predefined permission set.
-   Select AdministratorAccess and click Next.
-   Set the Permission set name to:
-   AA-<domain>
-   (Replace <domain> with your actual domain name)
-   Add a description: Administrator Access
-   Set the Session duration to:
-   1 hour
-   Click Create.
-3. Assign the Permission Set to an AWS Account
-   Go to AWS Accounts in IAM Identity Center.
-   Select the target AWS account.
-   Click Assign users or groups (or Add permission set).
-   Select the newly created permission set (AA-<domain>).
-   Complete the assignment process.
