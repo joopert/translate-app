@@ -5,7 +5,7 @@ import * as servicediscovery from "aws-cdk-lib/aws-servicediscovery";
 import { HttpApiStack } from "./httpapi";
 import { VpcLinkStack } from "./vpclink";
 import * as ecs from "aws-cdk-lib/aws-ecs";
-import { CertStack } from "./cert";
+import { CertStack } from "./certificate";
 import * as r53 from "aws-cdk-lib/aws-route53";
 import { config } from "../../config";
 
