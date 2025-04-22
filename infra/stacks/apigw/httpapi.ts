@@ -1,13 +1,14 @@
 import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
-import * as route53 from "aws-cdk-lib/aws-route53";
+import * as r53 from "aws-cdk-lib/aws-route53";
 import * as apigw from "aws-cdk-lib/aws-apigatewayv2";
-import * as targets from "aws-cdk-lib/aws-route53-targets";
-import * as acm from "aws-cdk-lib/aws-certificatemanager";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as ecs from "aws-cdk-lib/aws-ecs";
-import * as integrations from "aws-cdk-lib/aws-apigatewayv2-integrations";
 import * as servicediscovery from "aws-cdk-lib/aws-servicediscovery";
+import { DnsValidatedCertificate } from "@trautonen/cdk-dns-validated-certificate";
+import { CrossAccountRoute53RecordSet } from "cdk-cross-account-route53";
+import { config } from "../../config";
+
 // https://github.com/aws/aws-cdk/issues/31215
 // cannot use cloudmap from ecs services. It is apparently not exposed.
 
@@ -17,6 +18,8 @@ export interface HttpApiStackProps extends cdk.StackProps {
   vpcLink: apigw.VpcLink;
   frontendService: ecs.Ec2Service;
   backendService: ecs.Ec2Service;
+  certificate: DnsValidatedCertificate;
+  hostedZone: r53.IHostedZone;
 }
 
 export class HttpApiStack extends cdk.Stack {
@@ -42,15 +45,20 @@ export class HttpApiStack extends cdk.Stack {
     //     }
     //   );
 
+    const apigwDomainName = new apigw.DomainName(this, "DomainName", {
+      domainName: props.hostedZone.zoneName,
+      certificate: props.certificate,
+    });
+
     this.httpApi = new apigw.HttpApi(this, "ApiGw", {
-      apiName: "amfyapp.com",
+      apiName: props.hostedZone.zoneName,
       createDefaultStage: true,
       disableExecuteApiEndpoint: true,
-      //   defaultIntegration: serviceDiscoveryInt,
 
-      //   defaultDomainMapping: {
-      //     domainName: apigwDomainName,
-      //   },
+      //   defaultIntegration: serviceDiscoveryInt,
+      defaultDomainMapping: {
+        domainName: apigwDomainName,
+      },
       //   defaultIntegration: new integrations.HttpServiceDiscoveryIntegration(
       //     "DefaultIntegration",
       //     serviceDiscoveryInt,
@@ -69,6 +77,23 @@ export class HttpApiStack extends cdk.Stack {
       //   path: "/api/v1/{proxy+}",
       //   integration: ,
       // });
+    });
+
+    new CrossAccountRoute53RecordSet(this, "ARecord", {
+      delegationRoleName: "AmfyappRoute53Role",
+      delegationRoleAccount: config.sharedServicesAccountNumber,
+      hostedZoneId: props.hostedZone.hostedZoneId,
+      resourceRecordSets: [
+        {
+          Name: props.hostedZone.zoneName,
+          Type: "A",
+          AliasTarget: {
+            DNSName: apigwDomainName.regionalDomainName,
+            HostedZoneId: apigwDomainName.regionalHostedZoneId,
+            EvaluateTargetHealth: false,
+          },
+        },
+      ],
     });
   }
 }

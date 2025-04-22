@@ -4,7 +4,7 @@ repos:
     hooks:
       - id: check-yaml
       - id: pretty-format-json
-        exclude: ^.vscode/|frontend/tsconfig.json|package.json|infra/tsconfig.json # is invalid json, but expected. Except for package.json, not sure what is wrong.
+        exclude: ^.vscode/|frontend/tsconfig.json|package.json|infra/tsconfig.json|infra/cdk.context.json|infra/cdk.json # is invalid json, but expected. Except for package.json, not sure what is wrong.
       - id: check-json
         exclude: ^.vscode/|frontend/tsconfig.json|infra/tsconfig.json # is invalid json, but expected
       - id: end-of-file-fixer
