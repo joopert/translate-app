@@ -65,3 +65,46 @@ When using AWS CDK to set up ECS services with Cloud Map for service discovery, 
   These integrations are not managed by CDK. Any manual changes made in the AWS Console will not be tracked by your infrastructure-as-code and may prevent a clean destroy operation.
 - **Destroy Caveat:**
   If you manually add integrations in the console, a subsequent `cdk destroy` may fail to fully clean up resources. You may need to manually remove integrations before destroying the stack.
+
+## Adding and Verifying a New Google Domain (User Alias Domain)
+
+To add a new user alias domain in Google Workspace and verify it using AWS Route 53, follow these steps.
+
+**Warning:**
+
+- Do this in the shared account repo!
+
+### 1. Start Domain Addition in Google Admin
+
+- Go to [Google Admin domain management](https://admin.google.com/ac/domains/manage).
+- Click **Add a domain**.
+- Enter the desired domain name.
+- When prompted, select **User alias domain** as the domain type.
+- Proceed to **Add domain & start verification**.
+
+### 2. Select Domain Host and Get Verification Record
+
+- When asked to choose your domain host, select **Amazon Web Services**.
+- Google will display a **TXT verification record** (the `GOOGLE_SITE_VERIFICATION` value).
+
+### 3. Add the Verification Record in AWS
+
+- In your codebase, add a new stack (or update an existing one) for the domain under `stacks/gmail/gmail.ts`.
+- Set the following values in your stack:
+  - `DOMAIN`: The domain you are adding.
+  - `GOOGLE_SITE_VERIFICATION`: The TXT record provided by Google.
+- Note: The verification string is not a secret and can safely be stored in version control.
+
+### 4. Deploy to AWS
+
+- Deploy the updated stack to the **shared AWS account** (where your DNS is managed).
+
+### 5. Complete Verification in Google Admin
+
+- Once the stack is deployed and the DNS record is live, return to the Google Admin verification page.
+- At the bottom, select **Come back here and confirm once you have updated the code on your domain host**.
+- Click **Confirm**.
+
+### 6. Done!
+
+Your new user alias domain should now be verified and ready for use in Google Workspace.
