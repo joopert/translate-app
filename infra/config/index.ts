@@ -13,4 +13,7 @@ export const config = {
   peeringVpcRegion: "eu-west-1",
   peeringVpcRoleArn:
     "arn:aws:iam::233108183980:role/vpc-peering-acceptance-role",
+  githubActionsRole: {
+    allowedRepositories: [""],
+  },
 };

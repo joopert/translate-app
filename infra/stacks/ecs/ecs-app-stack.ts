@@ -6,9 +6,11 @@ import * as ec2 from "aws-cdk-lib/aws-ec2";
 import { EcsClusterStack } from "./cluster";
 import * as servicediscovery from "aws-cdk-lib/aws-servicediscovery";
 import * as ecs from "aws-cdk-lib/aws-ecs";
+import * as iam from "aws-cdk-lib/aws-iam";
 
 export interface EcsAppStackProps extends StackProps {
   vpc: ec2.IVpc;
+  githubActionsRole?: iam.Role;
 }
 
 export class EcsAppStack extends Stack {
@@ -50,5 +52,19 @@ export class EcsAppStack extends Stack {
     this.cluster = clusterStack.cluster;
     this.frontendService = frontendStack.frontendService;
     this.backendService = backendStack.backendService;
+
+    if (props.githubActionsRole) {
+      props.githubActionsRole.addToPolicy(
+        new iam.PolicyStatement({
+          sid: "EcsUpdateService",
+          actions: ["ecs:UpdateService"],
+          effect: iam.Effect.ALLOW,
+          resources: [
+            this.frontendService.serviceArn,
+            this.backendService.serviceArn,
+          ],
+        })
+      );
+    }
   }
 }

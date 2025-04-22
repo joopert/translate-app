@@ -8,10 +8,12 @@ import * as ssm from "aws-cdk-lib/aws-ssm";
 import { CrossAccountRoute53RecordSet } from "cdk-cross-account-route53";
 import { Construct } from "constructs";
 import { config } from "../../config";
+import * as iam from "aws-cdk-lib/aws-iam";
 
 interface StaticCloudfrontDistributionProps extends cdk.StackProps {
   hostedZone: route53.IHostedZone;
   certificate: acm.ICertificate;
+  githubActionsRole?: iam.Role;
 }
 
 export class StaticCloudfrontDistributionStack extends cdk.Stack {
@@ -161,12 +163,39 @@ export class StaticCloudfrontDistributionStack extends cdk.Stack {
       ],
     });
 
-    // new route53.ARecord(this, "AliasRecord", {
-    //   zone: props.hostedZone,
-    //   recordName: config.staticDomain,
-    //   target: route53.RecordTarget.fromAlias(
-    //     new targets.CloudFrontTarget(distribution)
-    //   ),
-    // });
+    if (props.githubActionsRole) {
+      props.githubActionsRole.addToPolicy(
+        new iam.PolicyStatement({
+          sid: "S3Access",
+          actions: [
+            "s3:PutObject",
+            "s3:GetObject",
+            "s3:DeleteObject",
+            "s3:ListBucket",
+          ],
+          effect: iam.Effect.ALLOW,
+          resources: [
+            this.blueBucket.bucketArn,
+            this.blueBucket.arnForObjects("*"),
+            this.greenBucket.bucketArn,
+            this.greenBucket.arnForObjects("*"),
+          ],
+        })
+      );
+
+      props.githubActionsRole.addToPolicy(
+        new iam.PolicyStatement({
+          sid: "SSMAccess",
+          actions: [
+            "ssm:DescribeParameters",
+            "ssm:GetParameters",
+            "ssm:GetParameter",
+            "ssm:PutParameter",
+          ],
+          resources: [this.blueGreenParameter.parameterArn],
+          effect: iam.Effect.ALLOW,
+        })
+      );
+    }
   }
 }
