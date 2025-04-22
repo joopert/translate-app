@@ -3,6 +3,7 @@ import { VpcStack } from "./stacks/vpc-stack";
 import { EcsAppStack } from "./stacks/ecs/ecs-app-stack";
 import { ApigwStack } from "./stacks/apigw/apigw-stack";
 import { verifyAwsAccount } from "./utils/account-protection";
+import { CloudfrontStack } from "./stacks/cloudfront/cloudfront-stack";
 
 const app = new cdk.App();
 const env = {
@@ -27,6 +28,10 @@ const apigwStack = new ApigwStack(app, "ApigwStack", {
   cloudmap: ecsAppStack.cloudmap,
   frontendService: ecsAppStack.frontendService,
   backendService: ecsAppStack.backendService,
+});
+
+new CloudfrontStack(app, "CloudfrontStack", {
+  env,
 });
 
 apigwStack.addDependency(ecsAppStack);

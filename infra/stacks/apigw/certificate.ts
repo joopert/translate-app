@@ -16,12 +16,10 @@ export class CertStack extends Stack {
   constructor(scope: Construct, id: string, props: CertStackProps) {
     super(scope, id, props);
 
-    // This is the role on the shared account that is used to create the dns record
-    const roleArn = `arn:aws:iam::${config.sharedServicesAccountNumber}:role/toberemoved-crossaccountcert`;
     const validationRole: iam.IRole = iam.Role.fromRoleArn(
       this,
       "ValidationRole",
-      roleArn
+      config.sharedServicesCertificateRole
     );
 
     //https://github.com/trautonen/cdk-dns-validated-certificate/blob/main/src/certificate-requestor.lambda.ts#L156
