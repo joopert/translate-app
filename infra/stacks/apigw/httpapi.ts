@@ -46,12 +46,12 @@ export class HttpApiStack extends cdk.Stack {
     //   );
 
     const apigwDomainName = new apigw.DomainName(this, "DomainName", {
-      domainName: props.hostedZone.zoneName,
+      domainName: config.domain,
       certificate: props.certificate,
     });
 
     this.httpApi = new apigw.HttpApi(this, "ApiGw", {
-      apiName: props.hostedZone.zoneName,
+      apiName: config.domain,
       createDefaultStage: true,
       disableExecuteApiEndpoint: true,
 
@@ -82,10 +82,10 @@ export class HttpApiStack extends cdk.Stack {
     new CrossAccountRoute53RecordSet(this, "ARecord", {
       delegationRoleName: "AmfyappRoute53Role",
       delegationRoleAccount: config.sharedServicesAccountNumber,
-      hostedZoneId: props.hostedZone.hostedZoneId,
+      hostedZoneId: config.sharedServicesHostedZoneId,
       resourceRecordSets: [
         {
-          Name: props.hostedZone.zoneName,
+          Name: config.domain,
           Type: "A",
           AliasTarget: {
             DNSName: apigwDomainName.regionalDomainName,

@@ -35,7 +35,7 @@ export class CertStack extends Stack {
             validationRole: validationRole,
           },
         ],
-        domainName: props.hostedZoneSharedAccount.zoneName,
+        domainName: config.domain,
       }
     );
   }

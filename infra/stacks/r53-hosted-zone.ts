@@ -12,7 +12,7 @@ export function getSharedAccountHostedZone(scope: Construct): r53.IHostedZone {
     "HostedZoneSharedAccount",
     {
       hostedZoneId: config.sharedServicesHostedZoneId,
-      zoneName: config.domain,
+      zoneName: config.sharedServicesHostedZoneName,
     }
   );
 }

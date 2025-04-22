@@ -38,7 +38,7 @@ export class StaticCloudfrontDistributionStack extends cdk.Stack {
       }
     );
     this.greenBucket = new s3.Bucket(this, "GreenBucket", {
-      bucketName: `${config.appName}-static-green-e30913b6`,
+      bucketName: `${config.appName}-${config.environment}-static-green-e30913b6`,
       publicReadAccess: false,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
@@ -63,7 +63,7 @@ export class StaticCloudfrontDistributionStack extends cdk.Stack {
     });
 
     this.blueBucket = new s3.Bucket(this, "blueBucket", {
-      bucketName: `${config.appName}-static-blue-e30913b6`,
+      bucketName: `${config.appName}-${config.environment}-static-blue-e30913b6`,
       publicReadAccess: false,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
@@ -149,10 +149,10 @@ export class StaticCloudfrontDistributionStack extends cdk.Stack {
     new CrossAccountRoute53RecordSet(this, "ARecord", {
       delegationRoleName: "AmfyappRoute53Role",
       delegationRoleAccount: config.sharedServicesAccountNumber,
-      hostedZoneId: props.hostedZone.hostedZoneId,
+      hostedZoneId: config.sharedServicesHostedZoneId,
       resourceRecordSets: [
         {
-          Name: props.hostedZone.zoneName,
+          Name: config.staticDomain,
           Type: "A",
           AliasTarget: {
             DNSName: distribution.distributionDomainName,
