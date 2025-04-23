@@ -147,7 +147,7 @@ export class StaticCloudfrontDistributionStack extends cdk.Stack {
     });
 
     new CrossAccountRoute53RecordSet(this, "ARecord", {
-      delegationRoleName: "AmfyappRoute53Role",
+      delegationRoleName: `AmfyappRoute53CrossAccountDomainRole-${config.environment}`,
       delegationRoleAccount: config.sharedServicesAccountNumber,
       hostedZoneId: config.sharedServicesHostedZoneId,
       resourceRecordSets: [

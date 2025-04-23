@@ -19,7 +19,7 @@ export class CertStack extends Stack {
     const validationRole: iam.IRole = iam.Role.fromRoleArn(
       this,
       "ValidationRole",
-      config.sharedServicesCertificateRole
+      `${config.sharedServicesCertificateRole}-${config.environment}`
     );
 
     //https://github.com/trautonen/cdk-dns-validated-certificate/blob/main/src/certificate-requestor.lambda.ts#L156
