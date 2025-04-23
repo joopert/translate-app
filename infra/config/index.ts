@@ -3,6 +3,14 @@ export enum Environment {
   prod = "prod",
 }
 
+export interface PeeringOptions {
+  vpcId: string;
+  vpcCidr: string;
+  vpcOwnerId: string;
+  vpcRegion: string;
+  vpcRoleArn: string;
+}
+
 export interface Config {
   cidr: string;
   appName: string;
@@ -14,11 +22,7 @@ export interface Config {
   sharedServicesCertificateRole: string;
   environment: Environment;
   peeringVpcEnabled: boolean;
-  peeringVpcId: string;
-  peeringVpcCidr: string;
-  peeringVpcOwnerId: string;
-  peeringVpcRegion: string;
-  peeringVpcRoleArn: string;
+  peeringOptions?: PeeringOptions;
   githubActionsRole: {
     allowedRepositories: string[];
   };
@@ -31,12 +35,6 @@ const baseConfig: Partial<Config> = {
   sharedServicesHostedZoneName: "amfyapp.com",
   sharedServicesCertificateRole: `arn:aws:iam::233108183980:role/AmfyappRoute53CrossAccountCertRole`,
   peeringVpcEnabled: false,
-  peeringVpcRegion: "eu-west-1",
-  peeringVpcId: "vpc-0ad9f1ed4afee37cb",
-  peeringVpcCidr: "10.0.0.0/20",
-  peeringVpcOwnerId: "233108183980",
-  peeringVpcRoleArn:
-    "arn:aws:iam::233108183980:role/vpc-peering-acceptance-role",
   githubActionsRole: {
     allowedRepositories: [""],
   },
