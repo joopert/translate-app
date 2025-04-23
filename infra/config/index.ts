@@ -13,6 +13,7 @@ export interface Config {
   sharedServicesHostedZoneName: string;
   sharedServicesCertificateRole: string;
   environment: Environment;
+  peeringVpcEnabled: boolean;
   peeringVpcId: string;
   peeringVpcCidr: string;
   peeringVpcOwnerId: string;
@@ -29,6 +30,7 @@ const baseConfig: Partial<Config> = {
   sharedServicesHostedZoneId: "Z076379912WYARXJ96QND",
   sharedServicesHostedZoneName: "amfyapp.com",
   sharedServicesCertificateRole: `arn:aws:iam::233108183980:role/AmfyappRoute53CrossAccountCertRole`,
+  peeringVpcEnabled: false,
   peeringVpcRegion: "eu-west-1",
   peeringVpcId: "vpc-0ad9f1ed4afee37cb",
   peeringVpcCidr: "10.0.0.0/20",

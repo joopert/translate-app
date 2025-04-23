@@ -5,6 +5,8 @@ import { ApigwStack } from "./stacks/apigw/apigw-stack";
 import { verifyAwsAccount } from "./utils/account-protection";
 import { CloudfrontStack } from "./stacks/cloudfront/cloudfront-stack";
 import { GithubActionsRoleStack } from "./stacks/github-actions-role";
+import { VpcPeeringStack } from "./stacks/vpc-peering";
+import { config } from "./config";
 
 const app = new cdk.App();
 const env = {
@@ -25,6 +27,13 @@ const githubActionsRoleStack = new GithubActionsRoleStack(
 const vpcStack = new VpcStack(app, "VpcStack", {
   env,
 });
+
+if (config.peeringVpcEnabled) {
+  new VpcPeeringStack(app, "VpcPeeringStack", {
+    env,
+    vpc: vpcStack.vpc,
+  });
+}
 
 const ecsAppStack = new EcsAppStack(app, "EcsAppStack", {
   env,
