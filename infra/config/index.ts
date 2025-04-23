@@ -43,14 +43,21 @@ const baseConfig: Partial<Config> = {
 };
 
 const environmentConfigs: Record<Environment, Partial<Config>> = {
+  //cidr ranges, the 2nd octet is the app (amfyapp, pickyourflight), the 3rd octet is the environment (0=dev, 16=test, 32=acc, 48=prod)
+  //dev: 10.1.0.0/20
+  //test: 10.1.16.0/20
+  //acc: 10.1.32.0/20
+  //prod: 10.1.48.0/20
+
   [Environment.dev]: {
     cidr: "10.1.0.0/20",
     domain: "dev.amfyapp.com",
     staticDomain: "static.dev.amfyapp.com",
     environment: Environment.dev,
   },
+
   [Environment.prod]: {
-    cidr: "10.4.0.0/20",
+    cidr: "10.1.48.0/20",
     domain: "amfyapp.com",
     staticDomain: "static.amfyapp.com",
     environment: Environment.prod,
