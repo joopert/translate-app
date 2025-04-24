@@ -6,7 +6,7 @@ import { HttpApiStack } from "./httpapi";
 import { VpcLinkStack } from "./vpclink";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import { CertStack } from "./certificate";
-import { getSharedAccountHostedZone } from "../r53-hosted-zone";
+import { getSharedAccountHostedZone } from "../../utils/get-shared-r53-hosted-zone";
 
 export interface ApigwStackProps extends StackProps {
   vpc: ec2.IVpc;

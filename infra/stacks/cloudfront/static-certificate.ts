@@ -4,7 +4,7 @@ import * as iam from "aws-cdk-lib/aws-iam";
 import { Construct } from "constructs";
 import { config } from "../../config";
 import { DnsValidatedCertificate } from "@trautonen/cdk-dns-validated-certificate";
-import { getSharedAccountHostedZone } from "../r53-hosted-zone";
+import { getSharedAccountHostedZone } from "../../utils/get-shared-r53-hosted-zone";
 
 interface StaticCertificateProps extends cdk.StackProps {
   // hostedZone: r53.IHostedZone;
