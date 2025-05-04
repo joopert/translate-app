@@ -13,18 +13,22 @@ export class VpcPeeringStack extends Stack {
   constructor(scope: Construct, id: string, props: VpcPeeringStackProps) {
     super(scope, id, props);
 
+    if (!config.peeringOptions) {
+      throw new Error("Peering options not configured");
+    }
+
     // Create a VPC peering connection to the shared account VPC
     this.peeringConnection = new ec2.CfnVPCPeeringConnection(
       this,
       "VpcPeeringConnection",
       {
         vpcId: props.vpc.vpcId,
-        peerVpcId: config.peeringVpcId,
+        peerVpcId: config.peeringOptions.vpcId,
         // For cross-account peering, specify the AWS account ID
-        peerOwnerId: config.peeringVpcOwnerId,
+        peerOwnerId: config.peeringOptions?.vpcOwnerId,
         // For cross-region peering, specify the region
-        peerRegion: config.peeringVpcRegion,
-        peerRoleArn: config.peeringVpcRoleArn,
+        peerRegion: config.peeringOptions?.vpcRegion,
+        peerRoleArn: config.peeringOptions?.vpcRoleArn,
         tags: [
           {
             key: "Name",
