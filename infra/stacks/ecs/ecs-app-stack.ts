@@ -33,6 +33,7 @@ export class EcsAppStack extends Stack {
       {
         cluster: clusterStack.cluster,
         cloudmap: clusterStack.cloudmap,
+        githubActionsRole: props.githubActionsRole,
       }
     );
 
@@ -42,6 +43,7 @@ export class EcsAppStack extends Stack {
       {
         cluster: clusterStack.cluster,
         cloudmap: clusterStack.cloudmap,
+        githubActionsRole: props.githubActionsRole,
       }
     );
 
@@ -52,19 +54,5 @@ export class EcsAppStack extends Stack {
     this.cluster = clusterStack.cluster;
     this.frontendService = frontendStack.frontendService;
     this.backendService = backendStack.backendService;
-
-    if (props.githubActionsRole) {
-      props.githubActionsRole.addToPolicy(
-        new iam.PolicyStatement({
-          sid: "EcsUpdateService",
-          actions: ["ecs:UpdateService"],
-          effect: iam.Effect.ALLOW,
-          resources: [
-            this.frontendService.serviceArn,
-            this.backendService.serviceArn,
-          ],
-        })
-      );
-    }
   }
 }

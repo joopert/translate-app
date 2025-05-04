@@ -9,6 +9,7 @@ import * as servicediscovery from "aws-cdk-lib/aws-servicediscovery";
 export interface FrontendEcsServiceStackProps extends StackProps {
   cluster: ecs.Cluster;
   cloudmap: servicediscovery.INamespace;
+  githubActionsRole?: iam.Role;
 }
 
 export class FrontendEcsServiceStack extends Stack {
@@ -129,5 +130,16 @@ export class FrontendEcsServiceStack extends Stack {
         ],
       },
     });
+
+    if (props.githubActionsRole) {
+      props.githubActionsRole.addToPolicy(
+        new iam.PolicyStatement({
+          sid: "EcsUpdateServiceFrontend",
+          actions: ["ecs:UpdateService"],
+          effect: iam.Effect.ALLOW,
+          resources: [this.frontendService.serviceArn],
+        })
+      );
+    }
   }
 }
