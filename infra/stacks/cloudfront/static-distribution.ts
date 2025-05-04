@@ -133,7 +133,7 @@ export class StaticCloudfrontDistributionStack extends cdk.Stack {
     const distribution = new cloudfront.Distribution(this, "Distribution", {
       defaultBehavior: {
         origin: originGroup,
-        viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.HTTPS_ONLY,
+        viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         cachePolicy: {
           cachePolicyId: cachePolicy.cachePolicyId,
         },
