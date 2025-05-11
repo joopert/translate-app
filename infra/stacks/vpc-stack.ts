@@ -12,13 +12,13 @@ export class VpcStack extends Stack {
   constructor(scope: Construct, id: string, props: IVpcStackProps) {
     super(scope, id, props);
 
-    const eip = new ec2.CfnEIP(this, "EIP", {});
+    // const eip = new ec2.CfnEIP(this, "EIP", {}); // only needed when a static ip is required
     const natGatewayProvider = new FckNatInstanceProvider({
       instanceType: ec2.InstanceType.of(
         ec2.InstanceClass.T4G,
         ec2.InstanceSize.NANO
       ),
-      eipPool: [eip.attrAllocationId],
+      // eipPool: [eip.attrAllocationId],
       enableSsm: true,
     });
 
