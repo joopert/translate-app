@@ -28,23 +28,6 @@ export class HttpApiStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: HttpApiStackProps) {
     super(scope, id, props);
 
-    // const x = new apigw.HttpIntegration(this, "asd", {
-    //   httpApi: props.httpApi,
-    //   integrationType: apigw.HttpIntegrationType.HTTP_PROXY,
-    //   connectionType: apigw.HttpConnectionType.VPC_LINK,
-
-    // });
-    // const serviceDiscoveryInt =
-    //   new integrations.HttpUrlIntegration(
-    //     "HttpServiceDiscovery",
-    //     "http://amfyapp.com",
-    //     {
-    //       vpcLink: props.vpcLink,
-
-    //       //   method: apigw.HttpMethod.ANY,
-    //     }
-    //   );
-
     const apigwDomainName = new apigw.DomainName(this, "DomainName", {
       domainName: config.domain,
       certificate: props.certificate,
@@ -54,33 +37,13 @@ export class HttpApiStack extends cdk.Stack {
       apiName: config.domain,
       createDefaultStage: true,
       disableExecuteApiEndpoint: true,
-
-      //   defaultIntegration: serviceDiscoveryInt,
       defaultDomainMapping: {
         domainName: apigwDomainName,
       },
-      //   defaultIntegration: new integrations.HttpServiceDiscoveryIntegration(
-      //     "DefaultIntegration",
-      //     serviceDiscoveryInt,
-      //     { vpcLink: props.vpcLink }
-      //   ),
-      //   defaultIntegration: new integrations.HttpServiceDiscoveryIntegration(
-      //     "DefaultIntegration",
-      //     //@ts-ignore
-      //     props.backendService.cloudMapService,
-      //     {
-      //       vpcLink: props.vpcLink,
-      //     }
-      //   ),
-      // });
-      // this.httpApi.addRoutes({
-      //   path: "/api/v1/{proxy+}",
-      //   integration: ,
-      // });
     });
 
-    new CrossAccountRoute53RecordSet(this, "ARecord", {
-      delegationRoleName: `AmfyappRoute53CrossAccountDomainRole-${config.environment}`,
+    new CrossAccountRoute53RecordSet(this, "CrossAccountARecordHttpApi", {
+      delegationRoleName: `${config.sharedServicesRoute53CrossAccountDomainRole}-${config.environment}`,
       delegationRoleAccount: config.sharedServicesAccountNumber,
       hostedZoneId: config.sharedServicesHostedZoneId,
       resourceRecordSets: [
