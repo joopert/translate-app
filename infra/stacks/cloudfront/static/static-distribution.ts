@@ -7,19 +7,23 @@ import * as route53 from "aws-cdk-lib/aws-route53";
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import { CrossAccountRoute53RecordSet } from "cdk-cross-account-route53";
 import { Construct } from "constructs";
-import { config } from "../../config";
+import { config } from "../../../config";
 import * as iam from "aws-cdk-lib/aws-iam";
+import * as lambda from "aws-cdk-lib/aws-lambda";
 
 interface StaticCloudfrontDistributionProps extends cdk.StackProps {
   hostedZone: route53.IHostedZone;
   certificate: acm.ICertificate;
   githubActionsRole?: iam.Role;
+  blueBucketName: string;
+  greenBucketName: string;
+  lambdaFunctionName: string;
 }
 
 export class StaticCloudfrontDistributionStack extends cdk.Stack {
+  public readonly blueGreenParameter: ssm.StringParameter;
   public readonly greenBucket: s3.Bucket;
   public readonly blueBucket: s3.Bucket;
-  public readonly blueGreenParameter: ssm.StringParameter;
 
   constructor(
     scope: Construct,
@@ -38,16 +42,9 @@ export class StaticCloudfrontDistributionStack extends cdk.Stack {
       }
     );
     this.greenBucket = new s3.Bucket(this, "GreenBucket", {
-      bucketName: `${config.appName}-${config.environment}-static-green-e30913b6`,
-      publicReadAccess: false,
+      bucketName: props.blueBucketName,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
-      blockPublicAccess: {
-        blockPublicAcls: false,
-        blockPublicPolicy: false,
-        ignorePublicAcls: false,
-        restrictPublicBuckets: false,
-      },
       cors: [
         {
           allowedMethods: [s3.HttpMethods.GET, s3.HttpMethods.HEAD],
@@ -62,17 +59,11 @@ export class StaticCloudfrontDistributionStack extends cdk.Stack {
       ],
     });
 
-    this.blueBucket = new s3.Bucket(this, "blueBucket", {
-      bucketName: `${config.appName}-${config.environment}-static-blue-e30913b6`,
+    this.blueBucket = new s3.Bucket(this, "BlueBucket", {
+      bucketName: props.greenBucketName,
       publicReadAccess: false,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
-      blockPublicAccess: {
-        blockPublicAcls: false,
-        blockPublicPolicy: false,
-        ignorePublicAcls: false,
-        restrictPublicBuckets: false,
-      },
       cors: [
         {
           allowedMethods: [s3.HttpMethods.GET, s3.HttpMethods.HEAD],
@@ -85,6 +76,46 @@ export class StaticCloudfrontDistributionStack extends cdk.Stack {
         },
       ],
     });
+    const greenBucketPolicy = new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      principals: [new iam.ServicePrincipal("lambda.amazonaws.com")],
+      actions: ["s3:GetObject", "s3:ListBucket"],
+      resources: [
+        this.greenBucket.bucketArn,
+        `${this.greenBucket.bucketArn}/*`,
+      ],
+      conditions: {
+        StringEquals: {
+          "AWS:SourceArn": [
+            lambda.Function.fromFunctionName(
+              this,
+              "LambdaPolicyGreenBucket",
+              props.lambdaFunctionName
+            ).functionArn,
+          ],
+        },
+      },
+    });
+    this.greenBucket.addToResourcePolicy(greenBucketPolicy);
+
+    const blueBucketPolicy = new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      principals: [new iam.ServicePrincipal("lambda.amazonaws.com")],
+      actions: ["s3:GetObject", "s3:ListBucket"],
+      resources: [this.blueBucket.bucketArn, `${this.blueBucket.bucketArn}/*`],
+      conditions: {
+        StringEquals: {
+          "AWS:SourceArn": [
+            lambda.Function.fromFunctionName(
+              this,
+              "LambdaPolicyBlueBucket",
+              props.lambdaFunctionName
+            ).functionArn,
+          ],
+        },
+      },
+    });
+    this.blueBucket.addToResourcePolicy(blueBucketPolicy);
 
     const originGroup = new origins.OriginGroup({
       primaryOrigin: origins.S3BucketOrigin.withOriginAccessControl(
@@ -94,7 +125,9 @@ export class StaticCloudfrontDistributionStack extends cdk.Stack {
           originAccessControl: new cloudfront.S3OriginAccessControl(
             this,
             "OriginAccessControlGreen",
-            {}
+            {
+              description: "Origin Access Control for green bucket",
+            }
           ),
         }
       ),
@@ -106,7 +139,9 @@ export class StaticCloudfrontDistributionStack extends cdk.Stack {
           originAccessControl: new cloudfront.S3OriginAccessControl(
             this,
             "OriginAccessControlBlue",
-            {}
+            {
+              description: "Origin Access Control for blue bucket",
+            }
           ),
         }
       ),
@@ -131,6 +166,7 @@ export class StaticCloudfrontDistributionStack extends cdk.Stack {
     );
 
     const distribution = new cloudfront.Distribution(this, "Distribution", {
+      comment: config.staticDomain,
       defaultBehavior: {
         origin: originGroup,
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
@@ -146,8 +182,8 @@ export class StaticCloudfrontDistributionStack extends cdk.Stack {
       httpVersion: cloudfront.HttpVersion.HTTP2_AND_3,
     });
 
-    new CrossAccountRoute53RecordSet(this, "ARecord", {
-      delegationRoleName: `AmfyappRoute53CrossAccountDomainRole-${config.environment}`,
+    new CrossAccountRoute53RecordSet(this, "CrossAccountARecordStatic", {
+      delegationRoleName: `${config.sharedServicesRoute53CrossAccountDomainRole}-${config.environment}`,
       delegationRoleAccount: config.sharedServicesAccountNumber,
       hostedZoneId: config.sharedServicesHostedZoneId,
       resourceRecordSets: [
@@ -185,7 +221,7 @@ export class StaticCloudfrontDistributionStack extends cdk.Stack {
 
       props.githubActionsRole.addToPolicy(
         new iam.PolicyStatement({
-          sid: "SSMAccess",
+          sid: "SSMAccessStaticCloudfront",
           actions: [
             "ssm:DescribeParameters",
             "ssm:GetParameters",

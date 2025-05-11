@@ -1,10 +1,12 @@
 import { Stack, StackProps } from "aws-cdk-lib";
 import { Construct } from "constructs";
-import { StaticCloudfrontDistributionStack } from "./static-distribution";
-import { StaticCertificateStack } from "./static-certificate";
+import { StaticCloudfrontDistributionStack } from "./static/static-distribution";
+import { StaticCertificateStack } from "./static/static-certificate";
 import { getSharedAccountHostedZone } from "../../utils/get-shared-r53-hosted-zone";
 import * as iam from "aws-cdk-lib/aws-iam";
-
+import { ImageCertificateStack } from "./image-optimization/image-certificate";
+import { ImageOptimizationStack } from "./image-optimization/image-optimization-stack";
+import { config } from "../../config";
 export interface CloudfrontStackProps extends StackProps {
   githubActionsRole?: iam.Role;
 }
@@ -14,12 +16,46 @@ export class CloudfrontStack extends Stack {
     super(scope, id, props);
 
     const hostedZoneSharedAccount = getSharedAccountHostedZone(this);
-    const certificate = new StaticCertificateStack(this, "Certificate", {});
+    const blueBucketName = `${config.appName}-${config.environment}-static-blue-e30913b6`;
+    const greenBucketName = `${config.appName}-${config.environment}-static-green-e30913b6`;
+    const lambdaFunctionName = "image-optimization";
 
-    new StaticCloudfrontDistributionStack(this, "Distribution", {
-      hostedZone: hostedZoneSharedAccount,
-      certificate: certificate.certificate,
-      githubActionsRole: props.githubActionsRole,
-    });
+    const staticCertificate = new StaticCertificateStack(
+      this,
+      "StaticCertificate",
+      {}
+    );
+
+    const imageCertificate = new ImageCertificateStack(
+      this,
+      "ImageCertificate",
+      {}
+    );
+
+    const staticDistribution = new StaticCloudfrontDistributionStack(
+      this,
+      "StaticDistributionStack",
+      {
+        hostedZone: hostedZoneSharedAccount,
+        certificate: staticCertificate.certificate,
+        githubActionsRole: props.githubActionsRole,
+        blueBucketName,
+        greenBucketName,
+        lambdaFunctionName: lambdaFunctionName,
+      }
+    );
+
+    const imageOptimization = new ImageOptimizationStack(
+      this,
+      "ImageOptimizationStack",
+      {
+        githubActionsRole: props.githubActionsRole,
+        certificate: imageCertificate.certificate,
+        blueBucketName,
+        greenBucketName,
+        lambdaFunctionName: lambdaFunctionName,
+      }
+    );
+    imageOptimization.node.addDependency(staticDistribution);
   }
 }
