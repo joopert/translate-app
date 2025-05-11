@@ -1,5 +1,22 @@
 # Getting Started
 
+## Create a new release
+
+Go to Actions --> `Bump release` --> select correct type (`major`, `minor`, `patch`) --> wait 30s --> go to pull requests --> Select "rebase and merge". A new version is now created.
+
+## Configure GitHub
+
+The default strategy we use is GitFlow.
+Even though we have a monorepo for backend, frontend and infra. We just use one version for all. If there is a bugfix needed while other stuff is merged to `dev`, we still update everything. Otherwise it shouldn't have been merged with `dev`.
+
+Set the following settings on GitHub:
+
+- set default branch = dev
+- disable `Allow merge commits`
+- disable `Allow rebase merging`
+
+For the bump-release workflow to work you must explicitly allow GitHub Actions to create pull requests. This setting can be found in a repository's settings under Actions > General > Workflow permissions.
+
 ## autoupdate-pre-commit
 
 You need to add a Personal Access Token called `PRECOMMIT_PR_TOKEN` to your repository secrets.
