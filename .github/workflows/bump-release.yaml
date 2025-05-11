@@ -1,0 +1,92 @@
+name: Bump release
+
+# This workflow bumps the version number in the dev branch
+# After merging to main, you can then build and deploy the versioned code
+on:
+  workflow_dispatch:
+    inputs:
+      bump-type:
+        description: "Bump type"
+        required: true
+        default: "patch"
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+
+  # Optional: Auto back-merge when PR is merged to main
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+
+jobs:
+  bump-release:
+    runs-on: ubuntu-latest
+    # Only run this job when triggered from the dev branch
+    if: github.ref == 'refs/heads/dev'
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+
+      - name: Bump version
+        id: bump
+        uses: callowayproject/bump-my-version@master
+        env:
+          BUMPVERSION_TAG: "true"
+        with:
+          args: ${{ inputs.bump-type }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check
+        if: steps.bump.outputs.bumped == 'true'
+        run: |
+          echo "Version was bumped from ${{ steps.bump.outputs.previous-version }} to ${{ steps.bump.outputs.current-version }}!"
+
+      - name: Create Pull Request
+        if: steps.bump.outputs.bumped == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Merge version bump ${{ steps.bump.outputs.current-version }} into main
+          branch: release/v${{ steps.bump.outputs.current-version }}
+          base: main
+          title: "Release ${{ steps.bump.outputs.current-version }} [REBASE]"
+          body: |
+            ## Version Bump: ${{ steps.bump.outputs.previous-version }} → ${{ steps.bump.outputs.current-version }}
+
+            ⚠️ This PR must be merged using the **Rebase and merge** option.
+
+            This PR was automatically created by the version bump workflow.
+
+            Changes included in this release:
+            - Bumped version from ${{ steps.bump.outputs.previous-version }} to ${{ steps.bump.outputs.current-version }}
+
+  # Automatically back-merge changes to dev when PR is closed
+  back-merge-to-dev:
+    runs-on: ubuntu-latest
+    # Only run when a PR to main is merged, not when closed without merging
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Back-merge main to dev
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git checkout dev
+          git merge --no-ff origin/main -m "Back-merge main into dev (${{ steps.bump.outputs.current-version }}) [skip ci]"
+          git push origin dev
