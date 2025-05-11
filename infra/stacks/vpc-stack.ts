@@ -1,7 +1,7 @@
 import { Construct } from "constructs";
-import { Stack, StackProps } from "aws-cdk-lib";
+import { Stack, StackProps, Tags } from "aws-cdk-lib";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
-import { config } from "../config";
+import { config, Environment } from "../config";
 import { FckNatInstanceProvider } from "cdk-fck-nat";
 
 interface IVpcStackProps extends StackProps {}
@@ -64,5 +64,11 @@ export class VpcStack extends Stack {
       ec2.Port.allTraffic(),
       "Allow traffic from VPC"
     );
+
+    if (config.environment === Environment.dev) {
+      natGatewayProvider.autoScalingGroups.forEach((asg) => {
+        Tags.of(asg).add("ManagedByScheduler", "true");
+      });
+    }
   }
 }
