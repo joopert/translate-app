@@ -16,8 +16,8 @@ export class CloudfrontStack extends Stack {
     super(scope, id, props);
 
     const hostedZoneSharedAccount = getSharedAccountHostedZone(this);
-    const blueBucketName = `${config.appName}-${config.environment}-static-blue-e30913b6`;
-    const greenBucketName = `${config.appName}-${config.environment}-static-green-e30913b6`;
+    const blueBucketName = `${config.appName}-${config.environment}-static-blue-${config.uniqueId}`;
+    const greenBucketName = `${config.appName}-${config.environment}-static-green-${config.uniqueId}`;
     const lambdaFunctionName = "image-optimization";
 
     const staticCertificate = new StaticCertificateStack(

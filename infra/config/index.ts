@@ -94,6 +94,12 @@ export interface Config {
   environment: Environment;
 
   /**
+   * A unique identifier for the application.
+   * Used to ensure that resources are unique across accounts and regions.
+   */
+  uniqueId: string;
+
+  /**
    * Flag indicating whether VPC peering should be enabled.
    * When true, sets up network connectivity between the application VPC and other VPCs.
    */
@@ -143,6 +149,7 @@ export interface Config {
 
 const baseConfig: Partial<Config> = {
   appName: "amfyapp",
+  uniqueId: "8ad5e5e6",
   sharedServicesAccountNumber: "233108183980",
   sharedServicesHostedZoneId: "Z076379912WYARXJ96QND",
   sharedServicesHostedZoneName: "amfyapp.com",
