@@ -12,18 +12,18 @@
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
-    "@types/node": "22.14.1",
-    "aws-cdk": "2.1010.0",
+    "@types/node": "22.15.17",
+    "aws-cdk": "2.1014.0",
     "jest": "^29.7.0",
-    "ts-jest": "^29.2.5",
+    "ts-jest": "^29.3.2",
     "ts-node": "^10.9.2",
     "typescript": "~5.8.3"
   },
   "dependencies": {
-    "@trautonen/cdk-dns-validated-certificate": "0.1.12",
-    "aws-cdk-lib": "2.190.0",
+    "@trautonen/cdk-dns-validated-certificate": "0.1.14",
+    "aws-cdk-lib": "2.195.0",
     "cdk-cross-account-route53": "^1.0.1",
-    "cdk-fck-nat": "1.5.17",
-    "constructs": "^10.0.0"
+    "cdk-fck-nat": "1.6.0",
+    "constructs": "^10.4.2"
   }
 }
