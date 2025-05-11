@@ -1,10 +1,11 @@
-import { Stack, StackProps } from "aws-cdk-lib";
+import { Stack, StackProps, Tags } from "aws-cdk-lib";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as asg from "aws-cdk-lib/aws-autoscaling";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import { Construct } from "constructs";
 import * as servicediscovery from "aws-cdk-lib/aws-servicediscovery";
+import { config, Environment } from "../../config";
 
 export interface EcsClusterStackProps extends StackProps {
   vpc: ec2.IVpc;
@@ -66,15 +67,13 @@ export class EcsClusterStack extends Stack {
 
     this.asg = new asg.AutoScalingGroup(this, "ASG", {
       vpc: props.vpc,
-      instanceType: ec2.InstanceType.of(
-        ec2.InstanceClass.T4G,
-        ec2.InstanceSize.MICRO
-        // need to explain that we're using a ec2 with twice the memory needed, because during deployment ecs will complain
-      ), // https://github.com/aws/amazon-ecs-agent/issues/4397 changed from ARM to this because of issue.
+      instanceType: config.ec2Ec2.frontendBackend.instanceType,
+      // need to explain that we're using a ec2 with twice the memory needed, because during deployment ecs will complain
+      // https://github.com/aws/amazon-ecs-agent/issues/4397 changed from ARM to this because of issue.
       machineImage: ecs.EcsOptimizedImage.amazonLinux2023(
         ecs.AmiHardwareType.ARM
       ),
-      desiredCapacity: 1,
+      desiredCapacity: 1, // TODO: make this configurable per environment
       minCapacity: 1,
       maxCapacity: 1,
       vpcSubnets: {
@@ -85,11 +84,13 @@ export class EcsClusterStack extends Stack {
       securityGroup: ecsSg,
       autoScalingGroupName: "ASG-ECS",
       requireImdsv2: true,
-      spotPrice: "0.005",
+      spotPrice: config.ec2Ec2.frontendBackend.spotPrice,
       capacityRebalance: true,
       role: ec2InstanceRoleForEcs,
     });
-
+    if (config.environment === Environment.dev) {
+      Tags.of(this.asg).add("ManagedByScheduler", "true");
+    }
     //docs.aws.amazon.com/cloud-map/latest/dg/security-iam-awsmanpol.html
     const capacityProvider = new ecs.AsgCapacityProvider(
       this,

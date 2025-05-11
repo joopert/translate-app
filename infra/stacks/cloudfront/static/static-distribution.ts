@@ -202,7 +202,7 @@ export class StaticCloudfrontDistributionStack extends cdk.Stack {
     if (props.githubActionsRole) {
       props.githubActionsRole.addToPolicy(
         new iam.PolicyStatement({
-          sid: "S3Access",
+          sid: "S3AccessBlueGreenBuckets",
           actions: [
             "s3:PutObject",
             "s3:GetObject",

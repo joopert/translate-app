@@ -7,10 +7,17 @@ import { EcsClusterStack } from "./cluster";
 import * as servicediscovery from "aws-cdk-lib/aws-servicediscovery";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as iam from "aws-cdk-lib/aws-iam";
+import * as s3 from "aws-cdk-lib/aws-s3";
+import * as ssm from "aws-cdk-lib/aws-ssm";
+import * as ecr from "aws-cdk-lib/aws-ecr";
 
 export interface EcsAppStackProps extends StackProps {
   vpc: ec2.IVpc;
   githubActionsRole?: iam.Role;
+  bucket: s3.Bucket;
+  applicationSecrets: ssm.StringParameter;
+  ecrBackendRepo: ecr.Repository;
+  ecrFrontendRepo: ecr.Repository;
 }
 
 export class EcsAppStack extends Stack {
@@ -34,6 +41,9 @@ export class EcsAppStack extends Stack {
         cluster: clusterStack.cluster,
         cloudmap: clusterStack.cloudmap,
         githubActionsRole: props.githubActionsRole,
+        bucket: props.bucket,
+        applicationSecrets: props.applicationSecrets,
+        backendEcrRepo: props.ecrBackendRepo,
       }
     );
 
@@ -44,6 +54,8 @@ export class EcsAppStack extends Stack {
         cluster: clusterStack.cluster,
         cloudmap: clusterStack.cloudmap,
         githubActionsRole: props.githubActionsRole,
+        applicationSecrets: props.applicationSecrets,
+        frontendEcrRepo: props.ecrFrontendRepo,
       }
     );
 

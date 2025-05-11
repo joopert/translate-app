@@ -5,11 +5,16 @@ import * as logs from "aws-cdk-lib/aws-logs";
 import * as cdk from "aws-cdk-lib";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as servicediscovery from "aws-cdk-lib/aws-servicediscovery";
+import { config } from "../../config";
+import * as ssm from "aws-cdk-lib/aws-ssm";
+import * as ecr from "aws-cdk-lib/aws-ecr";
 
 export interface FrontendEcsServiceStackProps extends StackProps {
   cluster: ecs.Cluster;
   cloudmap: servicediscovery.INamespace;
   githubActionsRole?: iam.Role;
+  applicationSecrets: ssm.StringParameter;
+  frontendEcrRepo: ecr.Repository;
 }
 
 export class FrontendEcsServiceStack extends Stack {
@@ -31,20 +36,19 @@ export class FrontendEcsServiceStack extends Stack {
       roleName: "ecsTaskRoleFrontend",
       assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
       inlinePolicies: {
-        // ssmAccess: new iam.PolicyDocument({
-        //   statements: [
-        //     new iam.PolicyStatement({
-        //       actions: [
-        //         "ssm:DescribeParameters",
-        //         "ssm:GetParameters",
-        //         "ssm:GetParameter",
-        //       ],
-        //       effect: iam.Effect.ALLOW,
-        //       resources: ["*"],
-        //       // resources: [props.applicationSecrets.parameterArn],
-        //     }),
-        //   ],
-        // }),
+        ssmAccess: new iam.PolicyDocument({
+          statements: [
+            new iam.PolicyStatement({
+              actions: [
+                "ssm:DescribeParameters",
+                "ssm:GetParameters",
+                "ssm:GetParameter",
+              ],
+              effect: iam.Effect.ALLOW,
+              resources: [props.applicationSecrets.parameterArn],
+            }),
+          ],
+        }),
       },
     });
 
@@ -68,19 +72,19 @@ export class FrontendEcsServiceStack extends Stack {
             }),
           ],
         }),
-        // ecrAccess: new iam.PolicyDocument({
-        //   statements: [
-        //     new iam.PolicyStatement({
-        //       actions: [
-        //         "ecr:GetAuthorizationToken",
-        //         "ecr:BatchCheckLayerAvailability",
-        //         "ecr:GetDownloadUrlForLayer",
-        //         "ecr:BatchGetImage",
-        //       ],
-        //       resources: ["*"],
-        //     }),
-        //   ],
-        // }),
+        ecrAccess: new iam.PolicyDocument({
+          statements: [
+            new iam.PolicyStatement({
+              actions: [
+                "ecr:GetAuthorizationToken",
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+              ],
+              resources: [props.frontendEcrRepo.repositoryArn],
+            }),
+          ],
+        }),
       },
     });
 
@@ -97,18 +101,28 @@ export class FrontendEcsServiceStack extends Stack {
 
     frontendTaskDefinition.addContainer("frontend", {
       containerName: "frontend",
-      image: ecs.ContainerImage.fromRegistry(
-        "public.ecr.aws/z2b2a2g2/joopert/fastapi-hello-world:latest"
+      image: ecs.ContainerImage.fromEcrRepository(
+        props.frontendEcrRepo,
+        "latest"
       ),
       environment: {
         APP_ENV: "frontend",
+        ENVIRONMENT: config.environment,
+        NUXT_PUBLIC_BASE_URL: `https://${config.domain}`,
+        NUXT_APP_CDN_URL: `https://${config.staticDomain}`,
+        // IMAGE_CLOUDFRONT_URL: props.cloudfrontUrl, //`https://${domainName}.s3.amazonaws.com`,
+        // NUXT_API_SERVICE_NAME: config.internalService, probably not needed anymore, used by nuxt ssr base url
+        // NUXT_API_DOMAIN: config.internalUrl, probably not needed anymore, used by nuxt ssr base url
+        NUXT_SITE_URL: `https://${config.domain}`,
+        NUXT_PUBLIC_LOG_LEVEL: "info",
+        NUXT_PUBLIC_IMAGE_CDN: `https://${config.imageDomain}`, // this comes from the separate cdk project for image optimization
       },
       logging: ecs.LogDriver.awsLogs({
         logGroup: frontendLogGroup,
         streamPrefix: "frontend",
       }),
       memoryReservationMiB: 128,
-      portMappings: [{ containerPort: 80, name: "frontend" }], //TODO: set to correct port
+      portMappings: [{ containerPort: 3000, name: "frontend" }],
     });
 
     this.frontendService = new ecs.Ec2Service(this, "frontendEcsService", {
@@ -134,7 +148,7 @@ export class FrontendEcsServiceStack extends Stack {
     if (props.githubActionsRole) {
       props.githubActionsRole.addToPolicy(
         new iam.PolicyStatement({
-          sid: "EcsUpdateServiceFrontend",
+          sid: "EcsUpdateService",
           actions: ["ecs:UpdateService"],
           effect: iam.Effect.ALLOW,
           resources: [this.frontendService.serviceArn],
