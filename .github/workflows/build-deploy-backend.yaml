@@ -1,0 +1,73 @@
+name: push backend
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "feat-**"
+    paths:
+      - "backend/**"
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_ACCOUNT_ID: "013683317612"
+
+jobs:
+  build-and-push-docker-to-ecr:
+    runs-on: ubuntu-latest
+    outputs:
+      image: ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }}
+    env:
+      REGISTRY: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.eu-west-1.amazonaws.com
+      REPOSITORY: amfyapp-backend
+      IMAGE_TAG: latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: install-aws-cli-action
+        uses: unfor19/install-aws-cli-action@v1
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/githubActionsRole
+          aws-region: eu-west-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          registries: "${{ env.AWS_ACCOUNT_ID }}"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          platforms: linux/arm64
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }}
+          file: backend/Dockerfile
+          provenance: false # makes sure you only get amd64 build in ECR.
+
+  deploy:
+    needs: build-and-push-docker-to-ecr
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/githubActionsRole
+          aws-region: eu-west-1
+
+      - name: Update ECS service
+        run: |
+          aws ecs update-service --service backend --cluster app-ecs-cluster --force-new-deployment
