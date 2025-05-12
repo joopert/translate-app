@@ -21,6 +21,7 @@ export interface BackendEcsServiceStackProps extends StackProps {
 
 export class BackendEcsServiceStack extends Stack {
   public readonly backendService: ecs.Ec2Service;
+  public readonly taskRoleBackend: iam.Role;
 
   constructor(
     scope: Construct,
@@ -34,7 +35,7 @@ export class BackendEcsServiceStack extends Stack {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
-    const taskRole = new iam.Role(this, "ecsTaskRoleBackend", {
+    this.taskRoleBackend = new iam.Role(this, "ecsTaskRoleBackend", {
       roleName: "ecsTaskRoleBackend",
       assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
       inlinePolicies: {
@@ -107,7 +108,7 @@ export class BackendEcsServiceStack extends Stack {
       this,
       "BackendTaskDef",
       {
-        taskRole: taskRole,
+        taskRole: this.taskRoleBackend,
         executionRole: taskExecutionRole,
         networkMode: ecs.NetworkMode.BRIDGE,
         family: "backend-task",

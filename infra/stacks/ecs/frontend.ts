@@ -19,6 +19,7 @@ export interface FrontendEcsServiceStackProps extends StackProps {
 
 export class FrontendEcsServiceStack extends Stack {
   public readonly frontendService: ecs.Ec2Service;
+  public readonly taskRoleFrontend: iam.Role;
 
   constructor(
     scope: Construct,
@@ -32,7 +33,7 @@ export class FrontendEcsServiceStack extends Stack {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
-    const taskRole = new iam.Role(this, "ecsTaskRoleFrontend", {
+    this.taskRoleFrontend = new iam.Role(this, "ecsTaskRoleFrontend", {
       roleName: "ecsTaskRoleFrontend",
       assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
       inlinePolicies: {
@@ -92,7 +93,7 @@ export class FrontendEcsServiceStack extends Stack {
       this,
       "FrontendTaskDef",
       {
-        taskRole: taskRole,
+        taskRole: this.taskRoleFrontend,
         executionRole: taskExecutionRole,
         family: "frontend-task",
         networkMode: ecs.NetworkMode.BRIDGE, // aws_vpc is recommended. But it will use a seperate ENI. A t4g.medium only has max 3 ENI's so max 2 containers per ec2.
