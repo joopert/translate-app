@@ -5,8 +5,9 @@ import { ApigwStack } from "./stacks/apigw/apigw-stack";
 import { verifyAwsAccount } from "./utils/account-protection";
 import { CloudfrontStack } from "./stacks/cloudfront/cloudfront-stack";
 import { GithubActionsRoleStack } from "./stacks/github-actions-role";
-import { VpcPeeringStack } from "./stacks/vpc-peering";
-import { config } from "./config";
+import { CognitoStack } from "./stacks/cognito/cognito-stack";
+import { GenericStack } from "./stacks/generic";
+import { EcrStack } from "./stacks/ecr";
 
 const app = new cdk.App();
 const env = {
@@ -24,21 +25,26 @@ const githubActionsRoleStack = new GithubActionsRoleStack(
   }
 );
 
-const vpcStack = new VpcStack(app, "VpcStack", {
+const genericStack = new GenericStack(app, "GenericStack", {
+  env,
+  githubActionsRole: githubActionsRoleStack.role,
+});
+
+const ecrReposStack = new EcrStack(app, "EcrStack", {
   env,
 });
 
-if (config.peeringVpcEnabled) {
-  new VpcPeeringStack(app, "VpcPeeringStack", {
-    env,
-    vpc: vpcStack.vpc,
-  });
-}
+const vpcStack = new VpcStack(app, "VpcStack", {
+  env,
+});
 
 const ecsAppStack = new EcsAppStack(app, "EcsAppStack", {
   env,
   vpc: vpcStack.vpc,
   githubActionsRole: githubActionsRoleStack.role,
+  applicationSecrets: genericStack.applicationSecrets,
+  ecrBackendRepo: ecrReposStack.backendRepo,
+  ecrFrontendRepo: ecrReposStack.frontendRepo,
 });
 
 const apigwStack = new ApigwStack(app, "ApigwStack", {
@@ -55,3 +61,7 @@ new CloudfrontStack(app, "CloudfrontStack", {
 });
 
 apigwStack.addDependency(ecsAppStack);
+
+new CognitoStack(app, "CognitoStack", {
+  env: env,
+});
