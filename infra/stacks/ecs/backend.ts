@@ -5,7 +5,7 @@ import * as cdk from "aws-cdk-lib";
 import * as iam from "aws-cdk-lib/aws-iam";
 import { Construct } from "constructs";
 import * as servicediscovery from "aws-cdk-lib/aws-servicediscovery";
-import { config } from "../../config";
+import { config, Environment } from "../../config";
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import * as ecr from "aws-cdk-lib/aws-ecr";
 
@@ -102,6 +102,10 @@ export class BackendEcsServiceStack extends Stack {
 
     backendTaskDefinition.addContainer("backend", {
       containerName: "backend",
+      stopTimeout:
+        config.environment === Environment.dev
+          ? cdk.Duration.seconds(2)
+          : undefined,
       image: ecs.ContainerImage.fromEcrRepository(
         props.backendEcrRepo,
         "latest"
