@@ -14,7 +14,7 @@ export interface FrontendEcsServiceStackProps extends StackProps {
   cloudmap: servicediscovery.INamespace;
   githubActionsRole?: iam.Role;
   applicationSecrets: ssm.StringParameter;
-  frontendEcrRepo: ecr.Repository;
+  frontendEcrRepo: ecr.IRepository;
 }
 
 export class FrontendEcsServiceStack extends Stack {

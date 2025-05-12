@@ -16,8 +16,8 @@ export interface EcsAppStackProps extends StackProps {
   githubActionsRole?: iam.Role;
   bucket: s3.Bucket;
   applicationSecrets: ssm.StringParameter;
-  ecrBackendRepo: ecr.Repository;
-  ecrFrontendRepo: ecr.Repository;
+  ecrBackendRepo: ecr.IRepository;
+  ecrFrontendRepo: ecr.IRepository;
 }
 
 export class EcsAppStack extends Stack {

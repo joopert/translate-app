@@ -16,7 +16,7 @@ export interface BackendEcsServiceStackProps extends StackProps {
   githubActionsRole?: iam.Role;
   bucket: Bucket;
   applicationSecrets: ssm.StringParameter;
-  backendEcrRepo: ecr.Repository;
+  backendEcrRepo: ecr.IRepository;
 }
 
 export class BackendEcsServiceStack extends Stack {
