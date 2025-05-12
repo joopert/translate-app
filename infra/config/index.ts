@@ -153,7 +153,9 @@ const baseConfig: Partial<Config> = {
   sharedServicesAccountNumber: "233108183980",
   sharedServicesHostedZoneId: "Z076379912WYARXJ96QND",
   sharedServicesHostedZoneName: "amfyapp.com",
-  sharedServicesCertificateRole: `arn:aws:iam::233108183980:role/AmfyappRoute53CrossAccountCertRole`,
+  sharedServicesCertificateRole: `arn:aws:iam::233108183980:role/amfyappRoute53CrossAccountCertRole`, //-environment suffix is added later.
+  sharedServicesRoute53CrossAccountDomainRole:
+    "amfyappRoute53CrossAccountDomainRole",
   peeringVpcEnabled: false,
   githubActionsRole: {
     allowedRepositories: [""],

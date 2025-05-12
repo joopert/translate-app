@@ -127,7 +127,7 @@ export class UserPoolStack extends cdk.Stack {
       this,
       "ARecord",
       {
-        delegationRoleName: `${config.sharedServicesRoute53CrossAccountDomainRole}-${config.environment}`,
+        delegationRoleName: `${config.sharedServicesRoute53CrossAccountDomainRole}-${config.environment}`, // CDK deployment failed? See note above!
         delegationRoleAccount: config.sharedServicesAccountNumber,
         hostedZoneId: config.sharedServicesHostedZoneId,
         resourceRecordSets: [
