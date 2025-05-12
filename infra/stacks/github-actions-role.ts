@@ -25,6 +25,7 @@ export class GithubActionsRoleStack extends cdk.Stack {
     });
 
     this.role = new iam.Role(this, "GithubActionsRole", {
+      // this role name is used in the github actions workflows, also in shared account cdk code
       roleName: "githubActionsRole",
       assumedBy: new iam.FederatedPrincipal(
         `arn:aws:iam::${this.account}:oidc-provider/token.actions.githubusercontent.com`,
@@ -33,7 +34,7 @@ export class GithubActionsRoleStack extends cdk.Stack {
             "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
           },
           StringLike: {
-            "token.actions.githubusercontent.com:sub": repos,
+            "token.actions.githubusercontent.com:sub": repos, // TODO: this is not secure for a public repo.
           },
         },
         "sts:AssumeRoleWithWebIdentity"

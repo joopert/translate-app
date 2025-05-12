@@ -68,7 +68,7 @@ export class BackendEcsServiceStack extends Stack {
     });
 
     const taskExecutionRole = new iam.Role(this, "BackendTaskExecutionRole", {
-      roleName: "backendTaskExecutionRole",
+      roleName: "backendTaskExecutionRole", // this role name is used in the shared account cdk code
       assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
       managedPolicies: [
         iam.ManagedPolicy.fromAwsManagedPolicyName(
