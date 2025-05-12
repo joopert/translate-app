@@ -14,7 +14,6 @@ import * as ecr from "aws-cdk-lib/aws-ecr";
 export interface EcsAppStackProps extends StackProps {
   vpc: ec2.IVpc;
   githubActionsRole?: iam.Role;
-  bucket: s3.Bucket;
   applicationSecrets: ssm.StringParameter;
   ecrBackendRepo: ecr.IRepository;
   ecrFrontendRepo: ecr.IRepository;
@@ -41,7 +40,6 @@ export class EcsAppStack extends Stack {
         cluster: clusterStack.cluster,
         cloudmap: clusterStack.cloudmap,
         githubActionsRole: props.githubActionsRole,
-        bucket: props.bucket,
         applicationSecrets: props.applicationSecrets,
         backendEcrRepo: props.ecrBackendRepo,
       }

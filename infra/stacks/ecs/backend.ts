@@ -6,7 +6,6 @@ import * as iam from "aws-cdk-lib/aws-iam";
 import { Construct } from "constructs";
 import * as servicediscovery from "aws-cdk-lib/aws-servicediscovery";
 import { config } from "../../config";
-import { Bucket } from "aws-cdk-lib/aws-s3";
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import * as ecr from "aws-cdk-lib/aws-ecr";
 
@@ -14,7 +13,6 @@ export interface BackendEcsServiceStackProps extends StackProps {
   cluster: ecs.Cluster;
   cloudmap: servicediscovery.INamespace;
   githubActionsRole?: iam.Role;
-  bucket: Bucket;
   applicationSecrets: ssm.StringParameter;
   backendEcrRepo: ecr.IRepository;
 }
@@ -49,19 +47,6 @@ export class BackendEcsServiceStack extends Stack {
               ],
               effect: iam.Effect.ALLOW,
               resources: [props.applicationSecrets.parameterArn],
-            }),
-          ],
-        }),
-        s3Access: new iam.PolicyDocument({
-          statements: [
-            new iam.PolicyStatement({
-              actions: ["s3:ListBucket", "s3:GetObject"],
-
-              effect: iam.Effect.ALLOW,
-              resources: [
-                props.bucket.bucketArn,
-                `${props.bucket.bucketArn}/*`,
-              ],
             }),
           ],
         }),
