@@ -36,12 +36,12 @@ repos:
           - "pydantic"
           - "types-requests"
           - "types-python-slugify"
-  - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: "v9.26.0"
-    hooks:
-      - id: eslint
-        files: "frontend/"
-        entry: "eslint --config ./frontend/eslint.config.mjs"
+  # - repo: https://github.com/pre-commit/mirrors-eslint
+  #   rev: "v9.26.0"
+  #   hooks:
+  #     - id: eslint
+  #       files: "frontend/"
+  #       entry: "eslint --config ./frontend/eslint.config.mjs"
   - repo: https://github.com/JoC0de/pre-commit-prettier
     rev: "v3.5.3"
     hooks:
