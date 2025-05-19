@@ -178,7 +178,7 @@ const environmentConfigs: Record<Environment, Partial<Config>> = {
     imageDomain: "images.dev.amfyapp.com",
     callbackUrls: [
       "http://localhost:8001/auth/callback",
-      "https://dev.amfyapp.com/api/v1/auth/callback",
+      "https://dev.amfyapp.com/api/auth/callback",
     ],
     ec2Ec2: {
       frontendBackend: {
@@ -200,7 +200,7 @@ const environmentConfigs: Record<Environment, Partial<Config>> = {
     imageDomain: "images.dev.amfyapp.com",
     callbackUrls: [
       "http://localhost:8001/auth/callback",
-      "https://amfyapp.com/api/v1/auth/callback",
+      "https://amfyapp.com/api/auth/callback",
     ],
     ec2Ec2: {
       frontendBackend: {

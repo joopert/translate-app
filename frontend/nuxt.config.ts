@@ -7,7 +7,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       enableSidebar: false,
-      baseURL: 'http://localhost:8001/api/v1', //TODO: get this from .env or so
+      baseURL: 'http://localhost:8001/api', //TODO: get this from .env or so
       cookiesAuth: {
         // TODO: this should be moved to a seperate config, not in public.
         refreshTokenUrl: '/auth/refresh',
@@ -15,10 +15,10 @@ export default defineNuxtConfig({
         redirectTo: '/sign-in',
       },
       company: {
-        name: 'someName',
-        website: 'https://domain.com',
-        infoEmail: 'hello@domain.com',
-        officialName: 'someName',
+        name: 'amfyapp',
+        website: 'https://dev.amfyapp.com',
+        infoEmail: 'hello@amfyapp.com',
+        officialName: 'amfyapp',
       },
     },
   },

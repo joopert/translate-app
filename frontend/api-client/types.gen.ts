@@ -549,5 +549,5 @@ export type PaymentsGetPlanResponses = {
 export type PaymentsGetPlanResponse = PaymentsGetPlanResponses[keyof PaymentsGetPlanResponses];
 
 export type ClientOptions = {
-  baseURL: `${string}://${string}/api/v1` | 'http://localhost:8001' | (string & {});
+  baseURL: `${string}://${string}/api` | 'http://localhost:8001' | (string & {});
 };

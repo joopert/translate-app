@@ -54,9 +54,9 @@ class MockData(BaseModel):
 class RefreshToken(BaseModel):
     expire_minutes: int = 30 * 24 * 3600
     paths: list[str] = [
-        "/api/v1/auth/refresh",  # TODO: need to use api_root_path from parent
-        "/api/v1/auth/logout/session",  # TODO: need to use api_root_path from parent
-        "/api/v1/auth/logout/all-devices",  # TODO: need to use api_root_path from parent
+        "/api/auth/refresh",  # TODO: need to use api_root_path from parent
+        "/api/auth/logout/session",  # TODO: need to use api_root_path from parent
+        "/api/auth/logout/all-devices",  # TODO: need to use api_root_path from parent
     ]
 
 
@@ -85,7 +85,8 @@ class Settings(BaseSettings):
     cors_allow_methods: list[str] = ["*"]
     cors_allow_headers: list[str] = ["*"]
     db_connection_timeout: int = 5000
-    api_root_path: str = "/api/v1"
+    api_root_path: str = "/api"
+    widget_root_path: str = "/widget"
     payments: "PaymentProvider"
     mock_data: MockData = MockData()
     use_mock_data: bool = False
