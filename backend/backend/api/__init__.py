@@ -9,6 +9,7 @@ from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import JSONResponse
 from fastapi_pagination import add_pagination
 
+from backend.api.apps.widget import widget_api
 from backend.api.exceptions import Detail, map_auth_exception_to_http
 from backend.api.routers.auth import router as auth_router
 from backend.api.routers.health import router as health_router
@@ -28,7 +29,8 @@ async def lifespan(app: FastAPI):
     yield await init_db()
 
 
-app = FastAPI(lifespan=lifespan, root_path=settings.api_root_path, servers=settings.fastapi.servers)
+app = FastAPI(lifespan=lifespan, root_path=settings.api_root_path)
+app.mount("/widget", widget_api, name="widget")
 
 
 @app.middleware("http")
