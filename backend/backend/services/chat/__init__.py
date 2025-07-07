@@ -31,13 +31,13 @@ async def process_chat_message(
     # Extract the history of ModelMessage objects for the agent.
     message_history = [stored.message for stored in messages_db.get(conversation_id, [])]
 
-    roulette_agent = Agent(
+    chat_agent = Agent(
         "bedrock:eu.amazon.nova-lite-v1:0",
         instructions=instructions,
         # "bedrock:eu.anthropic.claude-3-haiku-20240307-v1:0",
     )
 
-    ai_response = await roulette_agent.run(
+    ai_response = await chat_agent.run(
         user_prompt=request.message,
         message_history=message_history,
     )

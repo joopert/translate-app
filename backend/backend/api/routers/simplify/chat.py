@@ -32,7 +32,6 @@ async def chat_public(request: ChatRequest) -> ChatResponse:
     # TODO: need to implement rate limit etc.
     """
     latest_message = await process_chat_message(request, conversations_db, messages_db)
-    kind = "response"
 
     content = "".join(
         [str(part.content) for part in latest_message.message.parts if not isinstance(part, ToolCallPart)]
@@ -40,7 +39,7 @@ async def chat_public(request: ChatRequest) -> ChatResponse:
 
     frontend_message = FrontendMessage(
         id=latest_message.id,
-        kind=kind,
+        kind="response",
         content=content,
     )
 
