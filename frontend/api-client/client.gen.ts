@@ -6,7 +6,7 @@ import {
   type ClientOptions as DefaultClientOptions,
   createClient,
   createConfig,
-} from '@hey-api/client-nuxt';
+} from './client';
 
 /**
  * The `createClientConfig()` function will be called on client initialization
@@ -20,4 +20,8 @@ export type CreateClientConfig<T extends DefaultClientOptions = ClientOptions> =
   override?: Config<DefaultClientOptions & T>,
 ) => Config<Required<DefaultClientOptions> & T>;
 
-export const client = createClient(createConfig<ClientOptions>());
+export const client = createClient(
+  createConfig<ClientOptions>({
+    baseURL: '/api',
+  }),
+);

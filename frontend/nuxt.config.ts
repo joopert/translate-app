@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   runtimeConfig: {
     public: {
-      enableSidebar: false,
+      enableSidebar: true,
       baseURL: 'http://localhost:8001/api', //TODO: get this from .env or so
       cookiesAuth: {
         // TODO: this should be moved to a seperate config, not in public.
