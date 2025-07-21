@@ -348,7 +348,7 @@ export const zWebsiteOverrideCreate = z.object({
   config: zConfig,
 });
 
-export const zAuthGetSignInGoogleData = z.object({
+export const zAuthGetSignInGoogleOldData = z.object({
   body: z.never().optional(),
   path: z.never().optional(),
   query: z
@@ -361,7 +361,29 @@ export const zAuthGetSignInGoogleData = z.object({
 /**
  * Successful Response
  */
-export const zAuthGetSignInGoogleResponse = zOAuthUrl;
+export const zAuthGetSignInGoogleOldResponse = zOAuthUrl;
+
+export const zAuthGetSignInGoogleData = z.object({
+  body: z.never().optional(),
+  path: z.never().optional(),
+  query: z
+    .object({
+      redirect: z.union([z.string(), z.null()]).optional(),
+    })
+    .optional(),
+});
+
+/**
+ * Response Auth Get Sign In Google
+ * Successful Response
+ */
+export const zAuthGetSignInGoogleResponse = z.string();
+
+export const zAuthViaGoogleAuthCallbackGoogleGetData = z.object({
+  body: z.never().optional(),
+  path: z.never().optional(),
+  query: z.never().optional(),
+});
 
 export const zAuthCallbackAuthCallbackGetData = z.object({
   body: z.never().optional(),
@@ -495,14 +517,16 @@ export const zAuthPostLogoutAllDevicesData = z.object({
     .optional(),
 });
 
-export const zAuthGetProtectedData = z.object({
+export const zGetCurrentUserAuthMe2GetData = z.object({
   body: z.never().optional(),
   path: z.never().optional(),
-  query: z
-    .object({
-      id_token: z.union([z.string(), z.null()]).optional(),
-    })
-    .optional(),
+  query: z.never().optional(),
+});
+
+export const zGetMeTokenAuthMeTokenGetData = z.object({
+  body: z.never().optional(),
+  path: z.never().optional(),
+  query: z.never().optional(),
 });
 
 export const zHealthGetHealthData = z.object({
@@ -748,7 +772,11 @@ export const zConfigPutDataSourcesResponse = zDataSourcesSettings;
 export const zGetProfilesData = z.object({
   body: z.never().optional(),
   path: z.never().optional(),
-  query: z.never().optional(),
+  query: z
+    .object({
+      id_token: z.union([z.string(), z.null()]).optional(),
+    })
+    .optional(),
 });
 
 /**
@@ -760,7 +788,11 @@ export const zGetProfilesResponse = z.array(zProfile);
 export const zPostProfileData = z.object({
   body: zProfileIn,
   path: z.never().optional(),
-  query: z.never().optional(),
+  query: z
+    .object({
+      id_token: z.union([z.string(), z.null()]).optional(),
+    })
+    .optional(),
 });
 
 /**
@@ -773,7 +805,11 @@ export const zDeleteProfileData = z.object({
   path: z.object({
     name: z.string(),
   }),
-  query: z.never().optional(),
+  query: z
+    .object({
+      id_token: z.union([z.string(), z.null()]).optional(),
+    })
+    .optional(),
 });
 
 /**
@@ -786,7 +822,11 @@ export const zGetProfileData = z.object({
   path: z.object({
     name: z.string(),
   }),
-  query: z.never().optional(),
+  query: z
+    .object({
+      id_token: z.union([z.string(), z.null()]).optional(),
+    })
+    .optional(),
 });
 
 /**
@@ -800,7 +840,11 @@ export const zPutProfileData = z.object({
   path: z.object({
     name: z.string(),
   }),
-  query: z.never().optional(),
+  query: z
+    .object({
+      id_token: z.union([z.string(), z.null()]).optional(),
+    })
+    .optional(),
 });
 
 /**

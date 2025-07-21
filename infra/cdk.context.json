@@ -1,4 +1,5 @@
 {
+  "cli-telemetry": false,
   "availability-zones:account=018276530810:region=eu-west-1": [
     "eu-west-1a",
     "eu-west-1b",
@@ -19,5 +20,8 @@
     "us-east-1e",
     "us-east-1f"
   ],
-  "ami:account=018276530810:filters.image-type.0=machine:filters.name.0=fck-nat-al2023-*-arm64-ebs:filters.state.0=available:owners.0=568608671756:region=us-east-1": "ami-075a0093cd9926d44"
+  "ami:account=018276530810:filters.image-type.0=machine:filters.name.0=fck-nat-al2023-*-arm64-ebs:filters.state.0=available:owners.0=568608671756:region=us-east-1": "ami-075a0093cd9926d44",
+  "acknowledged-issue-numbers": [
+    34892
+  ]
 }

@@ -90,6 +90,7 @@ export class UserPoolStack extends cdk.Stack {
 
     const userPoolClient = new cognito.UserPoolClient(this, "UserPoolClient", {
       userPool: userPool,
+      generateSecret: true,
       oAuth: {
         flows: {
           authorizationCodeGrant: true,

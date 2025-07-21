@@ -638,6 +638,39 @@ export type WebsiteOverrideCreate = {
   config: Config;
 };
 
+export type AuthGetSignInGoogleOldData = {
+  body?: never;
+  path?: never;
+  query?: {
+    /**
+     * Redirect
+     * URL to redirect to after successful authentication
+     */
+    redirect?: string | null;
+  };
+  url: '/auth/sign-in/google-old';
+};
+
+export type AuthGetSignInGoogleOldErrors = {
+  /**
+   * Validation Error
+   */
+  422: HttpValidationError;
+};
+
+export type AuthGetSignInGoogleOldError =
+  AuthGetSignInGoogleOldErrors[keyof AuthGetSignInGoogleOldErrors];
+
+export type AuthGetSignInGoogleOldResponses = {
+  /**
+   * Successful Response
+   */
+  200: OAuthUrl;
+};
+
+export type AuthGetSignInGoogleOldResponse =
+  AuthGetSignInGoogleOldResponses[keyof AuthGetSignInGoogleOldResponses];
+
 export type AuthGetSignInGoogleData = {
   body?: never;
   path?: never;
@@ -662,13 +695,28 @@ export type AuthGetSignInGoogleError = AuthGetSignInGoogleErrors[keyof AuthGetSi
 
 export type AuthGetSignInGoogleResponses = {
   /**
+   * Response Auth Get Sign In Google
    * Successful Response
    */
-  200: OAuthUrl;
+  200: string;
 };
 
 export type AuthGetSignInGoogleResponse =
   AuthGetSignInGoogleResponses[keyof AuthGetSignInGoogleResponses];
+
+export type AuthViaGoogleAuthCallbackGoogleGetData = {
+  body?: never;
+  path?: never;
+  query?: never;
+  url: '/auth/callback/google';
+};
+
+export type AuthViaGoogleAuthCallbackGoogleGetResponses = {
+  /**
+   * Successful Response
+   */
+  200: unknown;
+};
 
 export type AuthCallbackAuthCallbackGetData = {
   body?: never;
@@ -1015,28 +1063,28 @@ export type AuthPostLogoutAllDevicesResponses = {
   200: unknown;
 };
 
-export type AuthGetProtectedData = {
+export type GetCurrentUserAuthMe2GetData = {
   body?: never;
   path?: never;
-  query?: {
-    /**
-     * Id Token
-     */
-    id_token?: string | null;
-  };
-  url: '/auth/protected';
+  query?: never;
+  url: '/auth/me2';
 };
 
-export type AuthGetProtectedErrors = {
+export type GetCurrentUserAuthMe2GetResponses = {
   /**
-   * Validation Error
+   * Successful Response
    */
-  422: HttpValidationError;
+  200: unknown;
 };
 
-export type AuthGetProtectedError = AuthGetProtectedErrors[keyof AuthGetProtectedErrors];
+export type GetMeTokenAuthMeTokenGetData = {
+  body?: never;
+  path?: never;
+  query?: never;
+  url: '/auth/me/token';
+};
 
-export type AuthGetProtectedResponses = {
+export type GetMeTokenAuthMeTokenGetResponses = {
   /**
    * Successful Response
    */
@@ -1538,9 +1586,23 @@ export type ConfigPutDataSourcesResponse =
 export type GetProfilesData = {
   body?: never;
   path?: never;
-  query?: never;
+  query?: {
+    /**
+     * Id Token
+     */
+    id_token?: string | null;
+  };
   url: '/simplify/profiles';
 };
+
+export type GetProfilesErrors = {
+  /**
+   * Validation Error
+   */
+  422: HttpValidationError;
+};
+
+export type GetProfilesError = GetProfilesErrors[keyof GetProfilesErrors];
 
 export type GetProfilesResponses = {
   /**
@@ -1555,7 +1617,12 @@ export type GetProfilesResponse = GetProfilesResponses[keyof GetProfilesResponse
 export type PostProfileData = {
   body: ProfileIn;
   path?: never;
-  query?: never;
+  query?: {
+    /**
+     * Id Token
+     */
+    id_token?: string | null;
+  };
   url: '/simplify/profiles';
 };
 
@@ -1585,7 +1652,12 @@ export type DeleteProfileData = {
      */
     name: string;
   };
-  query?: never;
+  query?: {
+    /**
+     * Id Token
+     */
+    id_token?: string | null;
+  };
   url: '/simplify/profiles/{name}';
 };
 
@@ -1615,7 +1687,12 @@ export type GetProfileData = {
      */
     name: string;
   };
-  query?: never;
+  query?: {
+    /**
+     * Id Token
+     */
+    id_token?: string | null;
+  };
   url: '/simplify/profiles/{name}';
 };
 
@@ -1646,7 +1723,12 @@ export type PutProfileData = {
      */
     name: string;
   };
-  query?: never;
+  query?: {
+    /**
+     * Id Token
+     */
+    id_token?: string | null;
+  };
   url: '/simplify/profiles/{name}';
 };
 

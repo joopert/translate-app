@@ -2,9 +2,13 @@
 
 import type { Options as ClientOptions, Composable, TDataShape, Client } from './client';
 import type {
+  AuthGetSignInGoogleOldData,
+  AuthGetSignInGoogleOldResponse,
+  AuthGetSignInGoogleOldError,
   AuthGetSignInGoogleData,
   AuthGetSignInGoogleResponse,
   AuthGetSignInGoogleError,
+  AuthViaGoogleAuthCallbackGoogleGetData,
   AuthCallbackAuthCallbackGetData,
   AuthCallbackAuthCallbackGetError,
   AuthPostSignUpData,
@@ -36,8 +40,8 @@ import type {
   AuthPostLogoutSessionData,
   AuthPostLogoutAllDevicesData,
   AuthPostLogoutAllDevicesError,
-  AuthGetProtectedData,
-  AuthGetProtectedError,
+  GetCurrentUserAuthMe2GetData,
+  GetMeTokenAuthMeTokenGetData,
   HealthGetHealthData,
   HealthGetHealthResponse,
   PolarWebhookPaymentsWebhookPostData,
@@ -84,6 +88,7 @@ import type {
   ConfigPutDataSourcesError,
   GetProfilesData,
   GetProfilesResponse,
+  GetProfilesError,
   PostProfileData,
   PostProfileResponse,
   PostProfileError,
@@ -139,6 +144,32 @@ export type Options<
  * Google sign-in
  * Google sign-in
  */
+export const authGetSignInGoogleOld = <
+  TComposable extends Composable,
+  DefaultT extends AuthGetSignInGoogleOldResponse = AuthGetSignInGoogleOldResponse,
+>(
+  options: Options<
+    TComposable,
+    AuthGetSignInGoogleOldData,
+    AuthGetSignInGoogleOldResponse,
+    DefaultT
+  >,
+) => {
+  return (options.client ?? _heyApiClient).get<
+    TComposable,
+    AuthGetSignInGoogleOldResponse | DefaultT,
+    AuthGetSignInGoogleOldError,
+    DefaultT
+  >({
+    url: '/auth/sign-in/google-old',
+    ...options,
+  });
+};
+
+/**
+ * Google sign-in
+ * Google sign-in
+ */
 export const authGetSignInGoogle = <
   TComposable extends Composable,
   DefaultT extends AuthGetSignInGoogleResponse = AuthGetSignInGoogleResponse,
@@ -152,6 +183,21 @@ export const authGetSignInGoogle = <
     DefaultT
   >({
     url: '/auth/sign-in/google',
+    ...options,
+  });
+};
+
+/**
+ * Auth Via Google
+ */
+export const authViaGoogleAuthCallbackGoogleGet = <
+  TComposable extends Composable,
+  DefaultT = undefined,
+>(
+  options: Options<TComposable, AuthViaGoogleAuthCallbackGoogleGetData, unknown, DefaultT>,
+) => {
+  return (options.client ?? _heyApiClient).get<TComposable, unknown | DefaultT, unknown, DefaultT>({
+    url: '/auth/callback/google',
     ...options,
   });
 };
@@ -472,25 +518,25 @@ export const authPostLogoutAllDevices = <TComposable extends Composable, Default
 };
 
 /**
- * Protected route
- * Protected route
+ * Get Current User
  */
-export const authGetProtected = <TComposable extends Composable, DefaultT = undefined>(
-  options: Options<TComposable, AuthGetProtectedData, unknown, DefaultT>,
+export const getCurrentUserAuthMe2Get = <TComposable extends Composable, DefaultT = undefined>(
+  options: Options<TComposable, GetCurrentUserAuthMe2GetData, unknown, DefaultT>,
 ) => {
-  return (options.client ?? _heyApiClient).get<
-    TComposable,
-    unknown | DefaultT,
-    AuthGetProtectedError,
-    DefaultT
-  >({
-    security: [
-      {
-        scheme: 'bearer',
-        type: 'http',
-      },
-    ],
-    url: '/auth/protected',
+  return (options.client ?? _heyApiClient).get<TComposable, unknown | DefaultT, unknown, DefaultT>({
+    url: '/auth/me2',
+    ...options,
+  });
+};
+
+/**
+ * Get Me Token
+ */
+export const getMeTokenAuthMeTokenGet = <TComposable extends Composable, DefaultT = undefined>(
+  options: Options<TComposable, GetMeTokenAuthMeTokenGetData, unknown, DefaultT>,
+) => {
+  return (options.client ?? _heyApiClient).get<TComposable, unknown | DefaultT, unknown, DefaultT>({
+    url: '/auth/me/token',
     ...options,
   });
 };
@@ -958,9 +1004,15 @@ export const getProfiles = <
   return (options.client ?? _heyApiClient).get<
     TComposable,
     GetProfilesResponse | DefaultT,
-    unknown,
+    GetProfilesError,
     DefaultT
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/simplify/profiles',
     ...options,
   });
@@ -982,6 +1034,12 @@ export const postProfile = <
     PostProfileError,
     DefaultT
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/simplify/profiles',
     ...options,
     headers: {
@@ -1007,6 +1065,12 @@ export const deleteProfile = <
     DeleteProfileError,
     DefaultT
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/simplify/profiles/{name}',
     ...options,
   });
@@ -1028,6 +1092,12 @@ export const getProfile = <
     GetProfileError,
     DefaultT
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/simplify/profiles/{name}',
     ...options,
   });
@@ -1049,6 +1119,12 @@ export const putProfile = <
     PutProfileError,
     DefaultT
   >({
+    security: [
+      {
+        scheme: 'bearer',
+        type: 'http',
+      },
+    ],
     url: '/simplify/profiles/{name}',
     ...options,
     headers: {
