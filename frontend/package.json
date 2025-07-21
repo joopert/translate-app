@@ -5,10 +5,11 @@
     "@vee-validate/zod": "^4.15.1",
     "@vueuse/core": "^13.5.0",
     "@vueuse/integrations": "^13.5.0",
+    "@vueuse/nuxt": "13.5.0",
     "flowbite": "^3.1.2",
     "h3-compression": "^0.3.2",
     "jwt-decode": "^4",
-    "nuxt": "^3.17.7",
+    "nuxt": "^4.0.0",
     "vue": "^3.5.17",
     "vue-router": "^4.5.1",
     "zod": "^4.0.5"
@@ -18,9 +19,9 @@
     "@hey-api/openapi-ts": "^0.78.3",
     "@iconify-json/flowbite": "^1.2.5",
     "@iconify-json/mdi": "^1.2.3",
-    "@nuxt/eslint": "^1.5.2",
+    "@nuxt/eslint": "^1.6.0",
     "@tailwindcss/vite": "^4.1.11",
-    "@types/node": "^24.0.14",
+    "@types/node": "^24.0.15",
     "eslint": "^9.31.0",
     "nuxt-purgecss": "^2.0.0",
     "nuxt-vitalizer": "^0.10.0",
@@ -29,7 +30,7 @@
     "tsx": "^4.20.3",
     "typescript": "^5.8.3",
     "vanilla-cookieconsent": "3.1.0",
-    "vue-tsc": "^3.0.1"
+    "vue-tsc": "^3.0.3"
   },
   "dependenciesComments": {
     "@vueuse/integrations": "needed for jwt-decode",
