@@ -45,7 +45,9 @@
             d="M17 5.923A1 1 0 0 0 16 5h-3V4a4 4 0 1 0-8 0v1H2a1 1 0 0 0-1 .923L.086 17.846A2 2 0 0 0 2.08 20h13.84a2 2 0 0 0 1.994-2.153L17 5.923ZM7 9a1 1 0 0 1-2 0V7h2v2Zm0-5a2 2 0 1 1 4 0v1H7V4Zm6 5a1 1 0 1 1-2 0V7h2v2Z"
           />
         </svg>
-        <div class="text-sm font-medium text-gray-900 dark:text-white">Sales</div>
+        <div class="text-sm font-medium text-gray-900 dark:text-white">
+          Sales
+        </div>
       </a>
       <a
         href="#"
@@ -65,7 +67,9 @@
             d="M5 19h10v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2ZM5 7a5.008 5.008 0 0 1 4-4.9 3.988 3.988 0 1 0-3.9 5.859A4.974 4.974 0 0 1 5 7Zm5 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm5-1h-.424a5.016 5.016 0 0 1-1.942 2.232A6.007 6.007 0 0 1 17 17h2a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5ZM5.424 9H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h2a6.007 6.007 0 0 1 4.366-5.768A5.016 5.016 0 0 1 5.424 9Z"
           />
         </svg>
-        <div class="text-sm font-medium text-gray-900 dark:text-white">Users</div>
+        <div class="text-sm font-medium text-gray-900 dark:text-white">
+          Users
+        </div>
       </a>
       <a
         href="#"
@@ -85,7 +89,9 @@
             d="M1 18h16a1 1 0 0 0 1-1v-6h-4.439a.99.99 0 0 0-.908.6 3.978 3.978 0 0 1-7.306 0 .99.99 0 0 0-.908-.6H0v6a1 1 0 0 0 1 1Z"
           />
         </svg>
-        <div class="text-sm font-medium text-gray-900 dark:text-white">Inbox</div>
+        <div class="text-sm font-medium text-gray-900 dark:text-white">
+          Inbox
+        </div>
       </a>
       <a
         href="#"
@@ -102,7 +108,9 @@
             d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z"
           />
         </svg>
-        <div class="text-sm font-medium text-gray-900 dark:text-white">Profile</div>
+        <div class="text-sm font-medium text-gray-900 dark:text-white">
+          Profile
+        </div>
       </a>
       <a
         href="#"
@@ -119,7 +127,9 @@
             d="M18 7.5h-.423l-.452-1.09.3-.3a1.5 1.5 0 0 0 0-2.121L16.01 2.575a1.5 1.5 0 0 0-2.121 0l-.3.3-1.089-.452V2A1.5 1.5 0 0 0 11 .5H9A1.5 1.5 0 0 0 7.5 2v.423l-1.09.452-.3-.3a1.5 1.5 0 0 0-2.121 0L2.576 3.99a1.5 1.5 0 0 0 0 2.121l.3.3L2.423 7.5H2A1.5 1.5 0 0 0 .5 9v2A1.5 1.5 0 0 0 2 12.5h.423l.452 1.09-.3.3a1.5 1.5 0 0 0 0 2.121l1.415 1.413a1.5 1.5 0 0 0 2.121 0l.3-.3 1.09.452V18A1.5 1.5 0 0 0 9 19.5h2a1.5 1.5 0 0 0 1.5-1.5v-.423l1.09-.452.3.3a1.5 1.5 0 0 0 2.121 0l1.415-1.414a1.5 1.5 0 0 0 0-2.121l-.3-.3.452-1.09H18a1.5 1.5 0 0 0 1.5-1.5V9A1.5 1.5 0 0 0 18 7.5Zm-8 6a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z"
           />
         </svg>
-        <div class="text-sm font-medium text-gray-900 dark:text-white">Settings</div>
+        <div class="text-sm font-medium text-gray-900 dark:text-white">
+          Settings
+        </div>
       </a>
       <a
         href="#"
@@ -136,7 +146,9 @@
             d="M19 0H1a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1ZM2 6v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6H2Zm11 3a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V8a1 1 0 0 1 2 0h2a1 1 0 0 1 2 0v1Z"
           />
         </svg>
-        <div class="text-sm font-medium text-gray-900 dark:text-white">Products</div>
+        <div class="text-sm font-medium text-gray-900 dark:text-white">
+          Products
+        </div>
       </a>
       <a
         href="#"
@@ -157,7 +169,9 @@
             d="M1.75 15.363a4.954 4.954 0 0 0 2.638 1.574c2.345.572 4.653-.434 5.155-2.247.502-1.813-1.313-3.79-3.657-4.364-2.344-.574-4.16-2.551-3.658-4.364.502-1.813 2.81-2.818 5.155-2.246A4.97 4.97 0 0 1 10 5.264M6 17.097v1.82m0-17.5v2.138"
           />
         </svg>
-        <div class="text-sm font-medium text-gray-900 dark:text-white">Pricing</div>
+        <div class="text-sm font-medium text-gray-900 dark:text-white">
+          Pricing
+        </div>
       </a>
       <a
         href="#"
@@ -178,7 +192,9 @@
           />
           <path d="M11 11H9v1h2v-1Z" />
         </svg>
-        <div class="text-sm font-medium text-gray-900 dark:text-white">Billing</div>
+        <div class="text-sm font-medium text-gray-900 dark:text-white">
+          Billing
+        </div>
       </a>
       <a
         href="#"
@@ -199,7 +215,9 @@
             d="M4 8h11m0 0-4-4m4 4-4 4m-5 3H3a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h3"
           />
         </svg>
-        <div class="text-sm font-medium text-gray-900 dark:text-white">Logout</div>
+        <div class="text-sm font-medium text-gray-900 dark:text-white">
+          Logout
+        </div>
       </a>
     </div>
   </div>

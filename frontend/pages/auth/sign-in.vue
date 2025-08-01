@@ -1,8 +1,12 @@
 <template>
   <section class="bg-gray-50 dark:bg-gray-900">
-    <div class="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-20 lg:py-16 lg:grid-cols-12">
+    <div
+      class="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-20 lg:py-16 lg:grid-cols-12"
+    >
       <div class="w-full place-self-center lg:col-span-6">
-        <div class="p-6 mx-auto bg-white rounded-lg shadow dark:bg-gray-800 sm:max-w-xl sm:p-8">
+        <div
+          class="p-6 mx-auto bg-white rounded-lg shadow dark:bg-gray-800 sm:max-w-xl sm:p-8"
+        >
           <UiAlert
             v-if="alertMessage"
             :category="alertMessage.category"
@@ -52,7 +56,10 @@
                     :required="true"
                     v-bind="field"
                   />
-                  <p v-if="errorMessage" class="mt-2 text-sm text-red-600 dark:text-red-500">
+                  <p
+                    v-if="errorMessage"
+                    class="mt-2 text-sm text-red-600 dark:text-red-500"
+                  >
                     {{ errorMessage }}
                   </p>
                 </div>
@@ -77,7 +84,10 @@
                     :required="true"
                     class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   />
-                  <p v-if="errorMessage" class="mt-2 text-sm text-red-600 dark:text-red-500">
+                  <p
+                    v-if="errorMessage"
+                    class="mt-2 text-sm text-red-600 dark:text-red-500"
+                  >
                     {{ errorMessage }}
                   </p>
                 </div>
@@ -85,7 +95,9 @@
             </div>
             <div class="flex items-center">
               <div class="w-full h-0.5 bg-gray-200 dark:bg-gray-700"></div>
-              <div class="px-5 text-center text-gray-500 dark:text-gray-400">or</div>
+              <div class="px-5 text-center text-gray-500 dark:text-gray-400">
+                or
+              </div>
               <div class="w-full h-0.5 bg-gray-200 dark:bg-gray-700"></div>
             </div>
             <div class="space-y-3">
@@ -119,7 +131,12 @@
                   </g>
                   <defs>
                     <clipPath id="clip0_13183_10121">
-                      <rect width="20" height="20" fill="white" transform="translate(0.5)" />
+                      <rect
+                        width="20"
+                        height="20"
+                        fill="white"
+                        transform="translate(0.5)"
+                      />
                     </clipPath>
                   </defs>
                 </svg>
@@ -143,7 +160,12 @@
                   </g>
                   <defs>
                     <clipPath id="clip0_13183_29163">
-                      <rect width="20" height="20" fill="white" transform="translate(0.5)" />
+                      <rect
+                        width="20"
+                        height="20"
+                        fill="white"
+                        transform="translate(0.5)"
+                      />
                     </clipPath>
                   </defs>
                 </svg>
@@ -190,21 +212,27 @@
 </template>
 
 <script setup lang="ts">
-import { useForm } from 'vee-validate';
-import { zSignUp } from '~/api-client/zod.gen';
-import { authPostSignIn, authGetSignInGoogle } from '~/api-client/sdk.gen';
-import { useFormErrorHandler } from '~/composables/useFormErrorHandler';
+import { useForm } from "vee-validate";
+import { zSignUp } from "~/api-client/zod.gen";
+import { authPostSignIn, authGetSignInGoogle } from "~/api-client/sdk.gen";
+import { useFormErrorHandler } from "~/composables/useFormErrorHandler";
 
 const route = useRoute();
-const redirectPath = ref((route.query.redirect as string) || '/');
+const redirectPath = ref((route.query.redirect as string) || "/");
 
 const form = useForm({
   validationSchema: toTypedSchema(zSignUp),
 });
 const { handleSubmit } = form;
 
-const { alertMessage, handleResponseError, clearError, loading, startLoading, stopLoading } =
-  useFormErrorHandler({ form });
+const {
+  alertMessage,
+  handleResponseError,
+  clearError,
+  loading,
+  startLoading,
+  stopLoading,
+} = useFormErrorHandler({ form });
 
 onMounted(() => {
   const { getRedirectMessage } = useRedirectMessage();
@@ -214,13 +242,13 @@ onMounted(() => {
   }
 });
 
-const onSubmit = handleSubmit(async values => {
+const onSubmit = handleSubmit(async (values) => {
   clearError();
   startLoading();
 
   try {
     await authPostSignIn({
-      composable: '$fetch',
+      composable: "$fetch",
       body: {
         username: values.email,
         password: values.password,
@@ -230,7 +258,7 @@ const onSubmit = handleSubmit(async values => {
 
     await navigateTo(redirectPath.value);
   } catch (error) {
-    console.error('Unhandled signup error:', error);
+    console.error("Unhandled signup error:", error);
   } finally {
     stopLoading();
   }
@@ -242,7 +270,7 @@ const handleGoogleSignIn = async () => {
 
   try {
     const result = await authGetSignInGoogle({
-      composable: '$fetch',
+      composable: "$fetch",
       query: {
         redirect: redirectPath.value,
       },
@@ -253,7 +281,7 @@ const handleGoogleSignIn = async () => {
       window.location.href = result.url;
     }
   } catch (error) {
-    console.error('Unhandled Google sign-in error:', error);
+    console.error("Unhandled Google sign-in error:", error);
     stopLoading();
   }
 };

@@ -1,7 +1,12 @@
-import { useAsyncData, useFetch, useLazyAsyncData, useLazyFetch } from 'nuxt/app';
-import { reactive, ref, watch } from 'vue';
+import {
+  useAsyncData,
+  useFetch,
+  useLazyAsyncData,
+  useLazyFetch,
+} from "nuxt/app";
+import { reactive, ref, watch } from "vue";
 
-import type { Client, Config } from './types';
+import type { Client, Config } from "./types";
 import {
   buildUrl,
   createConfig,
@@ -11,7 +16,7 @@ import {
   mergeInterceptors,
   serializeBody,
   setAuthParams,
-} from './utils';
+} from "./utils";
 
 export const createClient = (config: Config = {}): Client => {
   let _config = mergeConfigs(createConfig(), config);
@@ -23,7 +28,11 @@ export const createClient = (config: Config = {}): Client => {
     return getConfig();
   };
 
-  const request: Client['request'] = ({ asyncDataOptions, composable, ...options }) => {
+  const request: Client["request"] = ({
+    asyncDataOptions,
+    composable,
+    ...options
+  }) => {
     const key = options.key;
     const opts = {
       ..._config,
@@ -34,7 +43,12 @@ export const createClient = (config: Config = {}): Client => {
       onResponse: mergeInterceptors(_config.onResponse, options.onResponse),
     };
 
-    const { requestValidator, responseTransformer, responseValidator, security } = opts;
+    const {
+      requestValidator,
+      responseTransformer,
+      responseValidator,
+      security,
+    } = opts;
     if (requestValidator || security) {
       // auth must happen in interceptors otherwise we'd need to require
       // asyncContext enabled
@@ -62,7 +76,7 @@ export const createClient = (config: Config = {}): Client => {
       opts.onResponse = [
         ...opts.onResponse,
         async ({ options, response }) => {
-          if (options.responseType && options.responseType !== 'json') {
+          if (options.responseType && options.responseType !== "json") {
             return;
           }
 
@@ -82,40 +96,40 @@ export const createClient = (config: Config = {}): Client => {
     }
 
     // remove Content-Type header if body is empty to avoid sending invalid requests
-    if (opts.body === undefined || opts.body === '') {
-      opts.headers.delete('Content-Type');
+    if (opts.body === undefined || opts.body === "") {
+      opts.headers.delete("Content-Type");
     }
 
     const fetchFn = opts.$fetch;
 
-    if (composable === '$fetch') {
+    if (composable === "$fetch") {
       return executeFetchFn(opts, fetchFn);
     }
 
-    if (composable === 'useFetch' || composable === 'useLazyFetch') {
+    if (composable === "useFetch" || composable === "useLazyFetch") {
       const bodyParams = reactive({
         body: opts.body,
         bodySerializer: opts.bodySerializer,
       });
       const body = ref(serializeBody(opts));
       opts.body = body;
-      watch(bodyParams, changed => {
+      watch(bodyParams, (changed) => {
         body.value = serializeBody(changed);
       });
-      return composable === 'useLazyFetch'
+      return composable === "useLazyFetch"
         ? useLazyFetch(() => buildUrl(opts), opts)
         : useFetch(() => buildUrl(opts), opts);
     }
 
     const handler: any = () => executeFetchFn(opts, fetchFn);
 
-    if (composable === 'useAsyncData') {
+    if (composable === "useAsyncData") {
       return key
         ? useAsyncData(key, handler, asyncDataOptions)
         : useAsyncData(handler, asyncDataOptions);
     }
 
-    if (composable === 'useLazyAsyncData') {
+    if (composable === "useLazyAsyncData") {
       return key
         ? useLazyAsyncData(key, handler, asyncDataOptions)
         : useLazyAsyncData(handler, asyncDataOptions);
@@ -126,17 +140,17 @@ export const createClient = (config: Config = {}): Client => {
 
   return {
     buildUrl,
-    connect: options => request({ ...options, method: 'CONNECT' }),
-    delete: options => request({ ...options, method: 'DELETE' }),
-    get: options => request({ ...options, method: 'GET' }),
+    connect: (options) => request({ ...options, method: "CONNECT" }),
+    delete: (options) => request({ ...options, method: "DELETE" }),
+    get: (options) => request({ ...options, method: "GET" }),
     getConfig,
-    head: options => request({ ...options, method: 'HEAD' }),
-    options: options => request({ ...options, method: 'OPTIONS' }),
-    patch: options => request({ ...options, method: 'PATCH' }),
-    post: options => request({ ...options, method: 'POST' }),
-    put: options => request({ ...options, method: 'PUT' }),
+    head: (options) => request({ ...options, method: "HEAD" }),
+    options: (options) => request({ ...options, method: "OPTIONS" }),
+    patch: (options) => request({ ...options, method: "PATCH" }),
+    post: (options) => request({ ...options, method: "POST" }),
+    put: (options) => request({ ...options, method: "PUT" }),
     request,
     setConfig,
-    trace: options => request({ ...options, method: 'TRACE' }),
+    trace: (options) => request({ ...options, method: "TRACE" }),
   };
 };
