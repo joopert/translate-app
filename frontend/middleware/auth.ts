@@ -1,6 +1,6 @@
-export default defineNuxtRouteMiddleware(async to => {
+export default defineNuxtRouteMiddleware(async (to) => {
   // Skip middleware for auth pages to prevent redirect loops
-  if (to.path.startsWith('/auth/')) {
+  if (to.path.startsWith("/auth/")) {
     return;
   }
 
@@ -16,7 +16,7 @@ export default defineNuxtRouteMiddleware(async to => {
   }
 
   return navigateTo({
-    path: '/auth/sign-in',
+    path: "/auth/sign-in",
     query: {
       redirect: to.fullPath,
     },

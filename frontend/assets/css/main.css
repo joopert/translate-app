@@ -1,6 +1,6 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
-@import 'flowbite/src/themes/default';
+@import "flowbite/src/themes/default";
 @plugin 'flowbite/plugin';
 @plugin '@egoist/tailwindcss-icons';
 @source '../../node_modules/flowbite';
