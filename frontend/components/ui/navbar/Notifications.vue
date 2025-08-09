@@ -60,12 +60,17 @@
           </div>
         </div>
         <div class="pl-3 w-full">
-          <div class="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">
+          <div
+            class="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400"
+          >
             New message from
-            <span class="font-semibold text-gray-900 dark:text-white">Bonnie Green</span>: "Hey,
-            what's up? All set for the presentation?"
+            <span class="font-semibold text-gray-900 dark:text-white"
+              >Bonnie Green</span
+            >: "Hey, what's up? All set for the presentation?"
           </div>
-          <div class="text-xs font-medium text-primary-700 dark:text-primary-400">
+          <div
+            class="text-xs font-medium text-primary-700 dark:text-primary-400"
+          >
             a few moments ago
           </div>
         </div>
@@ -97,12 +102,21 @@
           </div>
         </div>
         <div class="pl-3 w-full">
-          <div class="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">
-            <span class="font-semibold text-gray-900 dark:text-white">Jese leos</span> and
-            <span class="font-medium text-gray-900 dark:text-white">5 others</span> started
-            following you.
+          <div
+            class="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400"
+          >
+            <span class="font-semibold text-gray-900 dark:text-white"
+              >Jese leos</span
+            >
+            and
+            <span class="font-medium text-gray-900 dark:text-white"
+              >5 others</span
+            >
+            started following you.
           </div>
-          <div class="text-xs font-medium text-primary-700 dark:text-primary-400">
+          <div
+            class="text-xs font-medium text-primary-700 dark:text-primary-400"
+          >
             10 minutes ago
           </div>
         </div>
@@ -134,13 +148,21 @@
           </div>
         </div>
         <div class="pl-3 w-full">
-          <div class="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">
-            <span class="font-semibold text-gray-900 dark:text-white">Joseph Mcfall</span>
+          <div
+            class="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400"
+          >
+            <span class="font-semibold text-gray-900 dark:text-white"
+              >Joseph Mcfall</span
+            >
             and
-            <span class="font-medium text-gray-900 dark:text-white">141 others</span> love your
-            story. See it and view more stories.
+            <span class="font-medium text-gray-900 dark:text-white"
+              >141 others</span
+            >
+            love your story. See it and view more stories.
           </div>
-          <div class="text-xs font-medium text-primary-700 dark:text-primary-400">
+          <div
+            class="text-xs font-medium text-primary-700 dark:text-primary-400"
+          >
             44 minutes ago
           </div>
         </div>
@@ -172,16 +194,29 @@
           </div>
         </div>
         <div class="pl-3 w-full">
-          <div class="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">
-            <span class="font-semibold text-gray-900 dark:text-white">Leslie Livingston</span>
+          <div
+            class="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400"
+          >
+            <span class="font-semibold text-gray-900 dark:text-white"
+              >Leslie Livingston</span
+            >
             mentioned you in a comment:
-            <span class="font-medium text-primary-700 dark:text-primary-500">@bonnie.green</span>
+            <span class="font-medium text-primary-700 dark:text-primary-500"
+              >@bonnie.green</span
+            >
             what do you say?
           </div>
-          <div class="text-xs font-medium text-primary-700 dark:text-primary-400">1 hour ago</div>
+          <div
+            class="text-xs font-medium text-primary-700 dark:text-primary-400"
+          >
+            1 hour ago
+          </div>
         </div>
       </a>
-      <a href="#" class="flex py-3 px-4 hover:bg-gray-100 dark:hover:bg-gray-600">
+      <a
+        href="#"
+        class="flex py-3 px-4 hover:bg-gray-100 dark:hover:bg-gray-600"
+      >
         <div class="flex-shrink-0">
           <img
             class="w-11 h-11 rounded-full"
@@ -205,11 +240,20 @@
           </div>
         </div>
         <div class="pl-3 w-full">
-          <div class="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">
-            <span class="font-semibold text-gray-900 dark:text-white">Robert Brown</span>
-            posted a new video: Glassmorphism - learn how to implement the new design trend.
+          <div
+            class="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400"
+          >
+            <span class="font-semibold text-gray-900 dark:text-white"
+              >Robert Brown</span
+            >
+            posted a new video: Glassmorphism - learn how to implement the new
+            design trend.
           </div>
-          <div class="text-xs font-medium text-primary-700 dark:text-primary-400">3 hours ago</div>
+          <div
+            class="text-xs font-medium text-primary-700 dark:text-primary-400"
+          >
+            3 hours ago
+          </div>
         </div>
       </a>
     </div>
@@ -239,7 +283,7 @@
 </template>
 <script setup lang="ts">
 onMounted(() => {
-  useFlowbite(flowbite => {
+  useFlowbite((flowbite) => {
     flowbite.initDropdowns();
   });
 });

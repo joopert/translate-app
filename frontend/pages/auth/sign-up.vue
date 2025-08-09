@@ -1,6 +1,8 @@
 <template>
   <section class="bg-gray-50 dark:bg-gray-900">
-    <div class="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-20 lg:py-16 lg:grid-cols-12">
+    <div
+      class="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-20 lg:py-16 lg:grid-cols-12"
+    >
       <div
         class="w-full p-6 mx-auto bg-white rounded-lg shadow dark:bg-gray-800 sm:max-w-xl lg:col-span-6 sm:p-8"
       >
@@ -45,7 +47,10 @@
                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="name@company.com"
                 />
-                <p v-if="errorMessage" class="mt-2 text-sm text-red-600 dark:text-red-500">
+                <p
+                  v-if="errorMessage"
+                  class="mt-2 text-sm text-red-600 dark:text-red-500"
+                >
                   {{ errorMessage }}
                 </p>
               </div>
@@ -69,7 +74,10 @@
                   autocomplete="new-password"
                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
-                <p v-if="errorMessage" class="mt-2 text-sm text-red-600 dark:text-red-500">
+                <p
+                  v-if="errorMessage"
+                  class="mt-2 text-sm text-red-600 dark:text-red-500"
+                >
                   {{ errorMessage }}
                 </p>
               </div>
@@ -77,7 +85,9 @@
           </div>
           <div class="flex items-center">
             <div class="w-full h-0.5 bg-gray-200 dark:bg-gray-700"></div>
-            <div class="px-5 text-center text-gray-500 dark:text-gray-400">or</div>
+            <div class="px-5 text-center text-gray-500 dark:text-gray-400">
+              or
+            </div>
             <div class="w-full h-0.5 bg-gray-200 dark:bg-gray-700"></div>
           </div>
           <div class="space-y-3">
@@ -112,7 +122,12 @@
                 </g>
                 <defs>
                   <clipPath id="clip0_13183_10121">
-                    <rect width="20" height="20" fill="white" transform="translate(0.5)" />
+                    <rect
+                      width="20"
+                      height="20"
+                      fill="white"
+                      transform="translate(0.5)"
+                    />
                   </clipPath>
                 </defs>
               </svg>
@@ -137,7 +152,12 @@
                 </g>
                 <defs>
                   <clipPath id="clip0_13183_29163">
-                    <rect width="20" height="20" fill="white" transform="translate(0.5)" />
+                    <rect
+                      width="20"
+                      height="20"
+                      fill="white"
+                      transform="translate(0.5)"
+                    />
                   </clipPath>
                 </defs>
               </svg>
@@ -156,7 +176,10 @@
                 />
               </div>
               <div class="ml-3 text-sm">
-                <label for="terms" class="font-light text-gray-500 dark:text-gray-300">
+                <label
+                  for="terms"
+                  class="font-light text-gray-500 dark:text-gray-300"
+                >
                   By signing up, you agree to our
                   <nuxtLink
                     to="/policies/privacy-policy"
@@ -185,7 +208,9 @@
                 />
               </div>
               <div class="ml-3 text-sm">
-                <label for="newsletter" class="font-light text-gray-500 dark:text-gray-300"
+                <label
+                  for="newsletter"
+                  class="font-light text-gray-500 dark:text-gray-300"
                   >Email me about product updates and resources.</label
                 >
               </div>
@@ -194,11 +219,13 @@
           <button
             type="submit"
             :disabled="!termsAccepted || loading"
-            :class="{ 'opacity-50 cursor-not-allowed': !termsAccepted || loading }"
+            :class="{
+              'opacity-50 cursor-not-allowed': !termsAccepted || loading,
+            }"
             class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
           >
             <UiLoadingSpinner v-if="loading" />
-            {{ loading ? 'Please wait...' : 'Create an account' }}
+            {{ loading ? "Please wait..." : "Create an account" }}
           </button>
         </form>
       </div>
@@ -214,10 +241,10 @@
 </template>
 
 <script setup lang="ts">
-import { useForm } from 'vee-validate';
-import { zSignUp } from '~/api-client/zod.gen';
-import { authPostSignUp, authGetSignInGoogle } from '~/api-client/sdk.gen';
-import { useFormErrorHandler } from '~/composables/useFormErrorHandler';
+import { useForm } from "vee-validate";
+import { zSignUp } from "~/api-client/zod.gen";
+import { authPostSignUp, authGetSignInGoogle } from "~/api-client/sdk.gen";
+import { useFormErrorHandler } from "~/composables/useFormErrorHandler";
 
 const { createRedirectMessage } = useRedirectMessage();
 
@@ -227,17 +254,23 @@ const form = useForm({
 });
 const { handleSubmit } = form;
 
-const { alertMessage, handleResponseError, clearError, loading, startLoading, stopLoading } =
-  useFormErrorHandler({ form });
+const {
+  alertMessage,
+  handleResponseError,
+  clearError,
+  loading,
+  startLoading,
+  stopLoading,
+} = useFormErrorHandler({ form });
 
-const onSubmit = handleSubmit(async values => {
+const onSubmit = handleSubmit(async (values) => {
   clearError();
   startLoading();
 
   let result;
   try {
     result = await authPostSignUp({
-      composable: '$fetch',
+      composable: "$fetch",
       body: {
         email: values.email,
         password: values.password,
@@ -247,20 +280,20 @@ const onSubmit = handleSubmit(async values => {
 
     if (result) {
       await navigateTo({
-        path: '/auth/confirm-sign-up',
+        path: "/auth/confirm-sign-up",
         query: {
           email: values.email,
           ...createRedirectMessage({
-            type: 'success',
+            type: "success",
             message:
-              'Your account was created successfully. Please check your email for verification instructions.',
-            category: 'Account created',
+              "Your account was created successfully. Please check your email for verification instructions.",
+            category: "Account created",
           }),
         },
       });
     }
   } catch (error) {
-    console.error('Unhandled signup error:', error);
+    console.error("Unhandled signup error:", error);
   } finally {
     stopLoading();
   }
@@ -277,7 +310,7 @@ const handleGoogleSignIn = async () => {
 
   try {
     const result = await authGetSignInGoogle({
-      composable: '$fetch',
+      composable: "$fetch",
       onResponseError: handleResponseError,
     });
 
@@ -285,7 +318,7 @@ const handleGoogleSignIn = async () => {
       window.location.href = result.url;
     }
   } catch (error) {
-    console.error('Unhandled Google sign-in error:', error);
+    console.error("Unhandled Google sign-in error:", error);
     stopLoading();
   }
 };

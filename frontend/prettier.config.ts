@@ -1,12 +1,12 @@
-import { type Config } from 'prettier';
+import { type Config } from "prettier";
 
 const config: Config = {
-  trailingComma: 'all',
+  trailingComma: "all",
   singleQuote: true,
   tabWidth: 2,
   printWidth: 100,
   bracketSpacing: true,
-  arrowParens: 'avoid',
+  arrowParens: "avoid",
   vueIndentScriptAndStyle: false,
   semi: true,
 };

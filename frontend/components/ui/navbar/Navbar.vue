@@ -37,14 +37,17 @@
               class="mr-3 h-8"
               :alt="$config.public.company.name + ' Logo'"
             />
-            <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">{{
-              $config.public.company.name
-            }}</span>
+            <span
+              class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
+              >{{ $config.public.company.name }}</span
+            >
           </NuxtLink>
           <form action="#" method="GET" class="hidden lg:block lg:pl-2">
             <label for="topbar-search" class="sr-only">Search</label>
             <div class="relative mt-1 lg:w-96">
-              <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+              <div
+                class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none"
+              >
                 <svg
                   class="w-4 h-4 text-gray-500 dark:text-gray-400"
                   aria-hidden="true"
@@ -107,7 +110,7 @@
 
 <script setup lang="ts">
 onMounted(() => {
-  useFlowbite(flowbite => {
+  useFlowbite((flowbite) => {
     flowbite.initDrawers();
     flowbite.initDropdowns();
   });
