@@ -7,7 +7,9 @@
         >
           500
         </h1>
-        <p class="mb-4 text-3xl tracking-tight font-bold text-gray-900 md:text-4xl dark:text-white">
+        <p
+          class="mb-4 text-3xl tracking-tight font-bold text-gray-900 md:text-4xl dark:text-white"
+        >
           Internal Server Error.
         </p>
         <p class="mb-4 text-lg font-light text-gray-500 dark:text-gray-400">
@@ -16,7 +18,8 @@
         <p class="mb-4 text-lg font-light text-gray-500 dark:text-gray-400">
           We are already working to solve the problem.
           <span v-if="!isHealthy" class="block mt-2 text-sm">
-            Next retry in {{ countdown }} seconds (Attempt {{ currentAttempt }}).
+            Next retry in {{ countdown }} seconds (Attempt
+            {{ currentAttempt }}).
           </span>
         </p>
         <button
@@ -51,10 +54,10 @@
 <script setup lang="ts">
 const { checkHealth, isHealthy } = useHealthCheck();
 const route = useRoute();
-const redirectPath = ref((route.query.redirect as string) || '/');
+const redirectPath = ref((route.query.redirect as string) || "/");
 
 const messages = ref<string[]>([]);
-const currentMessage = ref('');
+const currentMessage = ref("");
 
 const autoRetryTimeout = ref<number | null>(null);
 const countdownInterval = ref<number | null>(null);
@@ -132,25 +135,27 @@ const manualRetry = async () => {
 
 const getRandomMessage = () => {
   if (!messages.value || messages.value.length === 0)
-    return 'We seem to be experiencing technical difficulties. Please wait.';
+    return "We seem to be experiencing technical difficulties. Please wait.";
   return messages.value[Math.floor(Math.random() * messages.value.length)];
 };
 
 onMounted(async () => {
   try {
-    const response = await fetch('/data/500-messages.json');
-    if (!response.ok) throw new Error('Failed to fetch messages');
+    const response = await fetch("/data/500-messages.json");
+    if (!response.ok) throw new Error("Failed to fetch messages");
     const data = await response.json();
     messages.value = data.messages;
   } catch (error) {
-    console.error('Error loading 500 messages:', error);
-    messages.value = ['An unexpected error occurred. We are trying to reconnect.'];
+    console.error("Error loading 500 messages:", error);
+    messages.value = [
+      "An unexpected error occurred. We are trying to reconnect.",
+    ];
   }
   startAutoRetry();
 });
 
 onUnmounted(() => {
-  console.log('500 page unmounted. Clearing timers.');
+  console.log("500 page unmounted. Clearing timers.");
   stopAutoRetry();
 });
 </script>

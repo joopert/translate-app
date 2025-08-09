@@ -1,14 +1,14 @@
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute, useRouter } from "vue-router";
 
 // Alert message interface - match this with your existing AlertMessage type
 interface AlertMessage {
-  type: 'success' | 'info' | 'warning' | 'danger';
+  type: "success" | "info" | "warning" | "danger";
   category: string | undefined;
   message: string;
 }
 
 interface RedirectAlertMessage {
-  redirect_type: 'success' | 'info' | 'warning' | 'danger';
+  redirect_type: "success" | "info" | "warning" | "danger";
   redirect_category: string | undefined;
   redirect_message: string;
 }
@@ -34,12 +34,13 @@ export function useRedirectMessage() {
 
     if (type && message) {
       const result: AlertMessage = {
-        type: type as AlertMessage['type'],
+        type: type as AlertMessage["type"],
         category: category || undefined,
         message: message,
       };
 
-      const { redirect_type, redirect_message, redirect_category, ...query } = route.query;
+      const { redirect_type, redirect_message, redirect_category, ...query } =
+        route.query;
       router.replace({ query });
 
       return result;

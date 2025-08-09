@@ -7,7 +7,7 @@ export type AbTestingLabel = {
   /**
    * Type
    */
-  type: 'abTesting';
+  type: "abTesting";
   /**
    * Variants
    */
@@ -23,13 +23,13 @@ export type ButtonConfig = {
    */
   label:
     | ({
-        type: 'hardcoded';
+        type: "hardcoded";
       } & HardcodedLabel)
     | ({
-        type: 'contextual';
+        type: "contextual";
       } & ContextualLabel)
     | ({
-        type: 'abTesting';
+        type: "abTesting";
       } & AbTestingLabel);
   position: ButtonPosition;
 };
@@ -41,11 +41,11 @@ export type ButtonPosition = {
   /**
    * Horizontal
    */
-  horizontal: 'left' | 'center' | 'right';
+  horizontal: "left" | "center" | "right";
   /**
    * Vertical
    */
-  vertical: 'top' | 'bottom';
+  vertical: "top" | "bottom";
   /**
    * Offsetx
    */
@@ -195,7 +195,7 @@ export type ContextualLabel = {
   /**
    * Type
    */
-  type: 'contextual';
+  type: "contextual";
   /**
    * Fallbacklabel
    */
@@ -309,17 +309,17 @@ export type Detail = {
 /**
  * ErrorLocation
  */
-export type ErrorLocation = 'body' | 'query' | 'header' | 'cookies' | 'params';
+export type ErrorLocation = "body" | "query" | "header" | "cookies" | "params";
 
 /**
  * ErrorLocationField
  */
-export type ErrorLocationField = 'general';
+export type ErrorLocationField = "general";
 
 /**
  * FamiliarityLevel
  */
-export type FamiliarityLevel = 'beginner' | 'intermediate' | 'advanced';
+export type FamiliarityLevel = "beginner" | "intermediate" | "advanced";
 
 /**
  * ForgotPassword
@@ -342,7 +342,7 @@ export type FrontendMessage = {
   /**
    * Kind
    */
-  kind: 'request' | 'response';
+  kind: "request" | "response";
   /**
    * Content
    */
@@ -366,7 +366,7 @@ export type HardcodedLabel = {
   /**
    * Type
    */
-  type: 'hardcoded';
+  type: "hardcoded";
   /**
    * Value
    */
@@ -380,7 +380,7 @@ export type Health = {
   /**
    * Status
    */
-  status?: 'OK' | 'ERROR';
+  status?: "OK" | "ERROR";
   /**
    * Timestamp
    * UTC timestamp in ISO 8601 format
@@ -391,7 +391,7 @@ export type Health = {
 /**
  * LearningStyle
  */
-export type LearningStyle = 'no preference' | 'visual' | 'analogies';
+export type LearningStyle = "no preference" | "visual" | "analogies";
 
 /**
  * OAuthUrl
@@ -648,7 +648,7 @@ export type AuthGetSignInGoogleOldData = {
      */
     redirect?: string | null;
   };
-  url: '/auth/sign-in/google-old';
+  url: "/auth/sign-in/google-old";
 };
 
 export type AuthGetSignInGoogleOldErrors = {
@@ -681,7 +681,7 @@ export type AuthGetSignInGoogleData = {
      */
     redirect?: string | null;
   };
-  url: '/auth/sign-in/google';
+  url: "/auth/sign-in/google";
 };
 
 export type AuthGetSignInGoogleErrors = {
@@ -691,7 +691,8 @@ export type AuthGetSignInGoogleErrors = {
   422: HttpValidationError;
 };
 
-export type AuthGetSignInGoogleError = AuthGetSignInGoogleErrors[keyof AuthGetSignInGoogleErrors];
+export type AuthGetSignInGoogleError =
+  AuthGetSignInGoogleErrors[keyof AuthGetSignInGoogleErrors];
 
 export type AuthGetSignInGoogleResponses = {
   /**
@@ -708,7 +709,7 @@ export type AuthViaGoogleAuthCallbackGoogleGetData = {
   body?: never;
   path?: never;
   query?: never;
-  url: '/auth/callback/google';
+  url: "/auth/callback/google";
 };
 
 export type AuthViaGoogleAuthCallbackGoogleGetResponses = {
@@ -731,7 +732,7 @@ export type AuthCallbackAuthCallbackGetData = {
      */
     state: string;
   };
-  url: '/auth/callback';
+  url: "/auth/callback";
 };
 
 export type AuthCallbackAuthCallbackGetErrors = {
@@ -755,7 +756,7 @@ export type AuthPostSignUpData = {
   body: SignUp;
   path?: never;
   query?: never;
-  url: '/auth/sign-up';
+  url: "/auth/sign-up";
 };
 
 export type AuthPostSignUpErrors = {
@@ -765,7 +766,8 @@ export type AuthPostSignUpErrors = {
   422: HttpValidationError;
 };
 
-export type AuthPostSignUpError = AuthPostSignUpErrors[keyof AuthPostSignUpErrors];
+export type AuthPostSignUpError =
+  AuthPostSignUpErrors[keyof AuthPostSignUpErrors];
 
 export type AuthPostSignUpResponses = {
   /**
@@ -774,13 +776,14 @@ export type AuthPostSignUpResponses = {
   200: ResponseFormat;
 };
 
-export type AuthPostSignUpResponse = AuthPostSignUpResponses[keyof AuthPostSignUpResponses];
+export type AuthPostSignUpResponse =
+  AuthPostSignUpResponses[keyof AuthPostSignUpResponses];
 
 export type AuthPostConfirmSignUpData = {
   body: ConfirmSignUp;
   path?: never;
   query?: never;
-  url: '/auth/confirm-sign-up';
+  url: "/auth/confirm-sign-up";
 };
 
 export type AuthPostConfirmSignUpErrors = {
@@ -807,7 +810,7 @@ export type AuthPostResendConfirmationCodeData = {
   body: ResendConfirmationCode;
   path?: never;
   query?: never;
-  url: '/auth/resend-confirmation-code';
+  url: "/auth/resend-confirmation-code";
 };
 
 export type AuthPostResendConfirmationCodeErrors = {
@@ -834,7 +837,7 @@ export type AuthPostForgotPasswordData = {
   body: ForgotPassword;
   path?: never;
   query?: never;
-  url: '/auth/forgot-password';
+  url: "/auth/forgot-password";
 };
 
 export type AuthPostForgotPasswordErrors = {
@@ -861,7 +864,7 @@ export type AuthPostConfirmForgotPasswordData = {
   body: ConfirmForgotPassword;
   path?: never;
   query?: never;
-  url: '/auth/confirm-forgot-password';
+  url: "/auth/confirm-forgot-password";
 };
 
 export type AuthPostConfirmForgotPasswordErrors = {
@@ -893,7 +896,7 @@ export type AuthPostChangePasswordData = {
      */
     id_token?: string | null;
   };
-  url: '/auth/change-password';
+  url: "/auth/change-password";
 };
 
 export type AuthPostChangePasswordErrors = {
@@ -933,7 +936,7 @@ export type AuthPostSetInitialPasswordData = {
      */
     new_password: string;
   };
-  url: '/auth/set-initial-password';
+  url: "/auth/set-initial-password";
 };
 
 export type AuthPostSetInitialPasswordErrors = {
@@ -962,7 +965,7 @@ export type AuthGetMeData = {
      */
     id_token?: string | null;
   };
-  url: '/auth/me';
+  url: "/auth/me";
 };
 
 export type AuthGetMeErrors = {
@@ -987,7 +990,7 @@ export type AuthPostSignInData = {
   body: SignIn;
   path?: never;
   query?: never;
-  url: '/auth/sign-in';
+  url: "/auth/sign-in";
 };
 
 export type AuthPostSignInErrors = {
@@ -997,7 +1000,8 @@ export type AuthPostSignInErrors = {
   422: HttpValidationError;
 };
 
-export type AuthPostSignInError = AuthPostSignInErrors[keyof AuthPostSignInErrors];
+export type AuthPostSignInError =
+  AuthPostSignInErrors[keyof AuthPostSignInErrors];
 
 export type AuthPostSignInResponses = {
   /**
@@ -1010,7 +1014,7 @@ export type AuthPostRefreshData = {
   body?: never;
   path?: never;
   query?: never;
-  url: '/auth/refresh';
+  url: "/auth/refresh";
 };
 
 export type AuthPostRefreshResponses = {
@@ -1024,7 +1028,7 @@ export type AuthPostLogoutSessionData = {
   body?: never;
   path?: never;
   query?: never;
-  url: '/auth/logout/session';
+  url: "/auth/logout/session";
 };
 
 export type AuthPostLogoutSessionResponses = {
@@ -1043,7 +1047,7 @@ export type AuthPostLogoutAllDevicesData = {
      */
     id_token?: string | null;
   };
-  url: '/auth/logout/all-devices';
+  url: "/auth/logout/all-devices";
 };
 
 export type AuthPostLogoutAllDevicesErrors = {
@@ -1067,7 +1071,7 @@ export type GetCurrentUserAuthMe2GetData = {
   body?: never;
   path?: never;
   query?: never;
-  url: '/auth/me2';
+  url: "/auth/me2";
 };
 
 export type GetCurrentUserAuthMe2GetResponses = {
@@ -1081,7 +1085,7 @@ export type GetMeTokenAuthMeTokenGetData = {
   body?: never;
   path?: never;
   query?: never;
-  url: '/auth/me/token';
+  url: "/auth/me/token";
 };
 
 export type GetMeTokenAuthMeTokenGetResponses = {
@@ -1095,7 +1099,7 @@ export type HealthGetHealthData = {
   body?: never;
   path?: never;
   query?: never;
-  url: '/health/';
+  url: "/health/";
 };
 
 export type HealthGetHealthResponses = {
@@ -1105,13 +1109,14 @@ export type HealthGetHealthResponses = {
   200: Health;
 };
 
-export type HealthGetHealthResponse = HealthGetHealthResponses[keyof HealthGetHealthResponses];
+export type HealthGetHealthResponse =
+  HealthGetHealthResponses[keyof HealthGetHealthResponses];
 
 export type PolarWebhookPaymentsWebhookPostData = {
   body?: never;
   path?: never;
   query?: never;
-  url: '/payments/webhook';
+  url: "/payments/webhook";
 };
 
 export type PolarWebhookPaymentsWebhookPostResponses = {
@@ -1131,7 +1136,7 @@ export type PaymentsGetPlansData = {
   body?: never;
   path?: never;
   query?: never;
-  url: '/payments/plans';
+  url: "/payments/plans";
 };
 
 export type PaymentsGetPlansResponses = {
@@ -1141,7 +1146,8 @@ export type PaymentsGetPlansResponses = {
   200: Plans;
 };
 
-export type PaymentsGetPlansResponse = PaymentsGetPlansResponses[keyof PaymentsGetPlansResponses];
+export type PaymentsGetPlansResponse =
+  PaymentsGetPlansResponses[keyof PaymentsGetPlansResponses];
 
 export type PaymentsGetPlansRefreshData = {
   body?: never;
@@ -1152,7 +1158,7 @@ export type PaymentsGetPlansRefreshData = {
      */
     force?: boolean;
   };
-  url: '/payments/plans/refresh';
+  url: "/payments/plans/refresh";
 };
 
 export type PaymentsGetPlansRefreshErrors = {
@@ -1184,7 +1190,7 @@ export type PaymentsGetPlanData = {
     plan_id: string;
   };
   query?: never;
-  url: '/payments/plans/{plan_id}';
+  url: "/payments/plans/{plan_id}";
 };
 
 export type PaymentsGetPlanErrors = {
@@ -1194,7 +1200,8 @@ export type PaymentsGetPlanErrors = {
   422: HttpValidationError;
 };
 
-export type PaymentsGetPlanError = PaymentsGetPlanErrors[keyof PaymentsGetPlanErrors];
+export type PaymentsGetPlanError =
+  PaymentsGetPlanErrors[keyof PaymentsGetPlanErrors];
 
 export type PaymentsGetPlanResponses = {
   /**
@@ -1203,7 +1210,8 @@ export type PaymentsGetPlanResponses = {
   200: Plan;
 };
 
-export type PaymentsGetPlanResponse = PaymentsGetPlanResponses[keyof PaymentsGetPlanResponses];
+export type PaymentsGetPlanResponse =
+  PaymentsGetPlanResponses[keyof PaymentsGetPlanResponses];
 
 export type TranslateSitesGetSitesData = {
   body?: never;
@@ -1214,7 +1222,7 @@ export type TranslateSitesGetSitesData = {
      */
     id_token?: string | null;
   };
-  url: '/translate/sites';
+  url: "/translate/sites";
 };
 
 export type TranslateSitesGetSitesErrors = {
@@ -1247,7 +1255,7 @@ export type TranslateSitesPostSitesData = {
      */
     id_token?: string | null;
   };
-  url: '/translate/sites';
+  url: "/translate/sites";
 };
 
 export type TranslateSitesPostSitesErrors = {
@@ -1284,7 +1292,7 @@ export type TranslateSitesDeleteSiteData = {
      */
     id_token?: string | null;
   };
-  url: '/translate/sites/{site_id}';
+  url: "/translate/sites/{site_id}";
 };
 
 export type TranslateSitesDeleteSiteErrors = {
@@ -1321,7 +1329,7 @@ export type TranslateSitesGetSiteData = {
      */
     id_token?: string | null;
   };
-  url: '/translate/sites/{site_id}';
+  url: "/translate/sites/{site_id}";
 };
 
 export type TranslateSitesGetSiteErrors = {
@@ -1358,7 +1366,7 @@ export type TranslateSitesPutSiteData = {
      */
     id_token?: string | null;
   };
-  url: '/translate/sites/{site_id}';
+  url: "/translate/sites/{site_id}";
 };
 
 export type TranslateSitesPutSiteErrors = {
@@ -1395,7 +1403,7 @@ export type TranslateSitesPostToggleSiteData = {
      */
     id_token?: string | null;
   };
-  url: '/translate/sites/{site_id}/toggle';
+  url: "/translate/sites/{site_id}/toggle";
 };
 
 export type TranslateSitesPostToggleSiteErrors = {
@@ -1422,7 +1430,7 @@ export type DummyTranslateDummyPostData = {
   body?: never;
   path?: never;
   query?: never;
-  url: '/translate/dummy';
+  url: "/translate/dummy";
 };
 
 export type DummyTranslateDummyPostResponses = {
@@ -1450,7 +1458,7 @@ export type ConfigGetButtonData = {
      */
     id_token?: string | null;
   };
-  url: '/config/{domain}/button';
+  url: "/config/{domain}/button";
 };
 
 export type ConfigGetButtonErrors = {
@@ -1460,7 +1468,8 @@ export type ConfigGetButtonErrors = {
   422: HttpValidationError;
 };
 
-export type ConfigGetButtonError = ConfigGetButtonErrors[keyof ConfigGetButtonErrors];
+export type ConfigGetButtonError =
+  ConfigGetButtonErrors[keyof ConfigGetButtonErrors];
 
 export type ConfigGetButtonResponses = {
   /**
@@ -1469,7 +1478,8 @@ export type ConfigGetButtonResponses = {
   200: ButtonSettings;
 };
 
-export type ConfigGetButtonResponse = ConfigGetButtonResponses[keyof ConfigGetButtonResponses];
+export type ConfigGetButtonResponse =
+  ConfigGetButtonResponses[keyof ConfigGetButtonResponses];
 
 export type ConfigPutButtonData = {
   body: ButtonConfig;
@@ -1486,7 +1496,7 @@ export type ConfigPutButtonData = {
      */
     id_token?: string | null;
   };
-  url: '/config/{domain}/button';
+  url: "/config/{domain}/button";
 };
 
 export type ConfigPutButtonErrors = {
@@ -1496,7 +1506,8 @@ export type ConfigPutButtonErrors = {
   422: HttpValidationError;
 };
 
-export type ConfigPutButtonError = ConfigPutButtonErrors[keyof ConfigPutButtonErrors];
+export type ConfigPutButtonError =
+  ConfigPutButtonErrors[keyof ConfigPutButtonErrors];
 
 export type ConfigPutButtonResponses = {
   /**
@@ -1505,7 +1516,8 @@ export type ConfigPutButtonResponses = {
   200: ButtonSettings;
 };
 
-export type ConfigPutButtonResponse = ConfigPutButtonResponses[keyof ConfigPutButtonResponses];
+export type ConfigPutButtonResponse =
+  ConfigPutButtonResponses[keyof ConfigPutButtonResponses];
 
 export type ConfigGetDataSourcesData = {
   body?: never;
@@ -1522,7 +1534,7 @@ export type ConfigGetDataSourcesData = {
      */
     id_token?: string | null;
   };
-  url: '/config/{domain}/data_sources';
+  url: "/config/{domain}/data_sources";
 };
 
 export type ConfigGetDataSourcesErrors = {
@@ -1560,7 +1572,7 @@ export type ConfigPutDataSourcesData = {
      */
     id_token?: string | null;
   };
-  url: '/config/{domain}/data_sources';
+  url: "/config/{domain}/data_sources";
 };
 
 export type ConfigPutDataSourcesErrors = {
@@ -1592,7 +1604,7 @@ export type GetProfilesData = {
      */
     id_token?: string | null;
   };
-  url: '/simplify/profiles';
+  url: "/simplify/profiles";
 };
 
 export type GetProfilesErrors = {
@@ -1612,7 +1624,8 @@ export type GetProfilesResponses = {
   200: Array<Profile>;
 };
 
-export type GetProfilesResponse = GetProfilesResponses[keyof GetProfilesResponses];
+export type GetProfilesResponse =
+  GetProfilesResponses[keyof GetProfilesResponses];
 
 export type PostProfileData = {
   body: ProfileIn;
@@ -1623,7 +1636,7 @@ export type PostProfileData = {
      */
     id_token?: string | null;
   };
-  url: '/simplify/profiles';
+  url: "/simplify/profiles";
 };
 
 export type PostProfileErrors = {
@@ -1642,7 +1655,8 @@ export type PostProfileResponses = {
   200: Profile;
 };
 
-export type PostProfileResponse = PostProfileResponses[keyof PostProfileResponses];
+export type PostProfileResponse =
+  PostProfileResponses[keyof PostProfileResponses];
 
 export type DeleteProfileData = {
   body?: never;
@@ -1658,7 +1672,7 @@ export type DeleteProfileData = {
      */
     id_token?: string | null;
   };
-  url: '/simplify/profiles/{name}';
+  url: "/simplify/profiles/{name}";
 };
 
 export type DeleteProfileErrors = {
@@ -1677,7 +1691,8 @@ export type DeleteProfileResponses = {
   204: void;
 };
 
-export type DeleteProfileResponse = DeleteProfileResponses[keyof DeleteProfileResponses];
+export type DeleteProfileResponse =
+  DeleteProfileResponses[keyof DeleteProfileResponses];
 
 export type GetProfileData = {
   body?: never;
@@ -1693,7 +1708,7 @@ export type GetProfileData = {
      */
     id_token?: string | null;
   };
-  url: '/simplify/profiles/{name}';
+  url: "/simplify/profiles/{name}";
 };
 
 export type GetProfileErrors = {
@@ -1729,7 +1744,7 @@ export type PutProfileData = {
      */
     id_token?: string | null;
   };
-  url: '/simplify/profiles/{name}';
+  url: "/simplify/profiles/{name}";
 };
 
 export type PutProfileErrors = {
@@ -1755,7 +1770,7 @@ export type GetWebsiteOverridesData = {
   body?: never;
   path?: never;
   query?: never;
-  url: '/simplify/website_overrides';
+  url: "/simplify/website_overrides";
 };
 
 export type GetWebsiteOverridesResponses = {
@@ -1773,7 +1788,7 @@ export type PostWebsiteOverrideData = {
   body: WebsiteOverrideCreate;
   path?: never;
   query?: never;
-  url: '/simplify/website_overrides';
+  url: "/simplify/website_overrides";
 };
 
 export type PostWebsiteOverrideErrors = {
@@ -1783,7 +1798,8 @@ export type PostWebsiteOverrideErrors = {
   422: HttpValidationError;
 };
 
-export type PostWebsiteOverrideError = PostWebsiteOverrideErrors[keyof PostWebsiteOverrideErrors];
+export type PostWebsiteOverrideError =
+  PostWebsiteOverrideErrors[keyof PostWebsiteOverrideErrors];
 
 export type PostWebsiteOverrideResponses = {
   /**
@@ -1804,7 +1820,7 @@ export type DeleteWebsiteOverrideData = {
     domain: string;
   };
   query?: never;
-  url: '/simplify/website_overrides/{domain}';
+  url: "/simplify/website_overrides/{domain}";
 };
 
 export type DeleteWebsiteOverrideErrors = {
@@ -1836,7 +1852,7 @@ export type GetWebsiteOverrideData = {
     domain: string;
   };
   query?: never;
-  url: '/simplify/website_overrides/{domain}';
+  url: "/simplify/website_overrides/{domain}";
 };
 
 export type GetWebsiteOverrideErrors = {
@@ -1846,7 +1862,8 @@ export type GetWebsiteOverrideErrors = {
   422: HttpValidationError;
 };
 
-export type GetWebsiteOverrideError = GetWebsiteOverrideErrors[keyof GetWebsiteOverrideErrors];
+export type GetWebsiteOverrideError =
+  GetWebsiteOverrideErrors[keyof GetWebsiteOverrideErrors];
 
 export type GetWebsiteOverrideResponses = {
   /**
@@ -1868,7 +1885,7 @@ export type PutWebsiteOverrideData = {
     domain: string;
   };
   query?: never;
-  url: '/simplify/website_overrides/{domain}';
+  url: "/simplify/website_overrides/{domain}";
 };
 
 export type PutWebsiteOverrideErrors = {
@@ -1878,7 +1895,8 @@ export type PutWebsiteOverrideErrors = {
   422: HttpValidationError;
 };
 
-export type PutWebsiteOverrideError = PutWebsiteOverrideErrors[keyof PutWebsiteOverrideErrors];
+export type PutWebsiteOverrideError =
+  PutWebsiteOverrideErrors[keyof PutWebsiteOverrideErrors];
 
 export type PutWebsiteOverrideResponses = {
   /**
@@ -1895,7 +1913,7 @@ export type ChatPostChatPublicData = {
   body: ChatRequest;
   path?: never;
   query?: never;
-  url: '/simplify/chat/public';
+  url: "/simplify/chat/public";
 };
 
 export type ChatPostChatPublicErrors = {
@@ -1905,7 +1923,8 @@ export type ChatPostChatPublicErrors = {
   422: HttpValidationError;
 };
 
-export type ChatPostChatPublicError = ChatPostChatPublicErrors[keyof ChatPostChatPublicErrors];
+export type ChatPostChatPublicError =
+  ChatPostChatPublicErrors[keyof ChatPostChatPublicErrors];
 
 export type ChatPostChatPublicResponses = {
   /**

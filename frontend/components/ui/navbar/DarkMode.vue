@@ -15,7 +15,11 @@
       <span
         data-allow-mismatch="class"
         class="h-6 w-6 flex items-center justify-center"
-        :class="$colorMode.value === 'dark' ? 'i-mdi-weather-sunny' : 'i-mdi-weather-night'"
+        :class="
+          $colorMode.value === 'dark'
+            ? 'i-mdi-weather-sunny'
+            : 'i-mdi-weather-night'
+        "
       ></span>
     </button>
   </div>

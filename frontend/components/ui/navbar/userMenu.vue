@@ -6,7 +6,9 @@
   >
     <NuxtLink to="/auth/sign-in">
       <span class="sr-only">Sign-in</span>
-      <span class="h-6 w-6 flex items-center justify-center i-mdi-account"></span>
+      <span
+        class="h-6 w-6 flex items-center justify-center i-mdi-account"
+      ></span>
     </NuxtLink>
   </button>
   <button
@@ -30,10 +32,17 @@
     class="hidden z-50 my-4 w-56 text-base list-none bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600"
   >
     <div class="py-3 px-4">
-      <span class="block text-sm font-semibold text-gray-900 dark:text-white">Neil sims</span>
-      <span class="block text-sm text-gray-500 truncate dark:text-gray-400">name@flowbite.com</span>
+      <span class="block text-sm font-semibold text-gray-900 dark:text-white"
+        >Neil sims</span
+      >
+      <span class="block text-sm text-gray-500 truncate dark:text-gray-400"
+        >name@flowbite.com</span
+      >
     </div>
-    <ul class="py-1 text-gray-500 dark:text-gray-400" aria-labelledby="dropdown">
+    <ul
+      class="py-1 text-gray-500 dark:text-gray-400"
+      aria-labelledby="dropdown"
+    >
       <li>
         <a
           href="#"
@@ -49,7 +58,10 @@
         >
       </li>
     </ul>
-    <ul class="py-1 text-gray-500 dark:text-gray-400" aria-labelledby="dropdown">
+    <ul
+      class="py-1 text-gray-500 dark:text-gray-400"
+      aria-labelledby="dropdown"
+    >
       <li>
         <a
           href="#"
@@ -131,7 +143,10 @@
         </a>
       </li>
     </ul>
-    <ul class="py-1 text-gray-500 dark:text-gray-400" aria-labelledby="dropdown">
+    <ul
+      class="py-1 text-gray-500 dark:text-gray-400"
+      aria-labelledby="dropdown"
+    >
       <li>
         <a
           href="#"
@@ -144,18 +159,18 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { DropdownInterface } from 'flowbite';
-import { Dropdown } from 'flowbite';
-import { authPostLogoutSession } from '~/api-client/sdk.gen';
+import type { DropdownInterface } from "flowbite";
+import { Dropdown } from "flowbite";
+import { authPostLogoutSession } from "~/api-client/sdk.gen";
 
 const { isAuthenticated } = useAuth();
 let dropdown: DropdownInterface | null = null;
 
 onMounted(() => {
-  useFlowbite(flowbite => {
+  useFlowbite((flowbite) => {
     flowbite.initDropdowns();
   });
-  const $targetEl = document.getElementById('dropdown');
+  const $targetEl = document.getElementById("dropdown");
   if ($targetEl) {
     dropdown = new Dropdown($targetEl);
   }
@@ -163,7 +178,7 @@ onMounted(() => {
 
 const handleLogoutSession = async () => {
   await authPostLogoutSession({
-    composable: '$fetch',
+    composable: "$fetch",
   });
   isAuthenticated.value = false;
   if (dropdown) {

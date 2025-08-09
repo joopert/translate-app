@@ -1,6 +1,8 @@
 <template>
   <section class="bg-gray-50 dark:bg-gray-900">
-    <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+    <div
+      class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0"
+    >
       <UiAlert
         v-if="alertMessage"
         :category="alertMessage.category"
@@ -36,12 +38,19 @@
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="123456"
               />
-              <p v-if="errorMessage" class="mt-2 text-sm text-red-600 dark:text-red-500">
+              <p
+                v-if="errorMessage"
+                class="mt-2 text-sm text-red-600 dark:text-red-500"
+              >
                 {{ errorMessage }}
               </p>
             </div>
           </VeeField>
-          <VeeField name="email" v-slot="{ field, errorMessage }" :validate-on-model-update="false">
+          <VeeField
+            name="email"
+            v-slot="{ field, errorMessage }"
+            :validate-on-model-update="false"
+          >
             <div>
               <label
                 for="email"
@@ -56,7 +65,10 @@
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="name@company.com"
               />
-              <p v-if="errorMessage" class="mt-2 text-sm text-red-600 dark:text-red-500">
+              <p
+                v-if="errorMessage"
+                class="mt-2 text-sm text-red-600 dark:text-red-500"
+              >
                 {{ errorMessage }}
               </p>
             </div>
@@ -80,7 +92,10 @@
                 autocomplete="new-password"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
-              <p v-if="errorMessage" class="mt-2 text-sm text-red-600 dark:text-red-500">
+              <p
+                v-if="errorMessage"
+                class="mt-2 text-sm text-red-600 dark:text-red-500"
+              >
                 {{ errorMessage }}
               </p>
             </div>
@@ -97,12 +112,12 @@
   </section>
 </template>
 <script setup lang="ts">
-import { useForm } from 'vee-validate';
-import { zConfirmForgotPassword } from '~/api-client/zod.gen';
-import { authPostConfirmForgotPassword } from '~/api-client/sdk.gen';
-import { useFormErrorHandler } from '~/composables/useFormErrorHandler';
+import { useForm } from "vee-validate";
+import { zConfirmForgotPassword } from "~/api-client/zod.gen";
+import { authPostConfirmForgotPassword } from "~/api-client/sdk.gen";
+import { useFormErrorHandler } from "~/composables/useFormErrorHandler";
 const route = useRoute();
-const redirectPath = ref((route.query.redirect as string) || '/');
+const redirectPath = ref((route.query.redirect as string) || "/");
 
 const form = useForm({
   validationSchema: toTypedSchema(zConfirmForgotPassword),
@@ -112,8 +127,14 @@ const form = useForm({
 });
 const { handleSubmit } = form;
 
-const { alertMessage, handleResponseError, clearError, loading, startLoading, stopLoading } =
-  useFormErrorHandler({ form });
+const {
+  alertMessage,
+  handleResponseError,
+  clearError,
+  loading,
+  startLoading,
+  stopLoading,
+} = useFormErrorHandler({ form });
 
 onMounted(() => {
   const { getRedirectMessage } = useRedirectMessage();
@@ -122,13 +143,13 @@ onMounted(() => {
     alertMessage.value = redirectMsg;
   }
 });
-const onSubmit = handleSubmit(async values => {
+const onSubmit = handleSubmit(async (values) => {
   clearError();
   startLoading();
 
   try {
     await authPostConfirmForgotPassword({
-      composable: '$fetch',
+      composable: "$fetch",
       body: {
         email: values.email,
         confirmation_code: values.confirmation_code,
@@ -139,7 +160,7 @@ const onSubmit = handleSubmit(async values => {
 
     await navigateTo(redirectPath.value);
   } catch (error) {
-    console.error('Unhandled signup error:', error);
+    console.error("Unhandled signup error:", error);
   } finally {
     stopLoading();
   }

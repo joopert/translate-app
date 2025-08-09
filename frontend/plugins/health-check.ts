@@ -1,7 +1,7 @@
 export default defineNuxtPlugin(async () => {
   // Skip health check on 500 page
   const route = useRoute();
-  if (route.path === '/error/500') {
+  if (route.path === "/error/500") {
     return;
   }
 
@@ -14,7 +14,7 @@ export default defineNuxtPlugin(async () => {
 
   if (!isHealthy.value) {
     await navigateTo({
-      path: '/error/500',
+      path: "/error/500",
       query: {
         redirect: route.fullPath,
       },

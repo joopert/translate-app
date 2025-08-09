@@ -2,12 +2,12 @@
 //https://github.com/prettier/prettier-vscode/issues/3623
 
 const config = {
-  trailingComma: 'all',
+  trailingComma: "all",
   singleQuote: true,
   tabWidth: 2,
   printWidth: 100,
   bracketSpacing: true,
-  arrowParens: 'avoid',
+  arrowParens: "avoid",
   vueIndentScriptAndStyle: false,
   semi: true,
 };

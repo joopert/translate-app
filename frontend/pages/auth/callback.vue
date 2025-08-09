@@ -1,8 +1,8 @@
 <template></template>
 
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
-import { onMounted } from 'vue';
+import { useRoute } from "vue-router";
+import { onMounted } from "vue";
 
 const route = useRoute();
 const { createRedirectMessage } = useRedirectMessage();
@@ -14,12 +14,12 @@ onMounted(() => {
 
   if (error) {
     navigateTo({
-      path: '/auth/sign-in',
+      path: "/auth/sign-in",
       query: {
         ...createRedirectMessage({
-          type: 'danger',
-          message: errorDescription || 'Please try again.',
-          category: 'Authentication failed',
+          type: "danger",
+          message: errorDescription || "Please try again.",
+          category: "Authentication failed",
         }),
       },
     });
@@ -29,7 +29,7 @@ onMounted(() => {
   if (redirect) {
     navigateTo(redirect);
   } else {
-    navigateTo('/');
+    navigateTo("/");
   }
 });
 </script>
